@@ -1,0 +1,164 @@
+/* ------------------------------------ */
+/* 1. Page d'Accueil des Mouvements (Accueil Flux) */
+/* ------------------------------------ */
+
+/* Organisation du Conteneur Principal (.flux-section) */
+.flux-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+    padding: 40px;
+    margin: 20px auto;
+    max-width: 900px;
+    /* background-color: white; (Supprimé) */
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* Style général des Blocs d'actions */
+.flux-section div {
+    display: flex;
+    padding: 20px;
+    border-radius: 6px;
+    gap: 30px;
+    width: 100%;
+    box-sizing: border-box;
+    justify-content: center;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Bloc d'actions Administrateur (Création) */
+.content-flux-create {
+    /* background-color: #fff3cd; (Supprimé) */
+    border: 1px solid; /* Conserve le trait */
+}
+
+/* Bloc d'actions Standard (Consultation) */
+.content-flux {
+    /* background-color: #f8f9fa; (Supprimé) */
+    border: 1px solid #ccc; /* Bordure neutre */
+}
+
+/* Styles des Liens d'action */
+.flux-section a {
+    text-decoration: none;
+    padding: 12px 25px;
+    border-radius: 4px;
+    font-weight: bold;
+    transition: background-color 0.3s, color 0.3s;
+    text-align: center;
+    min-width: 180px;
+}
+
+.content-flux-create a {
+    /* background-color: #ffc107; (Supprimé) */
+    /* color: #333; (Supprimé) */
+}
+
+.content-flux-create a:hover {
+    /* background-color: #e0a800; (Supprimé) */
+}
+
+.content-flux a {
+    /* background-color: #007bff; (Supprimé) */
+    /* color: white; (Supprimé) */
+}
+
+.content-flux a:hover {
+    /* background-color: #0056b3; (Supprimé) */
+}
+
+/* ------------------------------------ */
+/* 2. Page de Détails des Flux (Entrées et Sorties) */
+/* ------------------------------------ */
+
+/* Cible les deux conteneurs de page de détail (SPÉCIFICITÉ AUGMENTÉE avec .content) */
+.content .content-flux-in, .content .content-flux-out {
+    padding: 20px;
+}
+
+/* Conteneur de recherche principal */
+.content .content-flux-in .search, .content .content-flux-out .search {
+    /* background-color: white; (Supprimé) */
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    padding: 20px;
+    margin-bottom: 30px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    align-items: flex-start;
+}
+
+/* Style des champs de recherche */
+.content .content-flux-in .search select, .content .content-flux-out .search select,
+.content .content-flux-in .search input, .content .content-flux-out .search input {
+    padding: 8px 10px;
+    border: 1px solid #ccc; /* Bordure neutre */
+    border-radius: 4px;
+    font-size: 1em;
+    margin-top: 5px;
+}
+
+/* Table de Résultats (SPÉCIFICITÉ AUGMENTÉE) */
+.content #result_entree, .content #result_sortie {
+    /* background-color: white; (Supprimé) */
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    padding: 10px;
+    overflow-x: auto;
+}
+
+.content .content-flux-in table, .content .content-flux-out table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 800px;
+}
+
+/* En-tête du tableau (th) */
+.content .content-flux-in table th, .content .content-flux-out table th {
+    /* background-color: #007bff; (Supprimé) */
+    /* color: white; (Supprimé) */
+    padding: 12px 15px;
+    text-align: left;
+    font-weight: 600;
+    border: none;
+}
+
+/* Lignes alternées et cellules */
+.content .content-flux-in table tr:nth-child(even), .content .content-flux-out table tr:nth-child(even) {
+    /* background-color: #f9f9f9; (Supprimé) */
+}
+
+.content .content-flux-in table td, .content .content-flux-out table td {
+    padding: 10px 15px;
+    border-bottom: 1px solid #eee; /* Bordure neutre */
+    vertical-align: middle;
+}
+
+/* Style des boutons Expéditeur/Destinataire */
+.content .content-flux-out td button {
+    background: none;
+    border: none;
+    /* color: #007bff; (Supprimé) */
+    cursor: pointer;
+    text-align: left;
+    padding: 0;
+}
+
+/* Bouton Rapport Excel */
+.content #excel {
+    text-align: right;
+    padding: 20px 10px 10px 10px;
+}
+
+.content #excel button {
+    /* background-color: #28a745; (Supprimé) */
+    /* color: white; (Supprimé) */
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+}

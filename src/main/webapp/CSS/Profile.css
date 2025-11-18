@@ -1,0 +1,102 @@
+/* ------------------------------------ */
+/* 1. CONTENEUR PRINCIPAL DE LA PAGE PROFIL */
+/* ------------------------------------ */
+
+.content .profile {
+    display: grid;
+    /* Définit les colonnes (1.5fr pour personnel, 1fr pour connexion/rôle) */
+    grid-template-columns: 1.5fr 1fr;
+    gap: 30px;
+    padding: 20px;
+    background-color: white;
+    border-radius: 8px;
+
+    /* DÉFINITION DES ZONES DE LA GRILLE AVEC LE TITRE EN HAUT */
+    grid-template-areas:
+        "header-profil header-profil"
+        "personnel connexion"
+        "personnel role";
+}
+
+/* ------------------------------------ */
+/* 2. STYLE DU TITRE ET PLACEMENT DES FIELDSETS */
+/* ------------------------------------ */
+
+.content .profile h4 {
+    grid-area: header-profil;
+    margin: 0 0 20px 0;
+    font-size: 1.5em;
+/*
+    color: #0056b3;
+    border-bottom: 2px solid #e9ecef;
+*/}
+
+#details-personnels {
+    grid-area: personnel;
+}
+
+#details-connexion {
+    grid-area: connexion;
+}
+
+#details-role {
+    grid-area: role;
+}
+
+/* ------------------------------------ */
+/* 3. STYLE DES FIELDSETS ET CONTENUS */
+/* ------------------------------------ */
+
+.content .profile fieldset {
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    background-color: #ffffff;
+}
+
+.content .profile legend {
+    font-size: 1.25em;
+    font-weight: bold;
+    /* color: #007bff; */
+    padding: 0 10px;
+}
+
+/* Style des icônes (si vous les utilisez) */
+.content .profile fieldset p i, .content .profile fieldset a i {
+    margin-right: 8px;
+    /* color: #007bff; */
+}
+
+/* Style des listes (pour la connexion) */
+#details-connexion ul {
+    list-style: none;
+    padding: 0;
+    margin: 10px 0 0 0;
+}
+
+#details-connexion ul li {
+    margin-bottom: 8px;
+}
+
+#details-connexion ul li a {
+    display: block;
+    /* color: #28a745; */
+    text-decoration: none;
+    font-weight: 500;
+}
+
+/* ------------------------------------ */
+/* 4. RESPONSIVITÉ */
+/* ------------------------------------ */
+
+@media (max-width: 900px) {
+    .content .profile {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+            "header-profil"
+            "personnel"
+            "connexion"
+            "role";
+    }
+}

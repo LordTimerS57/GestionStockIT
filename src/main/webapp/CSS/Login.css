@@ -1,0 +1,138 @@
+/* ------------------------------------ */
+/* 1. STYLES GÉNÉRAUX ET FOND DE PAGE    */
+/* ------------------------------------ */
+
+body {
+    /* Utilise une police sans-serif lisible */
+    font-family: Arial, sans-serif;
+    /* Centre le contenu verticalement et horizontalement */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* Hauteur minimale de la fenêtre (pour centrer verticalement) */
+    min-height: 100vh;
+    /* Couleur de fond très claire */
+    background-color: #f4f7f6;
+    /* Supprime les marges par défaut du navigateur */
+    margin: 0;
+}
+
+/* ------------------------------------ */
+/* 2. STYLE DU CONTENEUR DE FORMULAIRE  */
+/* ------------------------------------ */
+
+form {
+    /* Largeur maximale pour que le formulaire ne soit pas trop étendu */
+    max-width: 400px;
+    width: 90%;
+    /* Ombre subtile pour donner un effet de "carte" */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    /* Coins arrondis */
+    border-radius: 8px;
+    /* Remplissage intérieur */
+    padding: 30px;
+    /* Fond blanc pour le formulaire */
+    background-color: #ffffff;
+}
+
+fieldset {
+    /* Supprime la bordure par défaut de fieldset */
+    border: none;
+    padding: 0;
+    margin: 0;
+}
+
+legend h1 {
+    /* Couleur du titre */
+    color: #333;
+    /* Marge en bas pour séparer du reste */
+    margin-bottom: 25px;
+    /* Centre le texte */
+    text-align: center;
+    /* Taille de police du titre */
+    font-size: 24px;
+}
+
+/* ------------------------------------ */
+/* 3. CHAMPS DE SAISIE (INPUTS) ET LABELS */
+/* ------------------------------------ */
+
+label {
+    /* Rend le label block pour qu'il prenne toute la largeur */
+    display: block;
+    /* Petite marge en bas pour séparer les champs */
+    margin-bottom: 20px;
+    /* Rapproche le texte du label */
+    font-weight: bold;
+    color: #555;
+}
+
+input[type="email"],
+input[type="password"] {
+    /* Prend toute la largeur disponible dans le label */
+    width: 100%;
+    /* Ajoute un petit espace au-dessus du champ */
+    margin-top: 5px;
+    /* Remplissage intérieur */
+    padding: 10px;
+    /* Taille de la police */
+    font-size: 16px;
+    /* Bordure simple */
+    border: 1px solid #ccc;
+    /* Coins arrondis subtils */
+    border-radius: 4px;
+    /* Empêche le box-shadow d'être inclus dans la taille */
+    box-sizing: border-box;
+    /* Transition pour l'effet de focus */
+    transition: border-color 0.3s ease;
+}
+
+input[type="email"]:focus,
+input[type="password"]:focus {
+    /* Bordure bleue quand le champ est sélectionné */
+    border-color: #007bff;
+    /* Supprime la bordure d'outline par défaut du navigateur */
+    outline: none;
+}
+
+/* ------------------------------------ */
+/* 4. BOUTON DE SOUMISSION              */
+/* ------------------------------------ */
+
+#submit {
+    /* Prend toute la largeur du formulaire */
+    width: 100%;
+    /* Remplissage pour la hauteur du bouton */
+    padding: 12px;
+    /* Couleur de fond primaire (bleu) */
+    background-color: #007bff;
+    /* Texte blanc */
+    color: white;
+    /* Supprime la bordure par défaut */
+    border: none;
+    /* Coins arrondis */
+    border-radius: 4px;
+    /* Curseur pour indiquer qu'il est cliquable */
+    cursor: pointer;
+    /* Taille de police plus grande */
+    font-size: 18px;
+    /* Marge en haut pour le séparer du champ de mot de passe */
+    margin-top: 10px;
+    /* Transition pour l'effet de survol */
+    transition: background-color 0.3s ease;
+}
+
+#submit:hover {
+    /* Couleur plus foncée au survol */
+    background-color: #0056b3;
+}
+
+/* ------------------------------------ */
+/* 5. BOUTON DÉSACTIVÉ                  */
+/* ------------------------------------ */
+
+#submit:disabled {
+    /* Couleur grisée pour indiquer qu'il est inactif (si activite est false) */
+    background-color: #ccc;
+    cursor: not-allowed;
+}

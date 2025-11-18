@@ -1,0 +1,166 @@
+/* ------------------------------------ */
+/* Styles de la Page Gestion Fournisseurs */
+/* ------------------------------------ */
+
+/* Conteneur principal de la page Fournisseurs (la <section>) */
+.fournisseur-section {
+    padding: 20px;
+    /* background-color: white; (Supprimé) */
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    margin: 20px auto;
+    max-width: 90%;
+}
+
+/* --- 1. Style de la Recherche --- */
+
+.fournisseur-section label {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ccc; /* Bordure neutre */
+    border-radius: 20px;
+    padding: 5px 15px;
+    width: 350px;
+    margin-bottom: 25px;
+    /* background-color: white; (Supprimé) */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.fournisseur-section label input[type="search"] {
+    border: none;
+    outline: none;
+    flex-grow: 1;
+    padding: 5px;
+    font-size: 1em;
+}
+
+/* --- 2. Style du Bloc d'Ajout (Création) --- */
+
+.content-fournisseur-create {
+    margin-bottom: 30px;
+}
+
+.content-fournisseur-create a {
+    /* background-color: #28a745; (Supprimé) */
+    /* color: white; (Supprimé) */
+    text-decoration: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    font-weight: bold;
+    display: inline-block;
+    transition: background-color 0.3s;
+}
+
+.content-fournisseur-create a:hover {
+    /* background-color: #1e7e34; (Supprimé) */
+}
+
+/* --- 3. Styles des Résultats (Tables) --- */
+
+#result_fournisseur {
+    /* background-color: white; (Supprimé) */
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    padding: 10px;
+}
+
+.fournisseur-section table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.fournisseur-section table tr:nth-child(even) {
+    /* background-color: #f9f9f9; (Supprimé) */
+}
+
+.fournisseur-section table td {
+    padding: 10px 15px;
+    border-bottom: 1px solid #eee; /* Bordure neutre */
+    vertical-align: middle;
+}
+
+/* Style des boutons "Raison Sociale" (Détails) */
+.fournisseur-section table td button:first-child {
+    background: none;
+    border: none;
+    /* color: #007bff; (Supprimé) */
+    cursor: pointer;
+    text-align: left;
+    padding: 0;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+.fournisseur-section table td button:first-child:hover {
+    /* color: #0056b3; (Supprimé) */
+    text-decoration: underline;
+}
+
+/* Style des boutons Modifier/Supprimer */
+.fournisseur-section table td button {
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9em;
+    margin-left: 10px;
+    border: none;
+    transition: background-color 0.2s;
+}
+
+/* Bouton Modifier */
+.fournisseur-section table td button:nth-child(2) {
+    /* background-color: #17a2b8; (Supprimé) */
+    /* color: white; (Supprimé) */
+}
+.fournisseur-section table td button:nth-child(2):hover {
+    /* background-color: #138496; (Supprimé) */
+}
+
+/* Bouton Supprimer */
+.fournisseur-section table td button:last-child {
+    /* background-color: #dc3545; (Supprimé) */
+    /* color: white; (Supprimé) */
+}
+.fournisseur-section table td button:last-child:hover {
+    /* background-color: #c82333; (Supprimé) */
+}
+
+/* --- 4. Styles de la Fenêtre Modale (<dialog>) --- */
+
+#dialog_fournisseur {
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    padding: 30px;
+    max-width: 450px;
+    width: 90%;
+    margin: auto;
+}
+
+#dialog_fournisseur legend {
+    font-size: 1.4em;
+    /* color: #007bff; (Supprimé) */
+    font-weight: bold;
+}
+
+#dialog_fournisseur fieldset {
+    border: 1px solid #dee2e6; /* Bordure neutre */
+    border-radius: 6px;
+    padding: 15px;
+    margin-bottom: 20px;
+}
+
+#dialog_fournisseur p {
+    margin-bottom: 8px;
+    line-height: 1.4;
+}
+
+#dialog_fournisseur button {
+    /* background-color: #6c757d; (Supprimé) */
+    /* color: white; (Supprimé) */
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    border: none;
+    font-weight: 500;
+}

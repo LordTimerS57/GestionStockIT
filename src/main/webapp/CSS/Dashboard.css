@@ -1,0 +1,110 @@
+/* ------------------------------------ */
+/* 1. MISE EN PAGE GLOBALE & BODY       */
+/* ------------------------------------ */
+
+body {
+    display: flex;
+    flex-direction: column; /* Empile header et main verticalement */
+    min-height: 100vh;
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+}
+
+/* ------------------------------------ */
+/* 2. EN-TÊTE (header)                  */
+/* ------------------------------------ */
+
+header {
+    padding: 15px 0 15px 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: normal;
+}
+
+/* Style du bouton de déconnexion (Transféré du style inline du JSP) */
+header button {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    margin-right: 34px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+header button:hover {
+    background-color: #c82333;
+}
+
+/* ------------------------------------ */
+/* 3. CONTENEUR PRINCIPAL (<main>)      */
+/* ------------------------------------ */
+
+main {
+    display: flex; /* CRUCIAL : Place <nav> et <div> côte à côte */
+    flex-grow: 1; /* Prend tout l'espace vertical restant sous le header */
+}
+
+/* ------------------------------------ */
+/* 4. NAVIGATION VERTICALE (<nav>)      */
+/* ------------------------------------ */
+
+nav {
+    width: 230px; /* Largeur fixe de la barre latérale */
+    padding: 20px 0;
+    flex-shrink: 0; /* Empêche la barre latérale de se réduire */
+    display: flex;
+    flex-direction: column; /* Les liens s'empilent verticalement */
+}
+
+nav a {
+    padding: 10px 20px;
+    text-decoration: none;
+    margin-bottom: 2px;
+    transition: background-color 0.3s;
+    font-weight: 500;
+    display: block; /* Rend le lien un bloc pour la zone de clic */
+}
+
+nav a:hover {
+}
+
+nav a.active {
+    font-weight: bold;
+    border-left: 5px solid #0056b3; /* Indicateur visuel */
+    padding-left: 15px; /* Compenser les 5px de la bordure */
+}
+
+
+/* ------------------------------------ */
+/* 5. ZONE DE CONTENU PRINCIPALE (.content)*/
+/* ------------------------------------ */
+
+.content {
+    flex-grow: 1; /* Permet au contenu de prendre TOUT l'espace horizontal restant */
+    padding: 20px;
+    background-color: #f4f7f6;
+    overflow-y: auto; /* Ajoute un scroll au contenu si nécessaire */
+}
+
+/* ------------------------------------ */
+/* 6. PIED DE PAGE (footer)             */
+/* ------------------------------------ */
+
+footer {
+    background-color: #333;
+    color: #ccc;
+    padding: 10px;
+    text-align: center;
+    font-size: 0.8em;
+}
+

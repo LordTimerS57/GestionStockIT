@@ -1,0 +1,184 @@
+/* Conteneur principal de la page Employés (le <div> parent) */
+.employe-section {
+    padding: 20px;
+}
+
+/* Style de la barre de recherche */
+.employe-section label {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ccc; /* Bordure neutre */
+    border-radius: 20px;
+    padding: 5px 15px;
+    width: 350px; /* Limite la largeur de la barre de recherche */
+    margin-bottom: 25px;
+    /* background-color: white; (Supprimé) */
+}
+
+.employe-section label input[type="search"] {
+    border: none;
+    outline: none;
+    flex-grow: 1;
+    padding: 5px;
+    font-size: 1em;
+}
+
+.employe-section label .fas.fa-search {
+    /* color: #007bff; (Supprimé) */
+    margin-left: 10px;
+}
+
+/* Style des titres de liste */
+.employe-section h3 {
+    border-bottom: 2px solid; /* Conserve le trait de séparation */
+    padding-bottom: 5px;
+    margin-top: 30px;
+    /* color: #333; (Supprimé) */
+}
+
+
+/* Conteneurs des listes */
+#result_employe_connected, #result_employe_not_connected {
+    margin-bottom: 40px;
+}
+
+/* Style général des tableaux */
+.employe-section table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+.employe-section table tr:nth-child(even) {
+    /* background-color: #f9f9f9; (Supprimé) */
+}
+
+/* Style des cellules */
+.employe-section table td {
+    padding: 10px 15px;
+    border-bottom: 1px solid #eee; /* Bordure neutre */
+    vertical-align: middle;
+}
+
+/* Style des boutons "Nom/Prénoms" pour ouvrir les détails */
+.show-details-employe {
+    background: none;
+    border: none;
+    /* color: #007bff; (Supprimé) */
+    cursor: pointer;
+    text-align: left;
+    padding: 0;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+.show-details-employe:hover {
+    /* color: #0056b3; (Supprimé) */
+    text-decoration: underline;
+}
+
+/* Style des boutons Activer/Désactiver */
+.activation-employe {
+    /* background-color: #ffc107; (Supprimé) */
+    /* color: #333; (Supprimé) */
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9em;
+    margin-left: 15px;
+    transition: background-color 0.2s;
+}
+
+.activation-employe:hover {
+    /* background-color: #e0a800; (Supprimé) */
+}
+
+
+/* Style de la modale */
+#dialog_employe {
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    padding: 30px;
+    max-width: 600px;
+    width: 90%;
+    margin: auto;
+}
+
+/* En-tête des détails */
+#employe_details h1 {
+    font-size: 1.8em;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    /* color: #007bff; (Supprimé) */
+}
+
+/* Style des fieldsets dans la modale */
+#employe_details fieldset {
+    border: 1px solid #dee2e6; /* Bordure neutre */
+    border-radius: 6px;
+    padding: 15px;
+    margin-bottom: 15px;
+}
+
+#employe_details legend {
+    font-weight: bold;
+    /* color: #333; (Supprimé) */
+}
+
+/* Boutons d'action dans la modale */
+#dialog_employe button {
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 10px;
+    font-weight: 500;
+}
+
+/* Bouton Fermer */
+#dialog_employe button:first-of-type {
+    /* background-color: #6c757d; (Supprimé) */
+    /* color: white; (Supprimé) */
+    border: none;
+}
+
+/* Bouton Modifier Rôle */
+#modify_role_btn {
+    /* background-color: #17a2b8; (Supprimé) */
+    /* color: white; (Supprimé) */
+    border: none;
+}
+
+/* Formulaire de modification de rôle */
+#modify_role {
+    margin-top: 20px;
+    padding: 15px;
+    border: 1px dashed; /* Conserve le style de bordure en pointillé */
+    border-radius: 4px;
+    display: none;
+    flex-direction: column;
+}
+
+#modify_role label {
+    margin-bottom: 10px;
+    display: block;
+}
+
+#modify_role select {
+    padding: 8px;
+    border: 1px solid #ccc; /* Bordure neutre */
+    border-radius: 4px;
+    width: 100%;
+    margin-top: 5px;
+}
+
+/* Bouton Attribuer du formulaire */
+#modify_role .submit_employe.btn {
+    /* background-color: #28a745; (Supprimé) */
+    /* color: white; (Supprimé) */
+    border: none;
+    margin-top: 15px;
+    align-self: flex-start;
+}

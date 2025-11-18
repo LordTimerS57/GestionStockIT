@@ -1,0 +1,187 @@
+/* ------------------------------------ */
+/* 1. STYLES COMMUNS AUX DEUX FORMULAIRES DE FLUX (ENTRÉE & SORTIE) */
+/* ------------------------------------ */
+
+/* Styles génériques pour les deux formulaires */
+#addForm_entree, #addForm_sortie {
+    max-width: 700px;
+    margin: 20px auto;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* Style des Fieldsets */
+.article-info, .expediteur-info, .destinataire-info {
+    border: 1px solid #ccc; /* Bordure neutre */
+    border-radius: 6px;
+    padding: 15px 20px;
+    margin-bottom: 25px;
+    display: block; /* Force l'affichage bloc par défaut pour la verticalité */
+}
+
+/* Style des Légendes de Fieldset */
+#addForm_entree legend, #addForm_sortie legend {
+    font-size: 1.2em;
+    font-weight: bold;
+    padding: 0 10px;
+}
+
+/* Style des Labels */
+#addForm_entree label, #addForm_sortie label {
+    display: block;
+    font-weight: 500;
+    margin-bottom: 5px;
+}
+
+/* Style des champs de saisie (inputs) */
+#addForm_entree input[type="search"], #addForm_sortie input[type="search"],
+#addForm_entree input[type="number"], #addForm_sortie input[type="number"] {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc; /* Bordure neutre */
+    border-radius: 4px;
+    box-sizing: border-box;
+    margin-top: 5px;
+}
+
+/* ------------------------------------ */
+/* 2. CORRECTION FLUX VERTICAL (FIELDSET ARTICLE) */
+/* ------------------------------------ */
+
+/* Conteneur de la recherche d'article (doit rester en block) */
+.article-info > .search-article {
+    position: relative; /* Conteneur de référence pour la modale si on le veut absolute (mais on le laisse en relative) */
+    margin-bottom: 5px;
+    display: block;
+}
+
+/* Conteneur du nombre d'articles à déplacer */
+.article-info > .number-article {
+    display: block;
+    margin-top: 20px; /* Sépare bien le champ quantité du tableau de résultats */
+}
+
+/* --- Styles des Résultats de Recherche (Dropdown / Inline Block Corrigé) --- */
+
+#result_article, #result_expediteur, #result_destinataire {
+    /* POSITION RELATIVE est la correction pour éviter la collision */
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid #ccc; /* Bordure neutre */
+    border-top: none;
+    border-radius: 0 0 4px 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-top: -5px; /* Rapproche du champ de recherche */
+    margin-bottom: 10px;
+}
+
+#result_article table, #result_expediteur table, #result_destinataire table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+/* Boutons de sélection dans les résultats de recherche (Commun) */
+#result_article button, #result_expediteur button, #result_destinataire button {
+    width: 100%;
+    padding: 8px 10px;
+    text-align: left;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.1s;
+}
+
+#result_article button:hover, #result_expediteur button:hover, #result_destinataire button:hover {
+    text-decoration: underline;
+}
+
+/* ------------------------------------ */
+/* 3. STYLES SPECIFIQUES EXPÉDITEUR/DESTINATAIRE */
+/* ------------------------------------ */
+
+/* Styles pour le Bloc Expéditeur du formulaire Entrée (Recherche Fournisseur) */
+#addForm_entree .expediteur-info > .search-fournisseur {
+    margin-top: 10px;
+}
+
+/* Styles pour le Bloc Expéditeur du formulaire Sortie (Affichage Admin/Employé) */
+#addForm_sortie .expediteur-info > div {
+    margin-top: 10px;
+}
+
+#addForm_sortie .expediteur-info > div > button {
+    padding: 8px 15px;
+    font-weight: bold;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+#addForm_sortie .expediteur-info > div > button:hover {
+    opacity: 0.8;
+}
+
+/* Styles pour le Bloc Destinataire du formulaire Sortie (Recherche Employé) */
+#addForm_sortie .destinataire-info > .search-employe {
+    margin-top: 10px;
+}
+
+
+/* ------------------------------------ */
+/* 4. STYLES DES DIALOGUES (MODALES DE DÉTAILS) */
+/* ------------------------------------ */
+
+#dialog_article, #dialog_expediteur, #dialog_destinataire {
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    padding: 25px;
+    width: 90%;
+    max-width: 400px;
+}
+
+#dialog_article fieldset, #dialog_expediteur fieldset, #dialog_destinataire fieldset {
+    border: 1px solid #dee2e6; /* Bordure neutre */
+    border-radius: 6px;
+    padding: 15px;
+    margin-bottom: 15px;
+}
+
+#dialog_article legend, #dialog_expediteur legend, #dialog_destinataire legend {
+    font-weight: bold;
+}
+
+#dialog_article button, #dialog_expediteur button, #dialog_destinataire button {
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    border: none;
+    font-weight: 500;
+    margin-right: 10px;
+}
+
+
+/* ------------------------------------ */
+/* 5. STYLES DES BOUTONS CONFIRMER */
+/* ------------------------------------ */
+
+.submit_entree.btn, .submit_sortie.btn {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    font-size: 1.1em;
+    font-weight: bold;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 30px;
+    transition: opacity 0.2s;
+}
+
+.submit_entree.btn:hover, .submit_sortie.btn:hover {
+    opacity: 0.9;
+}

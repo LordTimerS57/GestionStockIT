@@ -1,0 +1,229 @@
+/*
+  ==============================================
+  1. STYLES DE BASE & TYPOGRAPHIE
+  ==============================================
+*/
+
+body {
+    font-family: 'Arial', sans-serif; /* Utilisation de la police Arial */
+    margin: 0;
+    padding: 0;
+    background-color: #f8f8f8; /* Arrière-plan très clair */
+    color: #333;
+    line-height: 1.6;
+}
+
+header {
+    background-color: #333; /* Noir/Gris très foncé pour l'en-tête */
+    color: white;
+    padding: 25px 40px;
+    text-align: center;
+    box-shadow: 0 4px 5px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    font-size: 1.8em;
+    margin-bottom: 5px;
+}
+
+h2 {
+    color: #444; /* Gris foncé pour les titres de section */
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 10px;
+    margin-top: 0;
+}
+
+/*
+  ==============================================
+  2. MISE EN PAGE PRINCIPALE (DEUX COLONNES - RATIO 2:1)
+  ==============================================
+*/
+
+main {
+    max-width: 1200px; /* Largeur maximale pour le contenu */
+    margin: 40px auto;
+    padding: 0 20px;
+
+    /* Activer Flexbox pour la mise en page en deux colonnes */
+    display: flex;
+    gap: 30px; /* Espace entre les deux sections */
+    align-items: flex-start; /* Aligner les éléments en haut */
+}
+
+/* Règle spécifique pour la section des Fonctionnalités (première section) */
+main section:first-child {
+    flex: 2; /* Facteur de croissance de 2 (prend deux tiers de l'espace) */
+
+    background-color: white;
+    padding: 30px;
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    margin-bottom: 0;
+}
+
+/* Règle spécifique pour la section des Actions (deuxième section) */
+main section:last-child {
+    flex: 1; /* Facteur de croissance de 1 (prend un tiers de l'espace) */
+
+    background-color: white;
+    padding: 30px;
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    margin-bottom: 0;
+}
+
+/*
+  ==============================================
+  3. LISTE DES FONCTIONNALITÉS (UL/LI)
+  ==============================================
+*/
+
+section:first-child ul {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    /* Une seule colonne pour les éléments de la liste dans la section 2:1 */
+    grid-template-columns: 1fr;
+    gap: 15px;
+    margin-top: 25px;
+}
+
+section ul li {
+    background-color: #f0f0f0; /* Gris clair pour chaque fonctionnalité */
+    padding: 15px;
+    border-left: 4px solid #777; /* Bordure d'accentuation grise */
+    border-radius: 4px;
+    font-size: 1.05em;
+    transition: background-color 0.2s;
+}
+
+section ul li:hover {
+    background-color: #e0e0e0; /* Assombrissement léger au survol */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/*
+  ==============================================
+  4. STYLES DES DÉTAILS (ACCORDÉON)
+  ==============================================
+*/
+
+summary {
+    font-weight: bold;
+    cursor: pointer;
+    color: #333;
+    padding: 5px 0;
+    list-style: none;
+}
+
+summary::before {
+    content: "▶";
+    display: inline-block;
+    width: 1em;
+    margin-right: 0.5em;
+    color: #555; /* Couleur de la flèche */
+    transition: transform 0.2s;
+}
+
+details[open] summary::before {
+    content: "▼";
+}
+
+details p {
+    margin-left: 20px;
+    padding: 5px 0;
+    font-size: 0.95em;
+    border-left: 2px dashed #ccc;
+    padding-left: 10px;
+}
+
+/*
+  ==============================================
+  5. STYLES DES ACTIONS (BOUTONS)
+  ==============================================
+*/
+
+.actions {
+    text-align: center;
+    margin-top: 40px;
+    display: flex;
+    flex-direction: column; /* Aligner les boutons verticalement */
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.actions a {
+    display: block; /* S'assurer que les liens prennent toute la largeur disponible */
+    text-decoration: none;
+    padding: 12px 25px;
+    margin: 0;
+    border-radius: 4px;
+    font-weight: bold;
+    transition: background-color 0.3s, opacity 0.3s;
+}
+
+.actions a:first-child { /* Se connecter (Action principale) */
+    background-color: #555; /* Gris foncé */
+    color: white;
+    border: 1px solid #555;
+}
+
+.actions a:last-child { /* Créer un compte */
+    background-color: white;
+    color: #555;
+    border: 1px solid #555;
+}
+
+.actions a:hover {
+    background-color: #444;
+    color: white;
+}
+
+/*
+  ==============================================
+  6. PIED DE PAGE (FOOTER)
+  ==============================================
+*/
+
+footer {
+    background-color: #333;
+    color: #ccc;
+    padding: 10px;
+    text-align: center;
+    font-size: 0.8em;
+}
+
+/*
+  ==============================================
+  7. MEDIA QUERIES (ADAPTATION MOBILE)
+  ==============================================
+*/
+
+@media (max-width: 900px) {
+    main {
+        /* Revenir à une seule colonne (empilement) sur mobile/tablette */
+        flex-direction: column;
+    }
+
+    main section {
+        /* Ajouter de la marge en bas pour séparer les sections empilées */
+        margin-bottom: 20px;
+    }
+
+    /* Supprimer les règles spécifiques de flex pour éviter les problèmes */
+    main section:first-child,
+    main section:last-child {
+        flex: auto;
+    }
+
+    .actions {
+        flex-direction: row; /* Repasser les boutons en ligne sur les petits écrans */
+        justify-content: space-around;
+        gap: 10px;
+    }
+
+    .actions a {
+        display: inline-block;
+        flex: 1; /* Distribuer l'espace équitablement entre les deux boutons */
+    }
+}

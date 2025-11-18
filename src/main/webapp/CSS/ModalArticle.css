@@ -1,0 +1,91 @@
+/* ------------------------------------ */
+/* Styles de la Modale/Formulaire de Création/Modification d'Article */
+/* ------------------------------------ */
+
+/* Style du formulaire principal */
+#addForm_article, #modifyForm_article {
+    max-width: 600px;
+    margin: 30px auto;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* Style des Fieldsets */
+#addForm_article fieldset, #modifyForm_article fieldset {
+    border: 1px solid #ccc; /* Bordure neutre */
+    border-radius: 6px;
+    padding: 20px;
+    margin-bottom: 30px;
+}
+
+/* Style de la Légende de Fieldset */
+#addForm_article legend, #modifyForm_article legend {
+    font-size: 1.3em;
+    font-weight: bold;
+    padding: 0 10px;
+}
+
+/* Conteneur pour les labels (pour l'organisation interne des infos de base) */
+#addForm_article fieldset > div,
+#modifyForm_article fieldset > div {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+/* Style des Labels */
+#addForm_article label, #modifyForm_article label {
+    display: block;
+    font-weight: 500;
+}
+
+/* Style des champs de saisie (input, textarea, et select) */
+#addForm_article input[type="text"],
+#addForm_article textarea,
+#addForm_article select,
+#modifyForm_article input[type="text"],
+#modifyForm_article textarea,
+#modifyForm_article select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc; /* Bordure neutre */
+    border-radius: 4px;
+    box-sizing: border-box;
+    margin-top: 5px;
+    font-size: 1em;
+}
+
+#addForm_article textarea, #modifyForm_article textarea {
+    resize: vertical; /* Permet uniquement le redimensionnement vertical */
+    min-height: 100px;
+    font-family: 'Arial', sans-serif;
+}
+
+/* Style pour le lien de création de type si aucun type n'est trouvé */
+#addForm_article fieldset a {
+    /* Suppression des couleurs: le navigateur ou Dashboard.css devra les fournir */
+    text-decoration: none;
+    font-weight: bold;
+    display: block;
+    margin-top: 10px;
+    padding: 5px 0;
+}
+
+/* Style du Bouton Confirmer */
+.submit_article.btn {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    font-size: 1.1em;
+    font-weight: bold;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.submit_article.btn:hover {
+    opacity: 0.9;
+}

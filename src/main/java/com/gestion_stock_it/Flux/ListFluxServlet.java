@@ -1,0 +1,72 @@
+package com.gestion_stock_it.Flux;
+
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
+import java.io.IOException;
+import java.util.List;
+
+@WebServlet({"/Mouvements/Entrees", "/Mouvements/Sorties"})
+public class ListFluxServlet extends HttpServlet {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String path = request.getServletPath();
+        String nomArticle = request.getParameter("article");
+        String dateFlux = request.getParameter("date_flux");
+        String dateParams = request.getParameter("date_params");
+
+        FluxDataController dao = new FluxDataController();
+
+        switch (path){
+            case "/Mouvements/Entrees": {
+                List<Entree> entrees = null;
+                try {
+                    entrees = dao.getEntreeList(null, nomArticle, null, dateFlux, dateParams);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+                if(entrees.isEmpty() || (nomArticle == null && dateFlux == null && dateParams == null)){
+                    request.setAttribute("rapport_button", false);
+                }
+                else{
+                    request.setAttribute("rapport_button", true);
+                }
+                request.setAttribute("entrees", entrees);
+                request.setAttribute("content", "/Flux/AcceuilEntree.jsp");
+                request.getRequestDispatcher("/Dashboard.jsp").forward(request, response);
+                break;
+            }
+            case "/Mouvements/Sorties": {
+                List<Sortie> sorties = null;
+                try {
+                    sorties = dao.getSortieList(null, nomArticle, null, null, dateFlux, dateParams);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+
+                if(sorties.isEmpty() || (nomArticle == null && dateFlux == null && dateParams == null)){
+                    request.setAttribute("rapport_button", false);
+                }
+                else {
+                    assert nomArticle != null;
+                    if (nomArticle.trim().isEmpty() && dateFlux.trim().isEmpty() && dateParams.trim().isEmpty()) {
+                            request.setAttribute("rapport_button", false);
+                    }
+                    else {
+                        request.setAttribute("rapport_button", true);
+                    }
+                }
+                request.setAttribute("sorties", sorties);
+                request.setAttribute("content", "/Flux/AcceuilSortie.jsp");
+                request.getRequestDispatcher("/Dashboard.jsp").forward(request, response);
+                break;
+            }
+            default: {
+                break;
+            }
+        }
+
+    }
+}

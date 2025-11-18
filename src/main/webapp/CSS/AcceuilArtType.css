@@ -1,0 +1,271 @@
+/* ------------------------------------ */
+/* Styles de la Page Articles-Types (surcharge de .content) */
+/* ------------------------------------ */
+
+/* 1. Organisation du Conteneur Principal (.article-type-section) */
+.article-type-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+    padding: 40px;
+    margin: 20px auto;
+    max-width: 900px;
+    /* background-color: white; (Supprimé) */
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* 2. Style des Blocs d'Actions (Création vs. Consultation) */
+
+/* Style général des deux conteneurs d'options */
+.article-type-section > div {
+    display: flex;
+    padding: 20px;
+    border-radius: 6px;
+    gap: 30px;
+    width: 100%;
+    box-sizing: border-box;
+    justify-content: center;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Bloc d'actions Standard (Consultation) */
+.content-article-type {
+    /* background-color: #f8f9fa; (Supprimé) */
+    border: 1px solid #ccc; /* Bordure neutre */
+}
+
+/* Style général des liens d'action */
+.article-type-section a {
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-weight: bold;
+    transition: background-color 0.3s, color 0.3s;
+    text-align: center;
+    min-width: 150px;
+}
+
+
+/* ------------------------------------ */
+/*  Page de Consultation des Articles (.content-article) */
+/* ------------------------------------ */
+
+.content-article {
+    padding: 20px;
+}
+
+/* Conteneur de recherche */
+.content-article .search {
+    /* background-color: white; (Supprimé) */
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    padding: 20px;
+    margin-bottom: 30px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    align-items: flex-start;
+}
+
+/* Style des champs de recherche */
+.content-article .search label {
+    flex-grow: 1;
+}
+
+.content-article .search input {
+    padding: 8px 10px;
+    border: 1px solid #ccc; /* Bordure neutre */
+    border-radius: 4px;
+    font-size: 1em;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Table de Résultats (Utilisation de .content pour augmenter la spécificité si nécessaire) */
+.content #result_article {
+    /* background-color: white; (Supprimé) */
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    padding: 10px;
+    overflow-x: auto;
+}
+
+.content .content-article table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 800px;
+}
+
+/* En-tête du tableau (th) */
+.content .content-article table th {
+    /* background-color: #007bff; (Supprimé) */
+    /* color: white; (Supprimé) */
+    padding: 12px 15px;
+    text-align: left;
+    font-weight: 600;
+    border: none;
+}
+
+/* Lignes alternées et cellules */
+.content .content-article table tr:nth-child(even) {
+    /* background-color: #f9f9f9; (Supprimé) */
+}
+
+.content .content-article table td {
+    padding: 10px 15px;
+    border-bottom: 1px solid #eee; /* Bordure neutre */
+    vertical-align: middle;
+}
+
+/* Bouton pour afficher les détails du Type */
+.content .content-article table td button {
+    background: none;
+    border: none;
+    /* color: #007bff; (Supprimé) */
+    cursor: pointer;
+    text-align: left;
+    padding: 0;
+    font-weight: 500;
+}
+
+/* Boutons d'Action (Modifier/Supprimer) */
+.content .content-article table td div button {
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9em;
+    margin-left: 5px;
+    border: none;
+}
+
+/* Bouton Modifier (Premier bouton) */
+.content .content-article table td div button:first-child {
+    /* background-color: #ffc107; (Supprimé) */
+    /* color: #333; (Supprimé) */
+}
+
+/* Bouton Supprimer (Deuxième bouton, si présent) */
+.content .content-article table td div button:last-child {
+    /* background-color: #dc3545; (Supprimé) */
+    /* color: white; (Supprimé) */
+}
+
+/* Style de la Modale (Détails du Type) */
+#dialog_type_article {
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    padding: 30px;
+    max-width: 500px;
+    width: 90%;
+    margin: auto;
+}
+
+#dialog_type_article legend {
+    font-size: 1.4em;
+    /* color: #007bff; (Supprimé) */
+    font-weight: bold;
+}
+
+#dialog_type_article fieldset {
+    border: 1px solid #dee2e6; /* Bordure neutre */
+    border-radius: 6px;
+    padding: 15px;
+    margin-bottom: 20px;
+}
+
+#dialog_type_article button {
+    /* background-color: #6c757d; (Supprimé) */
+    /* color: white; (Supprimé) */
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    border: none;
+    font-weight: 500;
+}
+
+/* ------------------------------------ */
+/* Page de Consultation des Types d'Articles (.content-type) */
+/* ------------------------------------ */
+
+.content-type {
+    padding: 20px;
+}
+
+/* Conteneur de recherche */
+.content-type label {
+    display: block; /* Prend toute la largeur pour bien placer l'input */
+    margin-bottom: 25px;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.content-type label input {
+    padding: 8px 10px;
+    border: 1px solid #ccc; /* Bordure neutre */
+    border-radius: 4px;
+    font-size: 1em;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Table de Résultats (Utilisation de .content pour augmenter la spécificité si nécessaire) */
+.content #result_type {
+    /* background-color: white; (Supprimé) */
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    padding: 10px;
+    overflow-x: auto;
+}
+
+.content .content-type table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 600px;
+}
+
+/* En-tête du tableau (th) */
+.content .content-type table th {
+    /* background-color: #007bff; (Supprimé) */
+    /* color: white; (Supprimé) */
+    padding: 12px 15px;
+    text-align: left;
+    font-weight: 600;
+    border: none;
+}
+
+/* Lignes alternées et cellules */
+.content .content-type table tr:nth-child(even) {
+    /* background-color: #f9f9f9; (Supprimé) */
+}
+
+.content .content-type table td {
+    padding: 10px 15px;
+    border-bottom: 1px solid #eee; /* Bordure neutre */
+    vertical-align: middle;
+}
+
+/* Boutons d'Action (Modifier/Supprimer) */
+.content .content-type table td div button {
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9em;
+    margin-left: 5px;
+    border: none;
+}
+
+/* Bouton Modifier (Premier bouton) */
+.content .content-type table td div button:first-child {
+    /* background-color: #ffc107; (Supprimé) */
+    /* color: #333; (Supprimé) */
+}
+
+/* Bouton Supprimer (Deuxième bouton, si présent) */
+.content .content-type table td div button:last-child {
+    /* background-color: #dc3545; (Supprimé) */
+    /* color: white; (Supprimé) */
+}
