@@ -34,22 +34,28 @@ public class CohereClient {
         return history;
     }
 
-    /** ÉTAPE 1 : Traduit la question de l'utilisateur en une requête SQL. */
+    /**
+     * ÉTAPE 1 : Traduit la question de l'utilisateur en une requête SQL.
+     */
     public String generateSql(String question, int role) throws Exception {
-        if(role != 1 && role != 2){
-            if(!question.toLowerCase().matches(".*(sorti|entré).*")){
-                if(!question.toLowerCase().matches("(?i).*(employ[ée]|employe).*(nom|prénom|adresse|email|téléphone).*|.*(nom|prénom|adresse|email|téléphone).*(employ[ée]|employe).*")){
+        if (role != 1 && role != 2) {
+            if (!question.toLowerCase().matches(".*(sorti|entré).*")) {
+                if (!question.toLowerCase().matches("(?i).*(employ[ée]|employe).*(nom|prénom|adresse|email|téléphone).*|.*(nom|prénom|adresse|email|téléphone).*(employ[ée]|employe).*")) {
                     throw new ErrorConfirmException("Vous ne pouvez questionner que les informations des noms, prénoms, adresse email et des numéros de télephones des employés. ");
                 }
             }
+        } else {
+            if (question.toLowerCase().matches(".*date.*(naissance|modification|création).*"))
+                throw new ErrorConfirmException("Je suis dans l'impossibilité de divulger ses informations");
+            if (question.toLowerCase().matches(".*mot de passe.*"))
+                throw new ErrorConfirmException("Je suis dans l'impossibilité de divulger le mot de passe.");
+            if (question.toLowerCase().matches(".*ajout.*"))
+                throw new ErrorConfirmException("Impossible de faire des requêtes de type \" INSERT \".");
+            if (question.toLowerCase().matches(".*modifi.*"))
+                throw new ErrorConfirmException("Impossible de faire des requêtes de type \" UPDATE \".");
         }
-        else{
-            if(question.toLowerCase().matches(".*date.*(naissance|modification|création).*")) throw new ErrorConfirmException("Je suis dans l'impossibilité de divulger ses informations");
-            if(question.toLowerCase().matches(".*mot de passe.*")) throw new ErrorConfirmException("Je suis dans l'impossibilité de divulger le mot de passe.");
-            if(question.toLowerCase().matches(".*ajout.*")) throw new ErrorConfirmException("Impossible de faire des requêtes de type \" INSERT \".");
-            if(question.toLowerCase().matches(".*modifi.*")) throw new ErrorConfirmException("Impossible de faire des requêtes de type \" UPDATE \".");
-        }
-        if(question.toLowerCase().matches(".*(mode d'emploi|utilis(ation|er)|manuel).*")) specificQuestion(question, role);
+        if (question.toLowerCase().matches(".*(mode d'emploi|utilis(ation|er)|manuel).*"))
+            specificQuestion(question, role);
 
         List<Message> currentHistory = new ArrayList<>(baseHistory);
 
@@ -65,7 +71,9 @@ public class CohereClient {
         return response.getText().trim();
     }
 
-    /** ÉTAPE 3 : Reformule les résultats bruts (JSON) en une réponse conversationnelle. */
+    /**
+     * ÉTAPE 3 : Reformule les résultats bruts (JSON) en une réponse conversationnelle.
+     */
     public String reformulateResponse(String userQuestion, String jsonResults) throws Exception {
 
         String systemInstruction =
@@ -90,19 +98,20 @@ public class CohereClient {
     }
 
     public void specificQuestion(String question, int role) throws Exception {
-        if(question.toLowerCase().matches(".*(chat)?.*")){
-            throw new ErrorConfirmException("L'utilisateur peut poser des questions au chat suivant tous les archétypes: articles, employé, types d'articles, entrées et sorties et fournisseurs");
-        } else if(question.toLowerCase().matches(".*stock.*")){
-            throw new ErrorConfirmException("L'utilisateur peut poser des questions la nature du stock (approfondi) d'un ou plusieurs articles au chat");
-        } else if(question.toLowerCase().matches(".*employés.*")){
-            throw new ErrorConfirmException("L'utilisateur peut poser des questions sur les informations des employés (sauf le mot de passe"+ ( (role > 2) ? " et les dates de modification, de création pour les employés simples": "") +") au chat");
-        } else if(question.toLowerCase().matches(".*articles|types.*")){
-            throw new ErrorConfirmException("L'utilisateur peut poser des questions sur les articles, types (description, nom, quantité en stock) au chat");
-        } else if(question.toLowerCase().matches(".*entrée|sortie.*")){
-            throw new ErrorConfirmException("L'utilisateur peut poser des questions sur les informations des entrées et/ou sorties au chat");
-        } else if(question.toLowerCase().matches(".*fournisseur.*")){
-            throw new ErrorConfirmException("L'utilisateur peut poser des questions sur les informations des fournisseurs au chat");
+        if (question.toLowerCase().matches(".*(chat)?.*")) {
+            if (question.toLowerCase().matches(".*stock.*")) {
+                throw new ErrorConfirmException("L'utilisateur peut poser des questions la nature du stock (approfondi) d'un ou plusieurs articles au chat");
+            } else if (question.toLowerCase().matches(".*employés.*")) {
+                throw new ErrorConfirmException("L'utilisateur peut poser des questions sur les informations des employés (sauf le mot de passe" + ((role > 2) ? " et les dates de modification, de création pour les employés simples" : "") + ") au chat");
+            } else if (question.toLowerCase().matches(".*articles|types.*")) {
+                throw new ErrorConfirmException("L'utilisateur peut poser des questions sur les articles, types (description, nom, quantité en stock) au chat");
+            } else if (question.toLowerCase().matches(".*entrée|sortie.*")) {
+                throw new ErrorConfirmException("L'utilisateur peut poser des questions sur les informations des entrées et/ou sorties au chat");
+            } else if (question.toLowerCase().matches(".*fournisseur.*")) {
+                throw new ErrorConfirmException("L'utilisateur peut poser des questions sur les informations des fournisseurs au chat");
+            } else {
+                throw new ErrorConfirmException("L'utilisateur peut poser des questions au chat suivant tous les archétypes: articles, employé, types d'articles, entrées et sorties et fournisseurs");
+            }
         }
     }
-
 }
