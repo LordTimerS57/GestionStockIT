@@ -50,7 +50,7 @@
 					<% } else { %>
 					<div>
 						<p>Aucun type trouvé</p>
-						<a href="<%=request.getContextPath()%>/Articles-Types/Articles-Types/Types/Creation">Veuiller créer un nouveau type d'article</a>
+						<a href="<%=request.getContextPath()%>/Articles-Types/Articles-Types/Articles/Creation">Veuiller créer un nouveau type d'article</a>
 					</div>
 					<% } %>
 					<span id="error_type_article"></span>

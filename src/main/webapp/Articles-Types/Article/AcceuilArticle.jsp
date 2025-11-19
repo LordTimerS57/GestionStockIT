@@ -14,7 +14,7 @@
 <section class="content-article">
   <% if(role.equals("Administrateur") || role.equals("Super Administrateur")) { %>
   <div class="content-article-create">
-    <a href="<%= request.getContextPath() %>/Articles-Types/Articles-Types/Articles/Creation">Un nouvel article</a>
+    <a href="<%= request.getContextPath() %>/Articles-Types/Articles/Creation">Un nouvel article</a>
   </div>
   <% } %>
   <div class="search">
