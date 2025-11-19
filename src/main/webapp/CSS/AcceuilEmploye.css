@@ -73,6 +73,7 @@
 #result_employe_connected, #result_employe_not_connected {
     /* Supprimez le margin-top si vous utilisez la caption qui a déjà un padding top */
     margin-bottom: 40px;
+    border-radius: 4px;
 }
 
 

@@ -164,7 +164,7 @@
 
 .content #result_entree, .content #result_sortie {
     background-color: var(--color-background-white);
-    border-radius: 8px;
+    border-radius: 4px;
     box-shadow: var(--shadow-light);
     padding: 0;
     overflow-x: auto;

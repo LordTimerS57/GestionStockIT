@@ -45,6 +45,7 @@
         <th>Type</th>
         <th>Quantité en stock</th>
         <th>Description</th>
+        <th></th>
       <tr>
       </thead>
       <tbody>
