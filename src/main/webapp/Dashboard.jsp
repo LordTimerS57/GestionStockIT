@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="<%= request.getContextPath() %>/CSS/AcceuilEmploye.css?v=<%=System.currentTimeMillis()%>" type="text/css"/>
     <link rel="stylesheet" href="<%= request.getContextPath() %>/CSS/AcceuilFlux.css?v=<%=System.currentTimeMillis()%>" type="text/css"/>
     <link rel="stylesheet" href="<%= request.getContextPath() %>/CSS/AcceuilFournisseur.css?v=<%=System.currentTimeMillis()%>" type="text/css"/>
+    <link rel="stylesheet" href="<%= request.getContextPath() %>/CSS/ChatBot.css?v=<%=System.currentTimeMillis()%>" type="text/css"/>
     <link rel="stylesheet" href="<%= request.getContextPath() %>/CSS/Dashboard.css?v=<%=System.currentTimeMillis()%>" type="text/css"/>
     <link rel="stylesheet" href="<%= request.getContextPath() %>/CSS/Profile.css?v=<%=System.currentTimeMillis()%>" type="text/css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLMD/CDyS38ZiuI0gGllKwZtQc0/J37I/YmK0rD+M4P/5a+2sD08i8+D+d+g+" crossorigin="anonymous" referrerpolicy="no-referrer" />

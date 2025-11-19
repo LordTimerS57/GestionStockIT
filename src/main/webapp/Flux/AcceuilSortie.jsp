@@ -21,53 +21,46 @@
     </div>
     <% } %>
     <div class="search">
-        <label>
-            Chercher la date de déplacement suivant
-            <select name="date" onchange="updateSearchFlux()">
-                <option value="date">la date</option>
-                <option value="mois">le mois et l'année seulement</option>
-            </select>
-        </label>
-        <div id="date_search">
-            <div id="date_search_1">
-                <label>
-                    <select name="precision_date" id="precision_date">
-                        <option value="">...</option>
-                        <option value="before">Avant</option>
-                        <option value="after">Après</option>
-                        <option value="equals">Durant</option>
-                    </select>
-                    le
-                    <input type="date" name="date_flux" id="date_flux" oninput="searchFlux('Sortie')">
-                </label>
-            </div>
-            <div id="date_search_2" style="display: none">
-                <!--
+        <div id="date_param_search_container">
+
+            <label id="date_type_select_label">
+                Chercher la date de déplacement suivant
+                <select name="date" onchange="updateSearchFlux()">
+                    <option value="date">la date</option>
+                    <option value="mois">le mois et l'année seulement</option>
+                </select>
+            </label>
+
+            <div id="date_input_fields">
+
+                <div id="date_search_1">
                     <label>
-                        <input type="month" name="date_flux_1" id="month_date_flux" oninput="searchFlux()">
+                        <select name="precision_date" id="precision_date">
+                            <option value="">...</option>
+                            <option value="before">Avant</option>
+                            <option value="after">Après</option>
+                            <option value="equals">Durant</option>
+                        </select>
+                        le
+                        <input type="date" name="date_flux" id="date_flux" oninput="searchFlux('Sortie')">
                     </label>
-                -->
-                <label>
-                    <select name="month_date_flux_1" id="month_flux" onchange="searchFlux('Sortie')">
-                        <option value="01">Janvier</option>
-                        <option value="02">Février</option>
-                        <option value="03">Mars</option>
-                        <option value="04">Avril</option>
-                        <option value="05">Mai</option>
-                        <option value="06">Juin</option>
-                        <option value="07">Juillet</option>
-                        <option value="08">Août</option>
-                        <option value="09">Septembre</option>
-                        <option value="10">Octobre</option>
-                        <option value="11">Novembre</option>
-                        <option value="12">Décembre</option>
-                    </select> - <input type="search" name="month_date_flux_2" id="year_flux" pattern="^[0-9]+$" oninput="searchFlux('Sortie')">
-                </label>
+                </div>
+
+                <div id="date_search_2" style="display: none">
+                    <label>
+                        <select name="month_date_flux_1" id="month_flux" onchange="searchFlux('Sortie')">
+                            <option value="01">Janvier</option>
+                            <option value="12">Décembre</option>
+                        </select> -
+                        <input type="search" name="month_date_flux_2" id="year_flux" pattern="^[0-9]+$" oninput="searchFlux('Sortie')">
+                    </label>
+                </div>
             </div>
         </div>
+
         <div id="article_search">
             <label>
-                <input type="search" name="nom_article" id="nom_article" placeholder="Chercher l'article que vous souhaitez chercher ..." oninput="searchFlux('Sortie')">
+                <input type="search" name="nom_article" id="nom_article" placeholder="Rechercher l'article souhaité ..." oninput="searchFlux('Sortie')">
             </label>
         </div>
     </div>
@@ -157,5 +150,8 @@
         <% } else { %>
         <p> Aucune sortie d'article trouvée</p>
         <% } %>
+    </div>
+    <div>
+        <a href="<%=request.getContextPath()%>/Mouvements/Entrees">Voir les entrées</a>
     </div>
 </section>

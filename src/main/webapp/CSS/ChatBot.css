@@ -1,0 +1,32 @@
+.content .chatbot-content form #message {
+    height: 300px;
+    border: 1px solid #ccc;
+    overflow-y: scroll;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+.content .chatbot-content form #message .user-msg {
+    text-align: right;
+    color: #007bff; /* Bleu Bootstrap */
+    background-color: #e9f0f9;
+    padding: 5px;
+    margin: 5px 0;
+    border-radius: 10px 10px 0 10px;
+    max-width: 80%;
+    margin-left: auto;
+}
+.content .chatbot-content fieldset #message .bot-msg {
+    text-align: left;
+    color: #28a745; /* Vert Success */
+    background-color: #e6f7e8;
+    padding: 5px;
+    margin: 5px 0;
+    border-radius: 10px 10px 10px 0;
+    max-width: 80%;
+    margin-right: auto;
+}
+.content .chatbot-content fieldset {
+    border: 1px solid #dee2e6;
+    padding: 15px;
+    border-radius: 5px;
+}

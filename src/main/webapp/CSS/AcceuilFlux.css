@@ -1,8 +1,22 @@
+/* --- Palette Neutre (Variables CSS) --- */
+:root {
+    --color-text-dark: #333;           /* Texte sombre */
+    --color-text-light: #fff;          /* Texte clair (utilisé uniquement sur les fonds foncés) */
+    --color-background-light: #f8f9fa; /* Fond léger des blocs (Gris très clair) */
+    --color-background-white: #fff;    /* Blanc pur */
+    --color-border-light: #eee;        /* Bordure très légère */
+    --color-border: #ccc;              /* Bordure moyenne */
+    --color-accent: #6c757d;           /* Gris foncé pour les accents et le hover */
+    --color-table-header: #495057;     /* Gris foncé pour l'en-tête de tableau */
+    --color-danger: #dc3545;           /* Rouge pour l'action "Se déconnecter" (non neutre, conservé pour l'action de sécurité) */
+    --shadow-light: 0 1px 3px rgba(0, 0, 0, 0.05);
+    --shadow-medium: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
 /* ------------------------------------ */
 /* 1. Page d'Accueil des Mouvements (Accueil Flux) */
 /* ------------------------------------ */
 
-/* Organisation du Conteneur Principal (.flux-section) */
 .flux-section {
     display: flex;
     flex-direction: column;
@@ -11,12 +25,11 @@
     padding: 40px;
     margin: 20px auto;
     max-width: 900px;
-    /* background-color: white; (Supprimé) */
+    background-color: var(--color-background-white);
     border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    box-shadow: var(--shadow-medium);
 }
 
-/* Style général des Blocs d'actions */
 .flux-section div {
     display: flex;
     padding: 20px;
@@ -25,88 +38,135 @@
     width: 100%;
     box-sizing: border-box;
     justify-content: center;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--shadow-light);
 }
 
-/* Bloc d'actions Administrateur (Création) */
 .content-flux-create {
-    /* background-color: #fff3cd; (Supprimé) */
-    border: 1px solid; /* Conserve le trait */
+    background-color: var(--color-background-light);
+    border: 1px solid var(--color-border);
 }
 
-/* Bloc d'actions Standard (Consultation) */
 .content-flux {
-    /* background-color: #f8f9fa; (Supprimé) */
-    border: 1px solid #ccc; /* Bordure neutre */
+    background-color: var(--color-background-white);
+    border: 1px solid var(--color-border);
 }
 
-/* Styles des Liens d'action */
 .flux-section a {
     text-decoration: none;
     padding: 12px 25px;
     border-radius: 4px;
     font-weight: bold;
-    transition: background-color 0.3s, color 0.3s;
+    transition: background-color 0.3s, opacity 0.3s;
     text-align: center;
     min-width: 180px;
+    box-shadow: var(--shadow-light);
 }
 
+/* Styles pour les boutons d'action (Gris) */
 .content-flux-create a {
-    /* background-color: #ffc107; (Supprimé) */
-    /* color: #333; (Supprimé) */
+    background-color: var(--color-border);
+    color: var(--color-text-dark);
 }
 
 .content-flux-create a:hover {
-    /* background-color: #e0a800; (Supprimé) */
+    background-color: var(--color-accent);
+    color: var(--color-text-light);
+    opacity: 1;
 }
 
 .content-flux a {
-    /* background-color: #007bff; (Supprimé) */
-    /* color: white; (Supprimé) */
+    background-color: var(--color-accent);
+    color: var(--color-text-light);
 }
 
 .content-flux a:hover {
-    /* background-color: #0056b3; (Supprimé) */
+    background-color: var(--color-table-header);
+    opacity: 1;
 }
 
 /* ------------------------------------ */
-/* 2. Page de Détails des Flux (Entrées et Sorties) */
+/* 2. Organisation et Style des Barres de Recherche (.search) */
 /* ------------------------------------ */
 
-/* Cible les deux conteneurs de page de détail (SPÉCIFICITÉ AUGMENTÉE avec .content) */
 .content .content-flux-in, .content .content-flux-out {
     padding: 20px;
 }
 
-/* Conteneur de recherche principal */
+/* Conteneur de recherche principal (Organisation Flexbox) */
 .content .content-flux-in .search, .content .content-flux-out .search {
-    /* background-color: white; (Supprimé) */
+    background-color: var(--color-background-light);
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    box-shadow: var(--shadow-light);
     padding: 20px;
     margin-bottom: 30px;
     display: flex;
     flex-wrap: wrap;
-    gap: 20px;
-    align-items: flex-start;
+    gap: 15px 20px;
+    align-items: center;
 }
 
-/* Style des champs de recherche */
+/* Organisation du conteneur des paramètres de date */
+#date_param_search_container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Organisation du sélecteur de type de date (label) */
+#date_type_select_label {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    font-weight: 600;
+}
+
+/* Alignement des champs de date/mois (Avant/Après/Durant, le, input) */
+#date_input_fields > div {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Style des champs de recherche (Inputs/Selects) */
 .content .content-flux-in .search select, .content .content-flux-out .search select,
 .content .content-flux-in .search input, .content .content-flux-out .search input {
     padding: 8px 10px;
-    border: 1px solid #ccc; /* Bordure neutre */
+    border: 1px solid var(--color-border);
     border-radius: 4px;
     font-size: 1em;
-    margin-top: 5px;
+    transition: border-color 0.3s;
 }
 
-/* Table de Résultats (SPÉCIFICITÉ AUGMENTÉE) */
+.content .content-flux-in .search input:focus,
+.content .content-flux-out .search input:focus,
+.content .content-flux-in .search select:focus,
+.content .content-flux-out .search select:focus {
+    border-color: var(--color-accent);
+    outline: none;
+}
+
+/* Style spécifique au champ de recherche d'article */
+#article_search {
+    display: flex;
+    flex-grow: 1;
+    min-width: 250px;
+    align-items: center;
+}
+#nom_article {
+    min-width: 250px;
+    box-sizing: border-box;
+}
+
+/* ------------------------------------ */
+/* 3. Style de la Table de Résultats */
+/* ------------------------------------ */
+
 .content #result_entree, .content #result_sortie {
-    /* background-color: white; (Supprimé) */
+    background-color: var(--color-background-white);
     border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-    padding: 10px;
+    box-shadow: var(--shadow-light);
+    padding: 0;
     overflow-x: auto;
 }
 
@@ -116,35 +176,48 @@
     min-width: 800px;
 }
 
-/* En-tête du tableau (th) */
 .content .content-flux-in table th, .content .content-flux-out table th {
-    /* background-color: #007bff; (Supprimé) */
-    /* color: white; (Supprimé) */
+    background-color: var(--color-table-header);
+    color: var(--color-text-light);
     padding: 12px 15px;
     text-align: left;
     font-weight: 600;
     border: none;
 }
 
-/* Lignes alternées et cellules */
 .content .content-flux-in table tr:nth-child(even), .content .content-flux-out table tr:nth-child(even) {
-    /* background-color: #f9f9f9; (Supprimé) */
+    background-color: var(--color-background-light);
+}
+.content .content-flux-in table tr:hover, .content .content-flux-out table tr:hover {
+    background-color: #e6f7ff; /* Bleu très léger pour l'effet de survol */
+    cursor: pointer;
 }
 
 .content .content-flux-in table td, .content .content-flux-out table td {
     padding: 10px 15px;
-    border-bottom: 1px solid #eee; /* Bordure neutre */
+    border-bottom: 1px solid var(--color-border-light);
     vertical-align: middle;
 }
 
-/* Style des boutons Expéditeur/Destinataire */
+/* Colonne Date de déplacement */
+.content table td:nth-child(4) {
+    min-width: 180px;
+    font-size: 0.9em;
+}
+
 .content .content-flux-out td button {
     background: none;
     border: none;
-    /* color: #007bff; (Supprimé) */
+    color: var(--color-accent);
     cursor: pointer;
     text-align: left;
     padding: 0;
+    transition: color 0.2s;
+}
+
+.content .content-flux-out td button:hover {
+    text-decoration: underline;
+    color: var(--color-table-header);
 }
 
 /* Bouton Rapport Excel */
@@ -154,11 +227,17 @@
 }
 
 .content #excel button {
-    /* background-color: #28a745; (Supprimé) */
-    /* color: white; (Supprimé) */
+    background-color: var(--color-accent);
+    color: var(--color-text-light);
     border: none;
     padding: 10px 20px;
     border-radius: 4px;
     cursor: pointer;
     font-weight: bold;
+    transition: background-color 0.3s;
+    box-shadow: var(--shadow-light);
+}
+
+.content #excel button:hover {
+    background-color: var(--color-table-header);
 }

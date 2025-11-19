@@ -204,37 +204,10 @@ function searchType() {
 function searchFlux(type) {
     let dateFlux = "", param = "", nomArticle = "";
 
-    /*
-        const selectType = document.querySelector('select[name="group"]').value;
-
-        const tableTous = document.getElementById("type_tous");
-        const tableEntree = document.getElementById("type_entree");
-        const tableSortie = document.getElementById("type_sortie");
-
-        if(selectType === "Entree"){
-            tableEntree.style.display = "block";
-            tableSortie.style.display = "none";
-            tableTous.style.display = "none";
-        }
-        else if(selectType === "Sortie"){
-            tableEntree.style.display = "none";
-            tableSortie.style.display = "block";
-            tableTous.style.display = "none";
-        }
-        else {
-            tableEntree.style.display = "none";
-            tableSortie.style.display = "none";
-            tableTous.style.display = "block";
-        }
-     */
-
     const nom = document.getElementById("nom_article").value;
     if (nom.trim() !== "") nomArticle = nom;
 
     const selectDate = document.querySelector('select[name="date"]').value;
-    const userAgent = navigator.userAgent.toLowerCase();
-    // const isSafari = /^((?!chrome|android).)*safari/.test(userAgent);
-    // const isFirefox = userAgent.includes("firefox");
 
     if (selectDate === "date") {
         const dateFlux1 = document.getElementById("date_flux").value;
@@ -244,30 +217,13 @@ function searchFlux(type) {
             param = precision;
         }
     } else if (selectDate === "mois") {
-        // const divMonth1 = document.getElementById("date_search_1");
-        // const divMonth2 = document.getElementById("date_search_2");
 
-        // const monthYearFlux = document.getElementById("month_date_flux").value;
         const monthFlux = document.getElementById("month_flux").value;
         const yearFlux = document.getElementById("year_flux").value;
 
         if (monthFlux && yearFlux) {
             dateFlux = monthFlux + "/" + yearFlux;
         }
-
-        /*
-            if (isSafari || isFirefox) {
-            divMonth1.style.display = "none";
-            divMonth2.style.display = "block";
-            } else {
-                divMonth1.style.display = "block";
-                divMonth2.style.display = "none";
-
-                if (monthYearFlux) {
-                    dateFlux = monthYearFlux;
-                }
-            }
-        */
         param = "month";
     }
 
@@ -349,31 +305,6 @@ function logOut(contextPath,data) {
         })
         .catch(err => console.error("ErrorLogOut:", err));
 }
-
-
-/*
-function searchArticleFlux(){
-
-    console.log(article);
-    const params = new URLSearchParams();
-
-    const currentBody = document.querySelector("#result_article");
-    currentBody.innerHTML = "<p>Recherche en cours...</p>";
-
-    fetch("/Stock/Mouvements/Articles/Search?" + params.toString())
-        .then(res => res.text())
-        .then(html => {
-            const tempDiv = document.createElement("div");
-            tempDiv.innerHTML = html;
-            const newContent = tempDiv.querySelector("#result_article");
-            currentBody.innerHTML = newContent ? newContent.innerHTML : "<p>Aucun résultat trouvé.</p>";
-        })
-        .catch(err => {
-            console.error(err);
-            currentBody.innerHTML = "<p>Erreur de chargement.</p>";
-        });
-}
- */
 
 function searchEntree(data){
     const params = new URLSearchParams();
@@ -727,9 +658,6 @@ function setExcelTransform(type){
     if (nom.trim() !== "") nomArticle = nom;
 
     const selectDate = document.querySelector('select[name="date"]').value;
-    const userAgent = navigator.userAgent.toLowerCase();
-    // const isSafari = /^((?!chrome|android).)*safari/.test(userAgent);
-    // const isFirefox = userAgent.includes("firefox");
 
     if (selectDate === "date") {
         const dateFlux1 = document.getElementById("date_flux").value;
@@ -739,30 +667,12 @@ function setExcelTransform(type){
             param = precision;
         }
     } else if (selectDate === "mois") {
-        // const divMonth1 = document.getElementById("date_search_1");
-        // const divMonth2 = document.getElementById("date_search_2");
-
-        // const monthYearFlux = document.getElementById("month_date_flux").value;
         const monthFlux = document.getElementById("month_flux").value;
         const yearFlux = document.getElementById("year_flux").value;
 
         if (monthFlux && yearFlux) {
             dateFlux = monthFlux + "/" + yearFlux;
         }
-
-        /*
-            if (isSafari || isFirefox) {
-            divMonth1.style.display = "none";
-            divMonth2.style.display = "block";
-            } else {
-                divMonth1.style.display = "block";
-                divMonth2.style.display = "none";
-
-                if (monthYearFlux) {
-                    dateFlux = monthYearFlux;
-                }
-            }
-        */
         param = "month";
     }
 
@@ -775,7 +685,7 @@ function setExcelTransform(type){
 
         if(type.trim() !== ""){
             url = "/Stock/RapportExcel" + (type.trim() === "Entree" ? "/Entrees" : "/Sorties") + "?" + data.toString();
-            window.location.href = url; // le navigateur déclenche le téléchargement automatiquement
+            window.location.href = url;
         }
     }
 
@@ -880,7 +790,9 @@ function setForm(e, style, type, subType){
         data.append(key, val);
     }
 
-    clearError(style,type,subType);
+    if(subType !== "Modification_role"){
+        clearError(style,type,subType);
+    }
 
     fetch( "/Stock" + url, {
         method: 'POST',
@@ -895,7 +807,9 @@ function setForm(e, style, type, subType){
 
             if (response.ok) {
                 form.reset();
-                clearError(style, type, subType);
+                if(subType !== "Modification_role"){
+                    clearError(style,type,subType);
+                }
                 window.location.href = "/Stock" + nextUrl ;
             } else {
                 return response.text().then(text => {
@@ -929,7 +843,7 @@ function removeData(data, type){
         case "Employe":
         {
             url = "/DeleteEmployeServlet";
-            nextUrl = "/Connexion";
+            nextUrl = "/Employes";
             tag = "matricule";
             break;
         }
@@ -983,31 +897,11 @@ function removeData(data, type){
         })
 }
 
-
-// -----------------------------------------------------------------
-// Handle.js - VUE FINALE SANS CHAT WEBSOCKET POUR LA MÉMOIRE
-// -----------------------------------------------------------------
-
-// Variables globales pour le stockage
-const CHAT_STORAGE_KEY_PREFIX = 'chat_history_';
-let currentMatricule = ''; // Sera défini par Dashboard.jsp
-
-// Vous devez ajouter cette logique à votre fonction d'initialisation dans Dashboard.jsp
-// Ex: Dans DOMContentLoaded: currentMatricule = '<%= matriculeForJS %>';
-
-// ******************************************************
-// FONCTIONS DE PERSISTANCE (sessionStorage)
-// ******************************************************
-
 function getChatStorageKey() {
-    // Assurez-vous que le matricule est accessible ici.
-    // Si Handle.js est chargé en mode 'defer', il pourrait ne pas avoir l'accès direct aux variables de DOMContentLoaded.
-    // L'idéal est de définir currentMatricule globalement après l'injection JSP.
-
-    // Pour la démo, on suppose que currentMatricule est défini.
-    if (!currentMatricule) {
+    const CHAT_STORAGE_KEY_PREFIX = 'chat_history_';
+    const matricule = window.currentMatricule;
+    if (!matricule || matricule === "null" || matricule === "undefined") {
         console.error("Matricule non défini. L'historique ne sera pas isolé par utilisateur.");
-        // Si matricule n'est pas défini, on utilise une clé générique (moins sécurisé)
         return CHAT_STORAGE_KEY_PREFIX + 'generic';
     }
     return CHAT_STORAGE_KEY_PREFIX + currentMatricule;
@@ -1046,19 +940,15 @@ function appendMessage(sender, text) {
 
     // Scroller vers le bas
     messageDiv.scrollTop = messageDiv.scrollHeight;
-
-    // 2. 🛑 Mise à jour du sessionStorage (persistance) 🛑
     let history = getChatHistoryFromSession();
     history.push({
+        id: Date.now(),
         type: sender,
-        content: text
+        content: text,
+        time: new Date().toISOString()
     });
     sessionStorage.setItem(getChatStorageKey(), JSON.stringify(history));
 }
-
-// -----------------------------------------------------------------
-// FLUX 1 : CHATBOT (AJAX/HTTP) - MODIFIÉ
-// -----------------------------------------------------------------
 
 /**
  * Gère l'envoi de la question au serveur via AJAX (Fetch API).
@@ -1067,7 +957,7 @@ function appendMessage(sender, text) {
 function submitQuestion(contextPath) {
     event.preventDefault();
 
-    const form = document.getElementById("ChatService");
+    const form = document.getElementById("chatService");
     const formData = new FormData(form);
     const data = new URLSearchParams();
     const questionValue = formData.get("question");
@@ -1118,10 +1008,6 @@ function submitQuestion(contextPath) {
             submitButton.disabled = false;
         });
 }
-
-// -----------------------------------------------------------------
-// FONCTION DE CHARGEMENT D'HISTORIQUE CLIENT
-// -----------------------------------------------------------------
 
 /**
  * Charge l'historique du chat depuis sessionStorage et l'affiche.

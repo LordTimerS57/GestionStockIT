@@ -37,8 +37,6 @@ function putError(messages, style, type, subType) {
     let form;
     let formPrefix = style != null && style.trim() === "Ajout" ? "add" : "modify";
 
-    console.log(style, type, subType.toLowerCase(), messages);
-
     switch (type) {
         case 'Article':     form = document.getElementById(formPrefix + 'Form_article'); break;
         case 'Employe':

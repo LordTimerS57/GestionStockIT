@@ -1,12 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-<%@ page import="java.util.ArrayList" %>
+		 pageEncoding="UTF-8"%>
 <%@ page import="java.util.List" %>
 <%@ page import="com.gestion_stock_it.Employe.Employe" %>
 <%@ page import="java.util.Objects" %>
 
 <%
-    List<Employe> connectes, nonConnectes;
+	List<Employe> connectes, nonConnectes;
 	connectes = (List<Employe>) request.getAttribute("connectes");
 	nonConnectes = (List<Employe>) request.getAttribute("non_connectes");
 %>
@@ -15,7 +14,8 @@
 	<label>
 		<input placeholder="Rechercher par le nom ou/et prénoms" type="search" name="nom_prenom" oninput="searchEmploye()"><i class="fas fa-search"></i>
 	</label>
-	<% if(!connectes.isEmpty() && !nonConnectes.isEmpty()) { %>
+
+	<% if(!connectes.isEmpty() || !nonConnectes.isEmpty()) { %>
 	<dialog id="dialog_employe">
 		<div id="employe_details">
 			<h1>Details sur l'employé <span id="dialog_employe_nom_complet"></span></h1>
@@ -33,47 +33,57 @@
 				<p id="dialog_employe_date_creation"></p>
 				<p id="dialog_employe_date_modification"></p>
 			</fieldset>
-			<button onclick="setDetails(event, 'Close', 'Employe', null)">Fermer</button>
-			<button id="modify_role_btn" onclick="passModification()">Modifier le rôle</button>
+
+			<div id="employe_action_buttons">
+				<button onclick="setDetails(event, 'Close', 'Employe', null)">Fermer</button>
+				<button id="modify_role_btn" onclick="passModification()">Modifier le rôle</button>
+			</div>
 		</div>
+
 		<form id="modify_role" onsubmit="event.preventDefault(); setForm(event, 'Modification', 'Employe', 'Modification_role'); setDetails(event, 'Close', 'Employe', null);">
-			<label>
-				Rôle:
-				<select id="emp_role" name="role">
-					<option value="" disabled>Veuillez choisir le role</option>
-					<option value="2">Administrateur</option>
-					<option value="3">Employé Simple</option>
-				</select>
-			</label>
-			<label>
+			<fieldset>
+				<legend>Modification du rôle</legend>
+				<label>
+					Rôle:
+					<select id="emp_role" name="role">
+						<option value="" disabled>Veuillez choisir le role</option>
+						<option value="2">Administrateur</option>
+						<option value="3">Employé Simple</option>
+					</select>
+				</label>
 				<input type="hidden" id="emp_matricule" name="matricule">
 				<input type="hidden" id="emp_email" name="email">
-			</label>
-			<button class="submit_employe btn">Attribuer</button>
+				<button class="submit_employe btn">Attribuer</button>
+			</fieldset>
 		</form>
 	</dialog>
-
 	<% } %>
+
 	<% if(!connectes.isEmpty()) { %>
 	<div id="result_employe_connected">
-		<h3>Liste des employés connectés</h3>
 		<table>
+			<caption>Employés en ligne</caption> <thead>
+		<tr>
+			<th>Nom et Prénoms</th>
+			<th></th>
+		</tr>
+		</thead>
 			<tbody>
 			<%  for (Employe c : connectes) { %>
 			<tr>
 				<td>
 					<button class="show-details-employe"
-						onclick="setDetails(event, 'Show', 'Employe', this)"
-						data-nom_prenom="<%= c.getNomPrenom() %>"
-						data-email="<%= c.getEmail() %>"
-						data-telephone="<%= c.getTelephone() %>"
-						data-adresse="<%= c.getAdresse() %>"
-						data-date_naissance="<%= c.getDate_de_naissance_formatter() %>"
-						data-matricule="<%= c.getMatricule() %>"
-						data-role="<%= Objects.equals(c.getRole(), "Super Administrateur") ? "Administrateur" : (Objects.equals(c.getRole(), "Administrateur") ? "Sous Admnistrateur" : c.getRole()) %>"
-						data-activite="<%= c.getActivite() %>"
-						data-date_creation="<%= c.getDate_creation_formatter() %>"
-						data-date_modification="<%= c.getDate_modification_formatter() %>">
+							onclick="setDetails(event, 'Show', 'Employe', this)"
+							data-nom_prenom="<%= c.getNomPrenom() %>"
+							data-email="<%= c.getEmail() %>"
+							data-telephone="<%= c.getTelephone() %>"
+							data-adresse="<%= c.getAdresse() %>"
+							data-date_naissance="<%= c.getDate_de_naissance_formatter() %>"
+							data-matricule="<%= c.getMatricule() %>"
+							data-role="<%= Objects.equals(c.getRole(), "Super Administrateur") ? "Administrateur" : (Objects.equals(c.getRole(), "Administrateur") ? "Sous Admnistrateur" : c.getRole()) %>"
+							data-activite="<%= c.getActivite() %>"
+							data-date_creation="<%= c.getDate_creation_formatter() %>"
+							data-date_modification="<%= c.getDate_modification_formatter() %>">
 						<%= c.getNomPrenom() %>
 					</button>
 				</td>
@@ -81,19 +91,26 @@
 				<td>
 					<button class="activation-employe" onclick="removeData('<%=c.getMatricule()%>', 'Employe')"><%= c.getActivite() ? "Désactiver" : "Activer" %> le compte</button>
 				</td>
-				<% } %>
-			<tr>
-					<% } %>
+				<% } else { %>
+				<td>—</td> <% } %>
+			</tr>
+			<% } %>
 			</tbody>
 		</table>
 	</div>
 	<% } else { %>
 	<p>Aucun employé en ligne trouvé.</p>
 	<% } %>
+
 	<% if(!nonConnectes.isEmpty()) { %>
 	<div id="result_employe_not_connected">
-		<h3>Liste des employés non connectés</h3>
 		<table>
+			<caption>Employés hors ligne</caption> <thead>
+		<tr>
+			<th>Nom et Prénoms</th>
+			<th></th>
+		</tr>
+		</thead>
 			<tbody>
 			<%  for (Employe nc : nonConnectes) { %>
 			<tr>
@@ -117,9 +134,10 @@
 				<td>
 					<button class="activation-employe" onclick="removeData('<%=nc.getMatricule()%>', 'Employe')"><%= nc.getActivite() ? "Désactiver" : "Activer" %> le compte</button>
 				</td>
-				<% } %>
-			<tr>
-					<% } %>
+				<% } else { %>
+				<td>—</td> <% } %>
+			</tr>
+			<% } %>
 			</tbody>
 		</table>
 	</div>

@@ -1,18 +1,35 @@
-/* Conteneur principal de la page Employés (le <div> parent) */
-.employe-section {
-    padding: 20px;
+/* --- Palette Neutre (Variables CSS) --- */
+:root {
+    --color-text-dark: #333;
+    --color-text-light: #fff;
+    --color-background-light: #f8f9fa;
+    --color-background-white: #fff;
+    --color-border-light: #eee;
+    --color-border: #ccc;
+    --color-accent: #6c757d;
+    --color-table-header: #495057;
+    --color-danger: #dc3545;
 }
 
-/* Style de la barre de recherche */
+/* ------------------------------------ */
+/* 1. Page Employés - Contenu Principal */
+/* ------------------------------------ */
+
+.employe-section {
+    padding: 20px;
+    background-color: var(--color-background-white);
+}
+
+/* --- Style de la barre de recherche --- */
 .employe-section label {
     display: flex;
     align-items: center;
-    border: 1px solid #ccc; /* Bordure neutre */
+    border: 1px solid var(--color-border);
     border-radius: 20px;
     padding: 5px 15px;
-    width: 350px; /* Limite la largeur de la barre de recherche */
+    width: 350px;
     margin-bottom: 25px;
-    /* background-color: white; (Supprimé) */
+    background-color: var(--color-background-white);
 }
 
 .employe-section label input[type="search"] {
@@ -24,47 +41,77 @@
 }
 
 .employe-section label .fas.fa-search {
-    /* color: #007bff; (Supprimé) */
+    color: var(--color-accent);
     margin-left: 10px;
 }
 
-/* Style des titres de liste */
+/* --- Style des titres de liste (CAPTION) --- */
+
+/* Suppression de l'ancien style h3:
 .employe-section h3 {
-    border-bottom: 2px solid; /* Conserve le trait de séparation */
+    border-bottom: 2px solid var(--color-accent);
     padding-bottom: 5px;
     margin-top: 30px;
-    /* color: #333; (Supprimé) */
+    color: var(--color-text-dark);
+}
+*/
+
+.employe-section table caption {
+    /* Style du titre de tableau */
+    caption-side: top;
+    text-align: left;
+    font-size: 1.3em;
+    font-weight: bold;
+    color: var(--color-text-dark);
+
+    padding: 15px 0 5px 0; /* Ajout de padding pour espacer le titre */
+    margin-bottom: 5px;
 }
 
 
 /* Conteneurs des listes */
 #result_employe_connected, #result_employe_not_connected {
+    /* Supprimez le margin-top si vous utilisez la caption qui a déjà un padding top */
     margin-bottom: 40px;
 }
 
-/* Style général des tableaux */
+
+/* ------------------------------------ */
+/* 2. Tableau de Données */
+/* ------------------------------------ */
+
 .employe-section table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 15px;
+    margin-top: 5px; /* Réduit la marge pour coller au caption */
+}
+
+.employe-section table th {
+    background-color: var(--color-table-header);
+    color: var(--color-text-light);
+    padding: 12px 15px;
+    text-align: left;
+    font-weight: 600;
 }
 
 .employe-section table tr:nth-child(even) {
-    /* background-color: #f9f9f9; (Supprimé) */
+    background-color: var(--color-background-light);
+}
+.employe-section table tr:hover {
+    background-color: #e6f7ff;
+    cursor: pointer;
 }
 
-/* Style des cellules */
 .employe-section table td {
     padding: 10px 15px;
-    border-bottom: 1px solid #eee; /* Bordure neutre */
+    border-bottom: 1px solid var(--color-border-light);
     vertical-align: middle;
 }
 
-/* Style des boutons "Nom/Prénoms" pour ouvrir les détails */
 .show-details-employe {
     background: none;
     border: none;
-    /* color: #007bff; (Supprimé) */
+    color: var(--color-accent);
     cursor: pointer;
     text-align: left;
     padding: 0;
@@ -73,112 +120,127 @@
 }
 
 .show-details-employe:hover {
-    /* color: #0056b3; (Supprimé) */
+    color: var(--color-table-header);
     text-decoration: underline;
 }
 
-/* Style des boutons Activer/Désactiver */
 .activation-employe {
-    /* background-color: #ffc107; (Supprimé) */
-    /* color: #333; (Supprimé) */
+    background-color: var(--color-border);
+    color: var(--color-text-dark);
     border: none;
     padding: 5px 10px;
     border-radius: 4px;
     cursor: pointer;
     font-size: 0.9em;
     margin-left: 15px;
-    transition: background-color 0.2s;
+    transition: background-color 0.2s, color 0.2s;
 }
 
 .activation-employe:hover {
-    /* background-color: #e0a800; (Supprimé) */
+    background-color: var(--color-accent);
+    color: var(--color-text-light);
 }
 
 
-/* Style de la modale */
+/* ------------------------------------ */
+/* 3. Style de la Modale (Détails Employé) */
+/* ------------------------------------ */
+
 #dialog_employe {
-    border: none;
+    border: 1px solid var(--color-border);
     border-radius: 8px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
     padding: 30px;
     max-width: 600px;
     width: 90%;
     margin: auto;
+    background-color: var(--color-background-white);
 }
 
-/* En-tête des détails */
+/* Titre des détails */
 #employe_details h1 {
     font-size: 1.8em;
-    border-bottom: 2px solid #eee;
+    border-bottom: 2px solid var(--color-border);
     padding-bottom: 10px;
     margin-bottom: 20px;
-    /* color: #007bff; (Supprimé) */
+    color: var(--color-accent);
 }
 
-/* Style des fieldsets dans la modale */
-#employe_details fieldset {
-    border: 1px solid #dee2e6; /* Bordure neutre */
+/* Fieldsets */
+#employe_details fieldset, #modify_role fieldset {
+    border: 1px solid var(--color-border);
     border-radius: 6px;
     padding: 15px;
     margin-bottom: 15px;
 }
 
-#employe_details legend {
+#employe_details legend, #modify_role legend {
     font-weight: bold;
-    /* color: #333; (Supprimé) */
+    color: var(--color-text-dark);
 }
 
-/* Boutons d'action dans la modale */
+/* Conteneur pour l'alignement des boutons de la modale */
+#employe_action_buttons {
+    display: flex;
+    justify-content: flex-start;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+/* Boutons de la modale (général) */
 #dialog_employe button {
     padding: 8px 15px;
     border-radius: 4px;
     cursor: pointer;
     margin-right: 10px;
     font-weight: 500;
+    transition: opacity 0.2s;
 }
 
 /* Bouton Fermer */
 #dialog_employe button:first-of-type {
-    /* background-color: #6c757d; (Supprimé) */
-    /* color: white; (Supprimé) */
+    background-color: var(--color-accent);
+    color: var(--color-text-light);
     border: none;
+}
+#dialog_employe button:first-of-type:hover {
+    opacity: 0.8;
 }
 
 /* Bouton Modifier Rôle */
 #modify_role_btn {
-    /* background-color: #17a2b8; (Supprimé) */
-    /* color: white; (Supprimé) */
+    background-color: #17a2b8; /* Gris/Cyan neutre */
+    color: var(--color-text-light);
     border: none;
+}
+#modify_role_btn:hover {
+    opacity: 0.8;
 }
 
 /* Formulaire de modification de rôle */
-#modify_role {
-    margin-top: 20px;
-    padding: 15px;
-    border: 1px dashed; /* Conserve le style de bordure en pointillé */
-    border-radius: 4px;
-    display: none;
-    flex-direction: column;
-}
-
 #modify_role label {
-    margin-bottom: 10px;
     display: block;
+    margin-bottom: 15px;
+    font-weight: 500;
 }
 
 #modify_role select {
     padding: 8px;
-    border: 1px solid #ccc; /* Bordure neutre */
+    border: 1px solid var(--color-border);
     border-radius: 4px;
     width: 100%;
     margin-top: 5px;
+    box-sizing: border-box;
 }
 
-/* Bouton Attribuer du formulaire */
+/* Bouton Attribuer */
 #modify_role .submit_employe.btn {
-    /* background-color: #28a745; (Supprimé) */
-    /* color: white; (Supprimé) */
+    background-color: #28a745; /* Gris/Vert neutre */
+    color: var(--color-text-light);
     border: none;
     margin-top: 15px;
     align-self: flex-start;
+    margin-right: 0;
+}
+#modify_role .submit_employe.btn:hover {
+    opacity: 0.8;
 }
