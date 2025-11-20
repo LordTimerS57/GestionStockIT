@@ -22,5 +22,5 @@
   System.out.println(tag + " " + section);
 
     assert section != null;
-    response.sendRedirect(request.getContextPath()+ "/Articles-Types" + ( section.equals("Type") ? "/Types" : "/Articles" ) +"/Modification" );
+    response.sendRedirect(request.getContextPath() + ( section.equals("Type") ? "/Types" : "/Articles" ) +"/Modification" );
 %>

@@ -16,7 +16,7 @@ import java.sql.Connection;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@WebServlet({"/AddSortieServlet" , "/Mouvements/Sorties/Creation"})
+@WebServlet({"/AddSortieServlet" , "/Sorties/Creation"})
 public class AddSortieServlet extends HttpServlet {
     private DatabaseConnection db;
     private Connection c;

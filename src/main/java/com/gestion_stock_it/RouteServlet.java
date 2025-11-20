@@ -6,12 +6,12 @@ import jakarta.servlet.http.*;
 import java.io.IOException;
 
 @WebServlet(urlPatterns = {
+		"/Acceuil",
         "/Profil",
-        "/Articles-Types",
         "/CreationCompte", "/Profil/Modification",
         "/Fournisseurs/Creation",
         "/Mouvements",
-        "/Articles-Types/Types/Creation",
+        "/Types/Creation",
         "/Chatbot",
         "/Connexion"
 })
@@ -24,6 +24,12 @@ public class RouteServlet extends HttpServlet {
         String path = request.getServletPath();
 
         switch (path) {
+        	case "/Acceuil":
+				request.setAttribute("content", "/Acceuil.jsp");
+				request.getRequestDispatcher("/Dashboard.jsp").forward(request, response);
+				break;
+				
+			// ---- AUTHENTIFICATION ----
             case "/Connexion":
                 request.getRequestDispatcher("/Employe/Login.jsp").forward(request, response);
                 break;
@@ -44,33 +50,13 @@ public class RouteServlet extends HttpServlet {
 
             // ---- FOURNISSEUR ----
             case "/Fournisseurs/Creation":
-                request.setAttribute("content", "/Fournisseur/AddModalFournisseur.jsp");
-                request.getRequestDispatcher("/Dashboard.jsp").forward(request, response);
-                break;
-
-            case "/Fournisseurs/Modification":
-                request.setAttribute("content", "/Fournisseur/ModifyModalFournisseur.jsp");
-                request.getRequestDispatcher("/Dashboard.jsp").forward(request, response);
-                break;
-
-            // ---- MOUVEMENTS D'ARTICLES ----
-            case "/Mouvements":
-                request.setAttribute("content", "/Flux/AcceuilFlux.jsp");
-                request.getRequestDispatcher("/Dashboard.jsp").forward(request, response);
+                request.getRequestDispatcher("/Fournisseur/AddModalFournisseur.jsp").forward(request, response);
                 break;
 
             // ---- TYPE ARTICLE ----
-            case "/Articles-Types/Types/Creation":
+            case "/Types/Creation":
                 request.getRequestDispatcher("/Articles-Types/Type/AddModalType.jsp").forward(request, response);
                 break;
-
-            // ---- ARTICLES - TYPES ----
-            case "/Articles-Types":
-                request.setAttribute("content", "/Articles-Types/AcceuilArtType.jsp");
-                request.getRequestDispatcher("/Dashboard.jsp").forward(request, response);
-                break;
-
-
 
             // ---- CHATBOT ----
             case "/Chatbot":

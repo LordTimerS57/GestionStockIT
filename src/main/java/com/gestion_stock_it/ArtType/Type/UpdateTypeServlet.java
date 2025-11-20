@@ -10,7 +10,7 @@ import jakarta.servlet.http.*;
 import java.io.IOException;
 import java.sql.Connection;
 
-@WebServlet({"/UpdateTypeServlet", "/Articles-Types/Types/Modification"})
+@WebServlet({"/UpdateTypeServlet", "/Types/Modification"})
 public class UpdateTypeServlet extends HttpServlet {
 
     private DatabaseConnection db;

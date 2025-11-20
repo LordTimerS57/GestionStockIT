@@ -4,10 +4,12 @@
 
 body {
     display: flex;
-    flex-direction: column; /* Empile header et main verticalement */
-    min-height: 100vh;
+    flex-direction: column; /* Empile header, main et footer verticalement */
+    min-height: 100vh; /* La hauteur minimale est celle de la fenêtre */
     margin: 0;
     font-family: 'Arial', sans-serif;
+    color: #333;
+    background-color: #fff;
 }
 
 /* ------------------------------------ */
@@ -15,11 +17,14 @@ body {
 /* ------------------------------------ */
 
 header {
+    background-color: #2c3e50;
+    color: white;
     padding: 15px 0 15px 15px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     width: 100%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 header h1 {
@@ -28,14 +33,28 @@ header h1 {
     font-weight: normal;
 }
 
-/* Style du bouton de déconnexion (Transféré du style inline du JSP) */
+header > div {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-right: 34px;
+}
+
+header a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 4px;
+}
+
+/* Style du bouton de déconnexion */
 header button {
     background-color: #dc3545;
     color: white;
     border: none;
     padding: 8px 15px;
     border-radius: 4px;
-    margin-right: 34px;
     cursor: pointer;
     font-size: 16px;
     transition: background-color 0.3s;
@@ -50,8 +69,11 @@ header button:hover {
 /* ------------------------------------ */
 
 main {
-    display: flex; /* CRUCIAL : Place <nav> et <div> côte à côte */
-    flex-grow: 1; /* Prend tout l'espace vertical restant sous le header */
+    display: flex; 
+    flex-grow: 1; /* Prend tout l'espace vertical restant */
+    
+    /* 🔑 CORRECTION CLÉ : Force main à définir sa hauteur sur tout l'espace restant */
+    height: 100%;
 }
 
 /* ------------------------------------ */
@@ -59,29 +81,117 @@ main {
 /* ------------------------------------ */
 
 nav {
-    width: 230px; /* Largeur fixe de la barre latérale */
+    width: 230px;
+    background-color: #34495e;
     padding: 20px 0;
-    flex-shrink: 0; /* Empêche la barre latérale de se réduire */
+    flex-shrink: 0; 
     display: flex;
-    flex-direction: column; /* Les liens s'empilent verticalement */
+    flex-direction: column;  
+    
+    /* S'étire sur toute la hauteur de main */
+    height: 100%; 
 }
 
-nav a {
-    padding: 10px 20px;
-    text-decoration: none;
+/* Conteneur de chaque élément de navigation */
+.dropdown-menu {
+    padding: 0; 
     margin-bottom: 2px;
+}
+
+/* Style de base pour TOUS les liens (simples et toggles) */
+nav a {
+    color: #ecf0f1;
+    padding: 10px 20px;
+    text-align: left;
+    text-decoration: none;
     transition: background-color 0.3s;
     font-weight: 500;
-    display: block; /* Rend le lien un bloc pour la zone de clic */
+    display: block; 
 }
 
 nav a:hover {
+    background-color: #4a6580;
 }
 
+/* Styles pour les liens principaux actifs */
 nav a.active {
     font-weight: bold;
-    border-left: 5px solid #0056b3; /* Indicateur visuel */
-    padding-left: 15px; /* Compenser les 5px de la bordure */
+    background-color: #2c3e50;
+    border-left: 5px solid #0056b3; 
+    padding-left: 15px; 
+}
+
+/* ------------------------------------ */
+/* 4.1. ALIGNEMENT DES ICÔNES           */
+/* ------------------------------------ */
+
+/* ESPACEMENT DES ICÔNES : Appliqué à toutes les icônes des liens */
+nav a .fas {
+    margin-right: 10px; 
+    min-width: 16px; 
+    text-align: center;
+}
+
+/* S'assurer que la flèche de dropdown à droite n'a pas la marge */
+.dropdown-toggle .dropdown-icon {
+    margin-right: 0;
+    min-width: auto;
+}
+
+/* ------------------------------------ */
+/* 4.2. MENU DÉROULANT (DROPDOWN)       */
+/* ------------------------------------ */
+
+/* Style du bouton de bascule uniquement (aligne texte et flèche) */
+.dropdown-toggle {
+    display: flex;
+    justify-content: space-between; 
+    align-items: center;
+}
+
+/* Conteneur des sous-liens (initialement caché) */
+.dropdown-content {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    
+    max-height: 0; 
+    overflow: hidden; 
+    transition: max-height 0.3s ease-out;
+    background-color: #3f5a70; 
+}
+
+/* Règle pour afficher le menu */
+.dropdown-menu.open .dropdown-content {
+    max-height: 200px; 
+    transition: max-height 0.3s ease-in;
+}
+
+/* Rotation de l'icône lors de l'ouverture */
+.dropdown-menu.open .dropdown-icon {
+    transform: rotate(180deg);
+}
+
+/* Styles des sous-liens (Indentation) */
+.dropdown-content li a {
+    /* Padding pour aligner le texte du sous-menu sous le texte du menu principal */
+    padding: 8px 20px 8px 46px; 
+    
+    display: block; 
+    font-size: 0.95em;
+    color: #ecf0f1; 
+    border-left: none !important; 
+}
+
+.dropdown-content li a:hover {
+    background-color: #4a6580;
+}
+
+/* Style du sous-lien actif */
+.dropdown-content li a.active-sub {
+    font-weight: bold;
+    background-color: #0056b3; 
+    color: white;
 }
 
 
@@ -90,10 +200,13 @@ nav a.active {
 /* ------------------------------------ */
 
 .content {
-    flex-grow: 1; /* Permet au contenu de prendre TOUT l'espace horizontal restant */
+    flex-grow: 1; 
     padding: 20px;
     background-color: #f4f7f6;
-    overflow-y: auto; /* Ajoute un scroll au contenu si nécessaire */
+    overflow-y: auto; 
+    
+    /* S'étire sur toute la hauteur de main */
+    min-height: 100%; 
 }
 
 /* ------------------------------------ */
@@ -106,5 +219,5 @@ footer {
     padding: 10px;
     text-align: center;
     font-size: 0.8em;
+    flex-shrink: 0;
 }
-

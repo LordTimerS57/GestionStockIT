@@ -111,7 +111,7 @@ function searchArticle() {
     const currentBody = document.querySelector("#result_article");
     currentBody.innerHTML = "<p>Recherche en cours...</p>";
 
-    fetch("/Stock/Articles-Types/Articles?" + params.toString())
+    fetch("/Stock/Articles?" + params.toString())
         .then(res => res.text())
         .then(html => {
             const tempDiv = document.createElement("div");
@@ -187,7 +187,7 @@ function searchType() {
     const currentBody = document.querySelector("#result_type");
     currentBody.innerHTML = "<p>Recherche en cours...</p>";
 
-    fetch("/Stock/Articles-Types/Types?" + params.toString())
+    fetch("/Stock/Types?" + params.toString())
         .then(res => res.text())
         .then(html => {
             const tempDiv = document.createElement("div");
@@ -242,7 +242,7 @@ function searchFlux(type) {
         const currentBody = document.querySelector(selector);
         currentBody.innerHTML = "<p>Recherche en cours...</p>";
 
-        fetch("/Stock/Mouvements" + (type.trim() === "Entree" ? "/Entrees" : "/Sorties") + "?" + data.toString())
+        fetch("/Stock" + (type.trim() === "Entree" ? "/Entrees" : "/Sorties") + "?" + data.toString())
             .then(res => res.text())
             .then(html => {
                 const tempDiv = document.createElement("div");
@@ -738,7 +738,7 @@ function setForm(e, style, type, subType){
                 form = document.getElementById('loginForm_employe');
                 submitButton = form.querySelector('.submit_login');
                 url = "/LoginServlet";
-                nextUrl = "/Profil";
+                nextUrl = "/Acceuil";
             }
             break;
         }

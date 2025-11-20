@@ -28,7 +28,7 @@ public class FilterController implements Filter {
 
         // 🔒 Auth requise pour toutes les autres pages
         if (session == null || session.getAttribute("login_profil") == null) {
-            response.sendRedirect(ctx + "/Connexion");
+            response.sendRedirect(ctx + "/");
             return;
         }
 
@@ -60,9 +60,10 @@ public class FilterController implements Filter {
                         || normalizedPath.startsWith("/CSS/")
                         || normalizedPath.startsWith("/JS/")
                         || normalizedPath.startsWith("/IMAGES/")
+                        || normalizedPath.equals("/")
                         || normalizedPath.equals("/Connexion")
                         || normalizedPath.equals("/LoginServlet")
-                        || normalizedPath.equals("/")
+                        || normalizedPath.equals("/index.jsp")
                         || normalizedPath.isEmpty();
         return isPublic;
     }

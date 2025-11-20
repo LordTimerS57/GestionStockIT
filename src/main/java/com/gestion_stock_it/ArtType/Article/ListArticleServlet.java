@@ -4,9 +4,10 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
-@WebServlet("/Articles-Types/Articles")
+@WebServlet("/Articles")
 public class ListArticleServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -18,7 +19,7 @@ public class ListArticleServlet extends HttpServlet {
         System.out.println("Nom article: " + nomArticle + " Nom type: " + nomType);
 
         ArticleDataController dao = new ArticleDataController();
-        List<Article> articles;
+        List<Article> articles = new ArrayList<>();
 
         try {
             // Si aucun filtre, récupère tous les articles

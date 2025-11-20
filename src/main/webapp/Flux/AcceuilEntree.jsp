@@ -17,7 +17,7 @@
 <section class="content-flux-in">
     <% if(role.equals("Administrateur") || role.equals("Super Administrateur") ) { %>
     <div class="content-flux-create">
-        <a href="<%=request.getContextPath()%>/Mouvements/Entrees/Creation">Entrer un article au stock</a>
+        <a href="<%=request.getContextPath()%>/Entrees/Creation">Entrer un article au stock</a>
     </div>
     <% } %>
     <div class="search">
@@ -32,7 +32,6 @@
             </label>
 
             <div id="date_input_fields">
-
                 <div id="date_search_1">
                     <label>
                         <select name="precision_date" id="precision_date">
@@ -50,6 +49,16 @@
                     <label>
                         <select name="month_date_flux_1" id="month_flux" onselect="searchFlux('Entree')">
                             <option value="01">Janvier</option>
+                            <option value="02">Février</option>
+                            <option value="03">Mars</option>
+                            <option value="04">Avril</option>
+                            <option value="05">Mai</option>
+                            <option value="06">Juin</option>
+                            <option value="07">Juillet</option>
+                            <option value="08">Août</option>
+                            <option value="09">Septembre</option>
+                            <option value="10">Octobre</option>
+                            <option value="11">Novembre</option>
                             <option value="12">Décembre</option>
                         </select> -
                         <input type="search" name="month_date_flux_2" id="year_flux" pattern="^[0-9]+$" oninput="searchFlux('Entree')">
@@ -58,11 +67,11 @@
             </div>
         </div>
 
-        <div id="article_search">
-            <label>
-                <input type="search" name="nom_article" id="nom_article" placeholder="Rechercher l'article souhaité ..." oninput="searchFlux('Entree')">
-            </label>
-        </div>
+        <label id="article_search">
+            <input type="search" name="nom_article" id="nom_article" placeholder="Rechercher l'article souhaité ..." oninput="searchFlux('Entree')">
+        	<i class="fas fa-search"></i>
+        </label>
+ 
     </div>
     <div id="result_entree">
         <% if (!entrees.isEmpty()) { %>
@@ -104,8 +113,5 @@
         <% } else { %>
         <p> Aucune entrée d'article trouvée</p>
         <% } %>
-    </div>
-    <div>
-        <a href="<%=request.getContextPath()%>/Mouvements/Sorties">Voir les sorties</a>
     </div>
 </section>

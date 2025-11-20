@@ -8,19 +8,20 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.ArrayList;
 
-
-@WebServlet("/Articles-Types/Types")
+@WebServlet("/Types")
 public class ListTypeServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String nomType = request.getParameter("nom_type");
 
         TypeArticleDataController dao = new TypeArticleDataController();
-        List<TypeArticle> types;
+        List<TypeArticle> types = new ArrayList<>();
 
         try {
             // Si aucun filtre, récupère tous les articles
             types = dao.getTypeArticleList(nomType);
+            
         } catch (Exception e) {
             throw new ServletException(e);
         }

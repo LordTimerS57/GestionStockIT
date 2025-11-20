@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @WebServlet("/Fournisseurs")
@@ -15,7 +16,7 @@ public class ListFournisseurServlet extends HttpServlet {
         String nom = request.getParameter("nom_fournisseur");
 
         FournisseurDataController dao = new FournisseurDataController();
-        List<Fournisseur> fournisseurs;
+        List<Fournisseur> fournisseurs = new ArrayList<>();
 
         try {
             fournisseurs = dao.getFournisseurList(null, nom, null, null);

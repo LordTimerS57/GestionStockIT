@@ -17,7 +17,7 @@
 <section class="content-flux-out">
     <% if(role.equals("Administrateur") || role.equals("Super Administrateur") ) { %>
     <div class="content-flux-create">
-        <a href="<%=request.getContextPath()%>/Mouvements/Sorties/Creation">Sortir un article</a>
+        <a href="<%=request.getContextPath()%>/Sorties/Creation">Sortir un article</a>
     </div>
     <% } %>
     <div class="search">
@@ -50,6 +50,16 @@
                     <label>
                         <select name="month_date_flux_1" id="month_flux" onchange="searchFlux('Sortie')">
                             <option value="01">Janvier</option>
+                            <option value="02">Février</option>
+                            <option value="03">Mars</option>
+                            <option value="04">Avril</option>
+                            <option value="05">Mai</option>
+                            <option value="06">Juin</option>
+                            <option value="07">Juillet</option>
+                            <option value="08">Août</option>
+                            <option value="09">Septembre</option>
+                            <option value="10">Octobre</option>
+                            <option value="11">Novembre</option>
                             <option value="12">Décembre</option>
                         </select> -
                         <input type="search" name="month_date_flux_2" id="year_flux" pattern="^[0-9]+$" oninput="searchFlux('Sortie')">
@@ -58,11 +68,10 @@
             </div>
         </div>
 
-        <div id="article_search">
-            <label>
-                <input type="search" name="nom_article" id="nom_article" placeholder="Rechercher l'article souhaité ..." oninput="searchFlux('Sortie')">
-            </label>
-        </div>
+        <label id="article_search">
+            <input type="search" name="nom_article" id="nom_article" placeholder="Rechercher l'article souhaité ..." oninput="searchFlux('Sortie')">
+        	<i class="fas fa-search"></i>
+        </label>
     </div>
     <div id="result_sortie">
         <% if (!sorties.isEmpty()) { %>
@@ -150,8 +159,5 @@
         <% } else { %>
         <p> Aucune sortie d'article trouvée</p>
         <% } %>
-    </div>
-    <div>
-        <a href="<%=request.getContextPath()%>/Mouvements/Entrees">Voir les entrées</a>
     </div>
 </section>

@@ -65,7 +65,6 @@ public class LogEmployeServlet extends HttpServlet {
                     fn.connect(c,  e.getMatricule(), email, motDePasse, "oui");
 
                     HttpSession session = req.getSession();
-
                     session.setAttribute("login_role",e.getRole());
                     session.setAttribute("login_profil",e);
 

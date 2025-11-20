@@ -16,7 +16,7 @@ import jakarta.mail.internet.MimeMessage;
 import org.mindrot.jbcrypt.BCrypt;
 
 public class EmployeDataController {
-	private final String FROM = System.getenv("MAIL_HOST");
+	private final String EMAIL_SENDER = System.getenv("MAIL_HOST");
 	private final String EMAIL_PASSWORD = System.getenv("MAIL_PASSWORD");
 
 	public List<Employe> getEmployeList(String Matricule, String Nom_prenom, int Role, String Email, String Connecte, String Actif) throws Exception {
@@ -443,13 +443,13 @@ public class EmployeDataController {
 
 		Session session = Session.getInstance(props, new Authenticator() {
 			protected PasswordAuthentication getPasswordAuthentication() {
-				return new PasswordAuthentication(FROM, EMAIL_PASSWORD);
+				return new PasswordAuthentication(EMAIL_SENDER, EMAIL_PASSWORD);
 			}
 		});
 
 		// Création du message
 		Message message = new MimeMessage(session);
-		message.setFrom(new InternetAddress(FROM));
+		message.setFrom(new InternetAddress(EMAIL_SENDER));
 		message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(destinataire.getEmail()));
 		message.setSubject(sujet);
 		message.setText(corpsEmail + "\n\nMerci de votre compréhension,\nLe service client");

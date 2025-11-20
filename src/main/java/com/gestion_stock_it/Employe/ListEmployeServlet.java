@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.ArrayList;
 
 @WebServlet("/Employes")
 public class ListEmployeServlet extends HttpServlet {
@@ -20,6 +21,12 @@ public class ListEmployeServlet extends HttpServlet {
         try {
             employesConnectes = dao.getEmployeList(null, nomPrenoms, -1, null,  "oui", null);
             employesNonConnectes = dao.getEmployeList(null, nomPrenoms, -1, null,  "non", null);
+            if (employesConnectes == null) {
+				employesConnectes = new ArrayList<>();
+			}
+            if (employesNonConnectes == null) {
+				employesNonConnectes = new ArrayList<>();
+            }
         } catch (Exception e) {
             throw new ServletException(e);
         }

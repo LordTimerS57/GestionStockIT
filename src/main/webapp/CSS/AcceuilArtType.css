@@ -6,126 +6,107 @@
     --color-background-white: #fff;    /* Blanc pur */
     --color-border-light: #eee;        /* Bordure très légère */
     --color-border: #ccc;              /* Bordure moyenne */
-    --color-accent: #6c757d;           /* Gris foncé pour les accents, liens et hover (Primaire) */
-    --color-table-header: #495057;     /* Gris foncé soutenu (En-tête de tableau) */
-    --color-warning-neutral: #e0a800;  /* Gris/Jaune neutre (Modifier) */
-    --color-danger: #dc3545;           /* Rouge (Supprimer) */
+    --color-accent: #6c757d;           /* Primaire: Gris foncé pour les accents, liens et hover */
+    --color-table-header: #495057;     /* En-tête: Gris foncé soutenu */
+    --color-warning-neutral: #e0a800;  /* Modifier: Jaune neutre */
+    --color-danger: #dc3545;           /* Supprimer: Rouge */
 }
 
 /* ------------------------------------ */
-/* A. PAGE D'ACCUEIL ARTICLES-TYPES (.article-type-section) */
+/* SECTION A: PAGE D'ACCUEIL ARTICLES-TYPES (.article-type-section) */
 /* ------------------------------------ */
 
 .article-type-section {
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 40px;
-    padding: 40px;
-    margin: 20px auto;
-    max-width: 900px;
-    background-color: var(--color-background-white);
-    border-radius: 8px;
-    /* box-shadow: Supprimé */
+    justify-content: space-between; 
 }
 
-/* Style général des deux conteneurs d'options */
-.article-type-section > div {
-    display: flex;
-    padding: 20px;
-    border-radius: 6px;
-    gap: 30px;
-    width: 100%;
-    box-sizing: border-box;
-    justify-content: center;
-    border: 1px solid var(--color-border);
-    /* box-shadow: Supprimé */
-}
-
-/* Bloc d'actions Standard (Consultation) */
-.content-article-type {
-    background-color: var(--color-background-white);
-}
-
-/* Style général des liens d'action */
+/* Optional: Adding styles for better visibility */
 .article-type-section a {
+    text-decoration: none;
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    background-color: #f0f0f0;
+}
+
+/* ------------------------------------ */
+/* SECTION B: PAGE DE CONSULTATION DES ARTICLES (.article-section) */
+/* ------------------------------------ */
+
+.article-section {
+    padding: 20px;
+    background-color: var(--color-background-white);
+}
+
+/* Bloc Ajouter Article */
+.content-article-create {
+    margin-bottom: 30px;
+}
+
+.content-article-create a {
+    background-color: var(--color-accent);
+    color: var(--color-text-light);
     text-decoration: none;
     padding: 10px 20px;
     border-radius: 4px;
     font-weight: bold;
-    transition: background-color 0.3s, color 0.3s;
-    text-align: center;
-    min-width: 150px;
-
-    /* Style par défaut des liens d'action (Similaire à .content-flux a) */
-    background-color: var(--color-accent);
-    color: var(--color-text-light);
+    transition: background-color 0.3s;
+    display: inline-block; 
 }
 
-.article-type-section a:hover {
+.content-article-create a:hover {
     background-color: var(--color-table-header);
 }
 
-/* ------------------------------------ */
-/* B. PAGE DE CONSULTATION DES ARTICLES (.content-article) */
-/* ------------------------------------ */
-
-.content-article {
-    padding: 20px;
-}
-
-/* Conteneur de recherche */
-.content-article .search {
-    background-color: var(--color-background-light);
-    border-radius: 8px;
-    padding: 20px;
-    margin-bottom: 30px;
+/* Conteneur et styles de la barre de recherche */
+.article-section .search-container {
     display: flex;
     flex-wrap: wrap;
-    gap: 20px;
-    align-items: flex-start;
+    gap: 15px 20px;
+    margin-bottom: 30px;
+}
+
+.article-section .search-label {
+    display: flex;
+    align-items: center;
     border: 1px solid var(--color-border);
-    /* box-shadow: Supprimé */
-}
-
-/* Style des champs de recherche */
-.content-article .search label {
-    flex-grow: 1;
-}
-
-.content-article .search input {
-    padding: 8px 10px;
-    border: 1px solid var(--color-border);
-    border-radius: 4px;
-    font-size: 1em;
-    width: 100%;
-    box-sizing: border-box;
-    transition: border-color 0.3s;
-}
-
-.content-article .search input:focus {
-    border-color: var(--color-accent);
-    outline: none;
-}
-
-/* Table de Résultats Articles */
-.content #result_article {
+    border-radius: 20px;
+    padding: 5px 15px;
+    width: 350px;
     background-color: var(--color-background-white);
-    border-radius: 8px;
-    padding: 0; /* padding: 10px; -> changé à 0 pour laisser les tables s'étendre */
-    overflow-x: auto;
-    border: 1px solid var(--color-border);
-    /* box-shadow: Supprimé */
 }
 
-.content .content-article table {
+.article-section .search-label input[type="search"] {
+    border: none;
+    outline: none;
+    flex-grow: 1;
+    padding: 5px;
+    font-size: 1em;
+}
+
+.article-section .search-label .fas.fa-search {
+    color: var(--color-accent);
+    margin-left: 10px;
+}
+
+/* Conteneur des résultats */
+#result_article {
+    margin-bottom: 40px; 
+    overflow-x: auto;
+    background-color: var(--color-background-white);
+}
+
+/* Tableau Articles */
+#result_article table {
     width: 100%;
     border-collapse: collapse;
-    min-width: 800px;
+    min-width: 900px;
+    border-radius: 4px;
+    margin-top: 5px;
 }
 
-/* En-tête du tableau (th) */
-.content .content-article table th {
+/* En-tête de tableau */
+.article-section table th {
     background-color: var(--color-table-header);
     color: var(--color-text-light);
     padding: 12px 15px;
@@ -134,23 +115,24 @@
     border: none;
 }
 
-/* Lignes alternées et cellules */
-.content .content-article table tr:nth-child(even) {
+/* Lignes alternées et hover */
+.article-section table tr:nth-child(even) {
     background-color: var(--color-background-light);
 }
-.content .content-article table tr:hover {
+.article-section table tr:hover {
     background-color: #e6f7ff;
-    cursor: pointer;
+    cursor: default; 
 }
 
-.content .content-article table td {
+/* Cellules de tableau */
+.article-section table td {
     padding: 10px 15px;
     border-bottom: 1px solid var(--color-border-light);
     vertical-align: middle;
 }
 
-/* Bouton pour afficher les détails du Type (Similaire aux boutons show-details-employe) */
-.content .content-article table td button:not(.action-btn) { /* Cible le bouton de détail de type */
+/* Bouton de détail (Nom du Type) - Apparence de lien */
+.show-details-type {
     background: none;
     border: none;
     color: var(--color-accent);
@@ -161,74 +143,203 @@
     transition: color 0.2s;
 }
 
-.content .content-article table td button:not(.action-btn):hover {
+.show-details-type:hover {
     color: var(--color-table-header);
     text-decoration: underline;
 }
 
-/* Boutons d'Action (Modifier/Supprimer) */
-.content .content-article table td div button {
+/* Conteneur des boutons d'action (Modifier/Supprimer) */
+.article-section .table-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.article-section .table-actions button {
     padding: 5px 10px;
     border-radius: 4px;
     cursor: pointer;
     font-size: 0.9em;
-    margin-left: 5px;
     border: none;
     transition: opacity 0.2s;
 }
 
-/* Bouton Modifier (Premier bouton) */
-.content .content-article table td div button:first-child {
-    background-color: var(--color-warning-neutral); /* Jaune neutre */
+/* Bouton Modifier */
+.article-section .table-actions .action-modifier {
+    background-color: var(--color-warning-neutral); 
     color: var(--color-text-dark);
 }
-.content .content-article table td div button:first-child:hover {
+.article-section .table-actions .action-modifier:hover {
     opacity: 0.8;
 }
 
-/* Bouton Supprimer (Deuxième bouton, si présent) */
-.content .content-article table td div button:last-child {
-    background-color: var(--color-danger); /* Rouge */
+/* Bouton Supprimer */
+.article-section .table-actions .action-supprimer {
+    background-color: var(--color-danger); 
     color: var(--color-text-light);
 }
-.content .content-article table td div button:last-child:hover {
+.article-section .table-actions .action-supprimer:hover {
     opacity: 0.8;
 }
 
 /* ------------------------------------ */
-/* C. STYLE DE LA MODALE (Détails du Type) */
+/* SECTION C: PAGE DE CONSULTATION DES TYPES D'ARTICLES (.type-section) */
 /* ------------------------------------ */
 
-#dialog_type_article {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+.type-section {
+    padding: 20px;
+    background-color: var(--color-background-white);
+}
 
+/* Bloc Ajouter Type */
+.content-type-create {
+    margin-bottom: 30px;
+}
+
+.content-type-create a {
+    background-color: var(--color-accent);
+    color: var(--color-text-light);
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-weight: bold;
+    transition: background-color 0.3s;
+    display: inline-block; 
+}
+
+.content-type-create a:hover {
+    background-color: var(--color-table-header);
+}
+
+/* Style de la barre de recherche */
+.type-section .search-label {
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--color-border);
+    border-radius: 20px;
+    padding: 5px 15px;
+    width: 350px;
+    margin-bottom: 25px;
+    background-color: var(--color-background-white);
+}
+
+.type-section .search-label input {
+    border: none;
+    outline: none;
+    flex-grow: 1;
+    padding: 5px;
+    font-size: 1em;
+}
+
+.type-section .search-label .fas.fa-search {
+    color: var(--color-accent);
+    margin-left: 10px;
+}
+
+/* Conteneur des résultats */
+#result_type {
+    margin-bottom: 40px;
+    border-radius: 4px;
+    overflow-x: auto;
+    background-color: var(--color-background-white);
+}
+
+/* Tableau Types */
+#result_type table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 600px;
+    margin-top: 5px;
+}
+
+/* En-tête de tableau */
+.type-section table th {
+    background-color: var(--color-table-header);
+    color: var(--color-text-light);
+    padding: 12px 15px;
+    text-align: left;
+    font-weight: 600;
+    border: none;
+}
+
+/* Lignes alternées et hover */
+.type-section table tr:nth-child(even) {
+    background-color: var(--color-background-light);
+}
+.type-section table tr:hover {
+    background-color: #e6f7ff;
+    cursor: default; 
+}
+
+/* Cellules de tableau */
+.type-section table td {
+    padding: 10px 15px;
+    border-bottom: 1px solid var(--color-border-light);
+    vertical-align: middle;
+}
+
+/* Boutons d'Action (Modifier/Supprimer) */
+.type-section .table-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.type-section .table-actions button {
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9em;
+    border: none;
+    transition: opacity 0.2s;
+}
+
+/* Bouton Modifier */
+.type-section .table-actions .action-modifier {
+    background-color: var(--color-warning-neutral); 
+    color: var(--color-text-dark);
+}
+.type-section .table-actions .action-modifier:hover {
+    opacity: 0.8;
+}
+
+/* Bouton Supprimer */
+.type-section .table-actions .action-supprimer {
+    background-color: var(--color-danger); 
+    color: var(--color-text-light);
+}
+.type-section .table-actions .action-supprimer:hover {
+    opacity: 0.8;
+}
+
+/* ------------------------------------ */
+/* SECTION D: MODALE (Détails du Type d'Article) */
+/* ------------------------------------ */
+
+#dialog_type_article {  
     border: 1px solid var(--color-border);
     border-radius: 8px;
-    /* box-shadow: Supprimé */
     padding: 30px;
     max-width: 500px;
     width: 90%;
     background-color: var(--color-background-white);
-
+    
     &::backdrop {
-        background-color: rgba(0, 0, 0, 0.4);
+        background-color: rgba(0, 0, 0, 0.4); 
     }
+}
+
+#dialog_type_article fieldset {
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    padding: 15px;
+    margin-bottom: 20px;
 }
 
 #dialog_type_article legend {
     font-size: 1.4em;
-    color: var(--color-accent);
     font-weight: bold;
-}
-
-#dialog_type_article fieldset {
-    border: 1px solid var(--color-border-light);
-    border-radius: 6px;
-    padding: 15px;
-    margin-bottom: 20px;
+    color: var(--color-accent);
 }
 
 #dialog_type_article button {
@@ -242,109 +353,5 @@
     transition: opacity 0.2s;
 }
 #dialog_type_article button:hover {
-    opacity: 0.8;
-}
-
-/* ------------------------------------ */
-/* D. PAGE DE CONSULTATION DES TYPES D'ARTICLES (.content-type) */
-/* ------------------------------------ */
-
-.content-type {
-    padding: 20px;
-}
-
-/* Conteneur de recherche */
-.content-type label {
-    display: block;
-    margin-bottom: 25px;
-    padding: 20px;
-    border-radius: 8px;
-    background-color: var(--color-background-light);
-    border: 1px solid var(--color-border);
-    /* box-shadow: Supprimé */
-}
-
-.content-type label input {
-    padding: 8px 10px;
-    border: 1px solid var(--color-border);
-    border-radius: 4px;
-    font-size: 1em;
-    width: 100%;
-    box-sizing: border-box;
-    transition: border-color 0.3s;
-}
-.content-type label input:focus {
-    border-color: var(--color-accent);
-    outline: none;
-}
-
-
-/* Table de Résultats Types */
-.content #result_type {
-    background-color: var(--color-background-white);
-    border-radius: 8px;
-    padding: 0;
-    overflow-x: auto;
-    border: 1px solid var(--color-border);
-    /* box-shadow: Supprimé */
-}
-
-.content .content-type table {
-    width: 100%;
-    border-collapse: collapse;
-    min-width: 600px;
-}
-
-/* En-tête du tableau (th) */
-.content .content-type table th {
-    background-color: var(--color-table-header);
-    color: var(--color-text-light);
-    padding: 12px 15px;
-    text-align: left;
-    font-weight: 600;
-    border: none;
-}
-
-/* Lignes alternées et cellules */
-.content .content-type table tr:nth-child(even) {
-    background-color: var(--color-background-light);
-}
-.content .content-type table tr:hover {
-    background-color: #e6f7ff;
-    cursor: pointer;
-}
-
-.content .content-type table td {
-    padding: 10px 15px;
-    border-bottom: 1px solid var(--color-border-light);
-    vertical-align: middle;
-}
-
-/* Boutons d'Action (Modifier/Supprimer) */
-.content .content-type table td div button {
-    padding: 5px 10px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 0.9em;
-    margin-left: 5px;
-    border: none;
-    transition: opacity 0.2s;
-}
-
-/* Bouton Modifier (Premier bouton) */
-.content .content-type table td div button:first-child {
-    background-color: var(--color-warning-neutral); /* Jaune neutre */
-    color: var(--color-text-dark);
-}
-.content .content-type table td div button:first-child:hover {
-    opacity: 0.8;
-}
-
-/* Bouton Supprimer (Deuxième bouton, si présent) */
-.content .content-type table td div button:last-child {
-    background-color: var(--color-danger); /* Rouge */
-    color: var(--color-text-light);
-}
-.content .content-type table td div button:last-child:hover {
     opacity: 0.8;
 }

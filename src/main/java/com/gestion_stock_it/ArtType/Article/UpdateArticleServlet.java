@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.util.List;
 
-@WebServlet({"/UpdateArticleServlet", "/Articles-Types/Articles/Modification"})
+@WebServlet({"/UpdateArticleServlet", "/Articles/Modification"})
 public class UpdateArticleServlet extends HttpServlet {
 
     private DatabaseConnection db;

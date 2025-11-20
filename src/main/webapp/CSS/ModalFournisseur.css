@@ -1,0 +1,94 @@
+/* ------------------------------------ */
+/* Styles de la Modale/Formulaire de Création/Modification de Fournisseur */
+/* ------------------------------------ */
+
+/* Style du formulaire principal */
+#addForm_fournisseur, #modifyForm_fournisseur {
+    font-family: 'Arial', sans-serif;
+    max-width: 600px;
+    margin: 30px auto;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* Style des Fieldsets */
+#addForm_fournisseur fieldset, #modifyForm_fournisseur fieldset {
+    border: 1px solid #ccc; /* Bordure neutre */
+    border-radius: 6px;
+    padding: 20px;
+    margin-bottom: 30px;
+}
+
+/* Style de la Légende de Fieldset */
+#addForm_fournisseur legend, #modifyForm_fournisseur legend {
+    font-size: 1.3em;
+    font-weight: bold;
+    padding: 0 10px;
+}
+
+/* Conteneur pour les labels */
+#addForm_fournisseur fieldset > div,
+#modifyForm_fournisseur fieldset > div {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+/* Style des Labels */
+#addForm_fournisseur label, #modifyForm_fournisseur label {
+    display: block;
+    margin-bottom: 5%;
+    font-weight: 500;
+}
+
+/* Style des champs de saisie (input[text, email, number] et textarea) */
+#addForm_fournisseur input[type="text"],
+#addForm_fournisseur input[type="email"],
+#addForm_fournisseur input[type="number"],
+#addForm_fournisseur textarea, /* <-- RÉINTRODUIT */
+#modifyForm_fournisseur input[type="text"],
+#modifyForm_fournisseur input[type="email"],
+#modifyForm_fournisseur input[type="number"],
+#modifyForm_fournisseur textarea { /* <-- RÉINTRODUIT */
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc; /* Bordure neutre */
+    border-radius: 4px;
+    box-sizing: border-box;
+    margin-top: 5px;
+    font-size: 1em;
+}
+
+#addForm_fournisseur textarea, #modifyForm_fournisseur textarea { /* <-- STYLES SPÉCIFIQUES RÉINTRODUITS */
+    resize: vertical; /* Permet uniquement le redimensionnement vertical */
+    min-height: 100px;
+    font-family: 'Arial', sans-serif;
+}
+
+/* Style pour les liens (s'il y a des liens dans le fieldset) */
+#addForm_fournisseur fieldset a {
+    text-decoration: none;
+    font-weight: bold;
+    display: block;
+    margin-top: 10px;
+    padding: 5px 0;
+}
+
+/* Style du Bouton Confirmer */
+.submit_fournisseur.btn {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    font-size: 1.1em;
+    font-weight: bold;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.submit_fournisseur.btn:hover {
+    opacity: 0.9;
+}

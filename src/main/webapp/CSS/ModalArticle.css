@@ -4,6 +4,7 @@
 
 /* Style du formulaire principal */
 #addForm_article, #modifyForm_article {
+    font-family: 'Arial', sans-serif;
     max-width: 600px;
     margin: 30px auto;
     padding: 30px;
@@ -38,6 +39,7 @@
 /* Style des Labels */
 #addForm_article label, #modifyForm_article label {
     display: block;
+    margin-bottom: 5%;
     font-weight: 500;
 }
 

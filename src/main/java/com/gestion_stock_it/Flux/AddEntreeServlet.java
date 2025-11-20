@@ -17,7 +17,7 @@ import java.sql.Connection;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@WebServlet({"/AddEntreeServlet", "/Mouvements/Entrees/Creation"})
+@WebServlet({"/AddEntreeServlet", "/Entrees/Creation"})
 public class AddEntreeServlet extends HttpServlet {
 
     private DatabaseConnection db;

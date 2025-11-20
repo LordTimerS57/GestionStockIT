@@ -66,7 +66,7 @@ public class EmployeWebSocket {
                 removeFromSessionsRole(ws);
                 if (ws != null && ws.isOpen()) ws.close();
 
-                // notifyAdmin("info", matricule + " s'est déconnecté.", "logout", null);
+                notifyAdmin("info", matricule + " s'est déconnecté.", "logout", null);
 
             } else if ("change_role".equals(type)) {
                 

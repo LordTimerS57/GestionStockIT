@@ -88,12 +88,14 @@
 /* 2. Organisation et Style des Barres de Recherche (.search) */
 /* ------------------------------------ */
 
+/* Ces classes restent pour définir les marges de la zone de contenu */
 .content .content-flux-in, .content .content-flux-out {
     padding: 20px;
 }
 
 /* Conteneur de recherche principal (Organisation Flexbox) */
-.content .content-flux-in .search, .content .content-flux-out .search {
+/* Cible maintenant TOUS les éléments .search à l'intérieur de .content */
+.content .search { 
     background-color: var(--color-background-light);
     border-radius: 8px;
     box-shadow: var(--shadow-light);
@@ -129,8 +131,9 @@
 }
 
 /* Style des champs de recherche (Inputs/Selects) */
-.content .content-flux-in .search select, .content .content-flux-out .search select,
-.content .content-flux-in .search input, .content .content-flux-out .search input {
+/* Cible maintenant TOUS les inputs et selects à l'intérieur de .content .search */
+.content .search select, 
+.content .search input {
     padding: 8px 10px;
     border: 1px solid var(--color-border);
     border-radius: 4px;
@@ -138,25 +141,42 @@
     transition: border-color 0.3s;
 }
 
-.content .content-flux-in .search input:focus,
-.content .content-flux-out .search input:focus,
-.content .content-flux-in .search select:focus,
-.content .content-flux-out .search select:focus {
+/* Style au focus */
+.content .search input:focus,
+.content .search select:focus {
     border-color: var(--color-accent);
     outline: none;
 }
 
-/* Style spécifique au champ de recherche d'article */
+/* Style spécifique au champ de recherche d'article (peut nécessiter d'être généralisé si d'autres modules ont un champ principal) */
 #article_search {
+    /* Styles de base copiés de .type-section .search-label */
     display: flex;
-    flex-grow: 1;
-    min-width: 250px;
     align-items: center;
-}
-#nom_article {
+    border: 1px solid var(--color-border);
+    border-radius: 20px; /* Forme arrondie */
+    padding: 5px 15px;
+    background-color: var(--color-background-white);
+    
+    /* Gestion de l'espace dans la barre de recherche */
+    flex-grow: 1; /* Permet de prendre l'espace restant dans la barre */
     min-width: 250px;
-    box-sizing: border-box;
+    max-width: 350px; /* Limiter la largeur si elle est dans la même barre Flex */
 }
+
+#nom_article {
+    /* Styles de l'input copiés de .type-section .search-label input */
+    border: none;
+    outline: none;
+    flex-grow: 1;
+    padding: 5px;
+    font-size: 1em;
+
+    /* Assure qu'il prend toute la place du conteneur Flexbox */
+    width: 100%;
+    min-width: 250px;
+}
+
 
 /* ------------------------------------ */
 /* 3. Style de la Table de Résultats */

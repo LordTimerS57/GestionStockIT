@@ -7,9 +7,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
-@WebServlet({"/Mouvements/Entrees", "/Mouvements/Sorties"})
+@WebServlet({"/Entrees", "/Sorties"})
 public class ListFluxServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String path = request.getServletPath();
@@ -20,8 +21,8 @@ public class ListFluxServlet extends HttpServlet {
         FluxDataController dao = new FluxDataController();
 
         switch (path){
-            case "/Mouvements/Entrees": {
-                List<Entree> entrees = null;
+            case "/Entrees": {
+                List<Entree> entrees = new ArrayList<>();
                 try {
                     entrees = dao.getEntreeList(null, nomArticle, null, dateFlux, dateParams);
                 } catch (Exception e) {
@@ -38,8 +39,8 @@ public class ListFluxServlet extends HttpServlet {
                 request.getRequestDispatcher("/Dashboard.jsp").forward(request, response);
                 break;
             }
-            case "/Mouvements/Sorties": {
-                List<Sortie> sorties = null;
+            case "/Sorties": {
+                List<Sortie> sorties = new ArrayList<>();
                 try {
                     sorties = dao.getSortieList(null, nomArticle, null, null, dateFlux, dateParams);
                 } catch (Exception e) {

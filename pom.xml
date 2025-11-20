@@ -18,6 +18,16 @@
     </properties>
 
     <dependencies>
+    	<dependency>
+    		<groupId>jakarta.servlet</groupId>
+    		<artifactId>jakarta.servlet-api</artifactId>
+    		<version>6.0.0</version>
+    	</dependency>
+    	<dependency>
+    		<groupId>jakarta.servlet.jsp</groupId>
+    		<artifactId>jakarta.servlet.jsp-api</artifactId>
+    		<version>3.0.0</version>
+    	</dependency>
         <dependency>
             <groupId>jakarta.platform</groupId>
             <artifactId>jakarta.jakartaee-api</artifactId>
@@ -106,7 +116,8 @@
             <groupId>org.apache.poi</groupId>
             <artifactId>poi</artifactId>
             <version>5.2.3</version>
-        </dependency>
+ 
+    	</dependency>
 
     </dependencies>
 
