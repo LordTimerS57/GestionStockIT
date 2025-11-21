@@ -113,6 +113,12 @@
     flex-direction: column;
     gap: 10px;
 }
+#employe_param_search_container{
+	display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 20%;
+}
 
 /* Organisation du sélecteur de type de date (label) */
 #date_type_select_label {
@@ -149,7 +155,7 @@
 }
 
 /* Style spécifique au champ de recherche d'article (peut nécessiter d'être généralisé si d'autres modules ont un champ principal) */
-#article_search {
+#article_search, #destinataire_search, #expediteur_search {
     /* Styles de base copiés de .type-section .search-label */
     display: flex;
     align-items: center;
@@ -164,7 +170,7 @@
     max-width: 350px; /* Limiter la largeur si elle est dans la même barre Flex */
 }
 
-#nom_article {
+#nom_article , #destinataire, #expediteur {
     /* Styles de l'input copiés de .type-section .search-label input */
     border: none;
     outline: none;

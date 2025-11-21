@@ -21,11 +21,11 @@
     </div>
     <% } %>
     <div class="search">
-        <div id="date_param_search_container">
-
+        <fieldset id="date_param_search_container">
+            <legend>Recherche par date</legend>
             <label id="date_type_select_label">
                 Chercher la date de déplacement suivant
-                <select name="date" onchange="updateSearchFlux()">
+                <select name="date" onchange="updateSearchFlux('Date_flux')">
                     <option value="date">la date</option>
                     <option value="mois">le mois et l'année seulement</option>
                 </select>
@@ -66,7 +66,19 @@
                     </label>
                 </div>
             </div>
-        </div>
+        </fieldset>
+        
+        <fieldset id="employe_param_search_container">
+            <legend>Recherche par employé</legend>
+            <div id="employe_search_input">
+            	<label id="expediteur_search">
+            		<input type="search" name="expediteur" id="expediteur" placeholder="Rechercher l'expéditeur par son nom et/ou prénoms..." oninput="searchFlux('Sortie')"><i class="fas fa-search"></i>
+            	</label>
+            	<label id="destinataire_search">
+            		<input type="search" name="destinataire" id="destinataire" placeholder="Rechercher la destinataire par son nom et/ou prénoms..." oninput="searchFlux('Sortie')"><i class="fas fa-search"></i>
+            	</label>
+        	</div>
+        </fieldset>
 
         <label id="article_search">
             <input type="search" name="nom_article" id="nom_article" placeholder="Rechercher l'article souhaité ..." oninput="searchFlux('Sortie')">

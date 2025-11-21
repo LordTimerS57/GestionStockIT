@@ -51,8 +51,7 @@ public class EmployeDataController {
 			}
 
 			if (hasNomPrenom) {
-				conditions.add("(Nom LIKE ? OR Prenom LIKE ?)");
-				params.add("%" + Nom_prenom + "%");
+				conditions.add("(CONCAT(Nom, ' ', Prenom) LIKE ?)");
 				params.add("%" + Nom_prenom + "%");
 			}
 

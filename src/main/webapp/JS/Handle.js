@@ -202,7 +202,7 @@ function searchType() {
 }
 
 function searchFlux(type) {
-    let dateFlux = "", param = "", nomArticle = "";
+    let dateFlux = "", param = "", nomArticle = "", destinataire = "", expediteur = "";
 
     const nom = document.getElementById("nom_article").value;
     if (nom.trim() !== "") nomArticle = nom;
@@ -226,11 +226,22 @@ function searchFlux(type) {
         }
         param = "month";
     }
+	
+	if(type.trim() !== "" && type.trim() === "Sortie") {
+		const destinataireInput = document.getElementById("destinataire").value;
+		const expediteurInput = document.getElementById("expediteur").value;
+		
+		if(destinataireInput.trim() !== "") destinataire = destinataireInput; 
+		if(expediteurInput.trim() !== "") expediteur = expediteurInput;
+		
+	}
 
     const data = new URLSearchParams({
         article: nomArticle,
         date_flux: dateFlux,
-        date_params: param
+        date_params: param,
+		destinataire: destinataire,
+		expediteur: expediteur
     });
 
     console.log(data);
@@ -257,16 +268,15 @@ function searchFlux(type) {
     }
 }
 
-function updateSearchFlux() {
-    const divDate1 = document.getElementById("date_search_1");
-    const divDate2 = document.getElementById("date_search_2");
-    const selectDate = document.querySelector('select[name="date"]').value;
+function updateSearchFlux(style) {
+	if(style.trim() !== "" || style.trim() === "Date_flux") {
+	    const divDate1 = document.getElementById("date_search_1");
+	    const divDate2 = document.getElementById("date_search_2");
+	    const selectDate = document.querySelector('select[name="date"]').value;	
 
-    divDate1.style.display = (selectDate === "date") ? "block" : "none";
-    divDate2.style.display = (selectDate === "mois") ? "block" : "none";
-
-    // On relance une recherche après changement du type de date
-    searchFlux();
+    	divDate1.style.display = (selectDate === "date") ? "block" : "none";
+    	divDate2.style.display = (selectDate === "mois") ? "block" : "none";
+	}
 }
 
 function setUpdateArticle(tag) {

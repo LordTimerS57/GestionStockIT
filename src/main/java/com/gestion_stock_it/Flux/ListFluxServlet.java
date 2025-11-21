@@ -42,7 +42,10 @@ public class ListFluxServlet extends HttpServlet {
             case "/Sorties": {
                 List<Sortie> sorties = new ArrayList<>();
                 try {
-                    sorties = dao.getSortieList(null, nomArticle, null, null, dateFlux, dateParams);
+                    String expediteur = request.getParameter("expediteur");
+                    String destinataire = request.getParameter("destinataire");
+                    
+                    sorties = dao.getSortieList(null, nomArticle, expediteur, destinataire, dateFlux, dateParams);
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }

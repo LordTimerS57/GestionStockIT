@@ -228,17 +228,15 @@ public class FluxDataController {
 			}
 
 			if (hasNomExpediteur) {
-				conditions.add("exp.Nom LIKE ? OR exp.Prenom LIKE ? ");
+				conditions.add("CONCAT(exp.Nom, ' ', exp.Prenom) LIKE ? ");
 				params.add("%" + Nom_expediteur + "%");
-				params.add("%" + Nom_expediteur + "%");
-				order.add("CONCAT(exp.Nom + \" \" + exp.Prenom) ASC");
+				order.add("CONCAT(exp.Nom, ' ', exp.Prenom) ASC");
 			}
 
 			if(hasNomDestinataire) {
-				conditions.add("des.Nom LIKE ? OR des.Prenom LIKE ? ");
+				conditions.add("CONCAT(des.Nom, ' ', des.Prenom)LIKE ? ");
 				params.add("%" + Nom_destinataire + "%");
-				params.add("%" + Nom_destinataire + "%");
-				order.add("CONCAT(des.Nom + \" \" + des.Prenom) ASC");
+				order.add("CONCAT(des.Nom, ' ', des.Prenom) ASC");
 			}
 
 			if (hasDateFlux && hasDateFluxParam) {
