@@ -63,7 +63,6 @@ public class FilterController implements Filter {
                         || normalizedPath.equals("/")
                         || normalizedPath.equals("/Connexion")
                         || normalizedPath.equals("/LoginServlet")
-                        || normalizedPath.equals("/index.jsp")
                         || normalizedPath.isEmpty();
         return isPublic;
     }

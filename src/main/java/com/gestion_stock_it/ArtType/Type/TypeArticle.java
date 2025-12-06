@@ -8,7 +8,7 @@ public class TypeArticle {
   private long nombre_occurence_article = 0;
 
   public long getNombre_occurence_article() {return nombre_occurence_article;}
-  public void setNombre_occurence_article(long Occurence_article) {this.nombre_occurence_article = Occurence_article;}
+  public void setNombre_occurence_article(long occ) {this.nombre_occurence_article = occ;}
 
     public TypeArticle(String tag_type, String nom_type, String description_type) {
 	this.tag_type = tag_type;

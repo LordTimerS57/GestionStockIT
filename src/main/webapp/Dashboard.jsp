@@ -45,14 +45,10 @@
                 const dropdownToggle = dropdownMenu.querySelector('.dropdown-toggle');
                 
                 if (dropdownToggle) {
-                    // Gère le clic sur les éléments de bascule
                     dropdownToggle.addEventListener('click', function(e) {
-                        // Pas besoin de e.preventDefault() si on utilise href="javascript:void(0)", mais bonne pratique
                         e.preventDefault(); 
                         dropdownMenu.classList.toggle('open');
                     });
-
-                    // Persistance : Ouvre le menu si un des sous-liens est actif
                     const activeSubLink = dropdownMenu.querySelector('.dropdown-content a.active-sub');
                     if (activeSubLink) {
                         dropdownMenu.classList.add('open');

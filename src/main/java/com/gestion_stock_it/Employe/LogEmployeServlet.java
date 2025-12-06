@@ -1,14 +1,18 @@
 package com.gestion_stock_it.Employe;
 
-import com.gestion_stock_it.DatabaseConnection;
-import com.gestion_stock_it.ErrorConfirmException;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.*;
-import jakarta.websocket.Session;
-
 import java.io.IOException;
 import java.sql.Connection;
+
+import com.gestion_stock_it.DatabaseConnection;
+import com.gestion_stock_it.ErrorConfirmException;
+
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import jakarta.websocket.Session;
 
 @WebServlet({"/LoginServlet","/LogoutServlet"})
 public class LogEmployeServlet extends HttpServlet {
@@ -25,6 +29,7 @@ public class LogEmployeServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String path = req.getServletPath();
+        System.out.println("Received " + path + " request");
 
         String matricule = req.getParameter("matricule");
         String email = req.getParameter("email");

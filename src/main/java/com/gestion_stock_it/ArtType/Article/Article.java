@@ -23,8 +23,8 @@ public class Article{
 	  this.situation_article = ( (nombre_article == 0) ? "Rupture de stock" : "En stock" );
   }
 
-  public void setNombre_occurence_entrees(long nombre_occurence_entrees) {this.nombre_occurence_entrees = nombre_occurence_entrees;}
-  public void setNombre_occurence_sorties(long nombre_occurence_sorties) {this.nombre_occurence_sorties = nombre_occurence_sorties;}
+  public void setNombre_occurence_entrees(long occ) {this.nombre_occurence_entrees = occ;}
+  public void setNombre_occurence_sorties(long occ) {this.nombre_occurence_sorties = occ;}
 
   public String getTag_article() { return tag_article; }
   public String getNom_article() { return nom_article; }

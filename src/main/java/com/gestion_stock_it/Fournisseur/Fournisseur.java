@@ -9,7 +9,7 @@ public class Fournisseur {
     private long nombre_occurence_entree = 0;
 
     public long getNombre_occurence_entree() {return nombre_occurence_entree;}
-    public void setNombre_occurence_entree(long nombre_occurence_entree) {this.nombre_occurence_entree = nombre_occurence_entree;}
+    public void setNombre_occurence_entree(long occ) {this.nombre_occurence_entree = occ;}
 
     public Fournisseur(String Tag_fournisseur, String Raison_Sociale, String Email_fournisseur, String Telephone_fournisseur) {
         this.tag_fournisseur = Tag_fournisseur;

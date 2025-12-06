@@ -1,3 +1,5 @@
+const ctx = "/StockIT";
+
 function initEmployeWebSocket(contextPath, matricule, role) {
     if (!matricule && !role) {
         console.warn("Aucun matricule fourni pour la connexion WebSocket.");
@@ -23,17 +25,17 @@ function initEmployeWebSocket(contextPath, matricule, role) {
                     console.log("🔄 Rafraîchissement des données demandé :", data.message);
 
                     // Selon la page active, on relance la fonction appropriée :
-                    if (window.location.pathname.includes("/Articles-Types/Articles")) {
+                    if (window.location.pathname.includes("/Articles")) {
                         searchArticle();
                     } else if (window.location.pathname.includes("/Employes")) {
                         searchEmploye();
                     } else if (window.location.pathname.includes("/Fournisseurs")) {
                         searchFournisseur();
-                    } else if (window.location.pathname.includes("/Articles-Types/Types")) {
+                    } else if (window.location.pathname.includes("/Types")) {
                         searchType();
-                    } else if (window.location.pathname.includes("/Mouvements/Entrees")) {
+                    } else if (window.location.pathname.includes("/Entrees")) {
                         searchFlux("Entree");
-                    } else if (window.location.pathname.includes("/Mouvements/Sorties")) {
+                    } else if (window.location.pathname.includes("/Sorties")) {
                         searchFlux("Sortie");
                     }
                 }
@@ -111,7 +113,7 @@ function searchArticle() {
     const currentBody = document.querySelector("#result_article");
     currentBody.innerHTML = "<p>Recherche en cours...</p>";
 
-    fetch("/Stock/Articles?" + params.toString())
+    fetch(ctx+"/Articles?" + params.toString())
         .then(res => res.text())
         .then(html => {
             const tempDiv = document.createElement("div");
@@ -137,7 +139,7 @@ function searchEmploye() {
     currentBody.innerHTML = "<p>Recherche en cours...</p>";
     currentBody1.innerHTML = "<p>Recherche en cours...</p>";
 
-    fetch("/Stock/Employes?" + params.toString())
+    fetch(ctx+"/Employes?" + params.toString())
         .then(res => res.text())
         .then(html => {
             const tempDiv = document.createElement("div");
@@ -164,7 +166,7 @@ function searchFournisseur() {
     const currentBody = document.querySelector("#result_fournisseur");
     currentBody.innerHTML = "<p>Recherche en cours...</p>";
 
-    fetch("/Stock/Fournisseurs?" + params.toString())
+    fetch(ctx+"/Fournisseurs?" + params.toString())
         .then(res => res.text())
         .then(html => {
             const tempDiv = document.createElement("div");
@@ -187,7 +189,7 @@ function searchType() {
     const currentBody = document.querySelector("#result_type");
     currentBody.innerHTML = "<p>Recherche en cours...</p>";
 
-    fetch("/Stock/Types?" + params.toString())
+    fetch(ctx+"/Types?" + params.toString())
         .then(res => res.text())
         .then(html => {
             const tempDiv = document.createElement("div");
@@ -253,7 +255,7 @@ function searchFlux(type) {
         const currentBody = document.querySelector(selector);
         currentBody.innerHTML = "<p>Recherche en cours...</p>";
 
-        fetch("/Stock" + (type.trim() === "Entree" ? "/Entrees" : "/Sorties") + "?" + data.toString())
+        fetch(ctx + (type.trim() === "Entree" ? "/Entrees" : "/Sorties") + "?" + data.toString())
             .then(res => res.text())
             .then(html => {
                 const tempDiv = document.createElement("div");
@@ -282,20 +284,20 @@ function updateSearchFlux(style) {
 function setUpdateArticle(tag) {
     if (tag.trim() !== "") {
         console.log(tag)
-        window.location.href = "/Stock/Articles-Types/SessionModifyArtType.jsp?section=Article&id=" + encodeURIComponent(tag);
+        window.location.href = "/Articles-Types/SessionModifyArtType.jsp?section=Article&id=" + encodeURIComponent(tag);
     }
 }
 
 function setUpdateFournisseur(tag){
     const params = new URLSearchParams();
     if(tag.trim() !== ""){
-        window.location.href = "/Stock/Fournisseur/SessionModifyFournisseur.jsp?id=" + encodeURIComponent(tag);
+        window.location.href = ctx+"/Fournisseur/SessionModifyFournisseur.jsp?id=" + encodeURIComponent(tag);
     }
 }
 
 function setUpdateType(tag) {
     if (tag.trim() !== "") {
-        window.location.href = "/Stock/Articles-Types/SessionModifyArtType.jsp?section=Type&id=" + encodeURIComponent(tag);
+        window.location.href = ctx+"/Articles-Types/SessionModifyArtType.jsp?section=Type&id=" + encodeURIComponent(tag);
     }
 }
 
@@ -330,7 +332,7 @@ function searchEntree(data){
     const currentBody = document.querySelector((data.trim() === "article") ? "#result_article" : "#result_expediteur");
     currentBody.innerHTML = "<p>Recherche en cours...</p>";
 
-    fetch("/Stock/Mouvements/Entrees/Creation?" + params.toString())
+    fetch(ctx+"/Entrees/Creation?" + params.toString())
         .then(res => res.text())
         .then(html => {
             const tempDiv = document.createElement("div");
@@ -358,7 +360,7 @@ function searchSortie(data){
     const currentBody = document.querySelector((data.trim() === "article") ? "#result_article" : "#result_destinataire");
     currentBody.innerHTML = "<p>Recherche en cours...</p>";
 
-    fetch("/Stock/Mouvements/Sorties/Creation?" + params.toString())
+    fetch(ctx + "/Sorties/Creation?" + params.toString())
         .then(res => res.text())
         .then(html => {
             const tempDiv = document.createElement("div");
@@ -694,7 +696,7 @@ function setExcelTransform(type){
         });
 
         if(type.trim() !== ""){
-            url = "/Stock/RapportExcel" + (type.trim() === "Entree" ? "/Entrees" : "/Sorties") + "?" + data.toString();
+            url = ctx + "/RapportExcel" + (type.trim() === "Entree" ? "/Entrees" : "/Sorties") + "?" + data.toString();
             window.location.href = url;
         }
     }
@@ -759,13 +761,13 @@ function setForm(e, style, type, subType){
                 form = document.getElementById(formPrefix + 'Form_entree');
                 submitButton = form.querySelector('.submit_entree');
                 url = "/"+ urlPrefix + "EntreeServlet";
-                nextUrl = "/Mouvements/Entrees";
+                nextUrl = "/Entrees";
             }
             if(subType.trim() === "Sortie"){
                 form = document.getElementById(formPrefix + 'Form_sortie');
                 submitButton = form.querySelector('.submit_sortie');
                 url = "/"+ urlPrefix + "SortieServlet";
-                nextUrl = "/Mouvements/Sorties";
+                nextUrl = "/Sorties";
             }
             break;
         }
@@ -804,7 +806,7 @@ function setForm(e, style, type, subType){
         clearError(style,type,subType);
     }
 
-    fetch( "/Stock" + url, {
+    fetch( ctx + url, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
@@ -820,7 +822,7 @@ function setForm(e, style, type, subType){
                 if(subType !== "Modification_role"){
                     clearError(style,type,subType);
                 }
-                window.location.href = "/Stock" + nextUrl ;
+                window.location.href = ctx + nextUrl ;
             } else {
                 return response.text().then(text => {
                     const erreurs = text.split('\n').filter(line => line.trim() !== '');
@@ -830,6 +832,7 @@ function setForm(e, style, type, subType){
             //
         })
         .catch(error => {
+			console.error("Fetch error:", error.message);
             alert('Erreur autre : ' + error.message);
         })
         .finally(() => {
@@ -879,7 +882,7 @@ function removeData(data, type){
     let params = new URLSearchParams();
     params.append(tag, data);
 
-    fetch( "/Stock" + url, {
+    fetch( ctx + url, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
@@ -891,7 +894,7 @@ function removeData(data, type){
             console.log(data);
                 if (response.ok) {
                     alert("Suppression réussi !");
-                    window.location.href = "/Stock" + nextUrl ;
+                    window.location.href = ctx + nextUrl ;
                 } else {
                     return response.text().then(text => {
                         const erreurs = text.split('\n').filter(line => line.trim() !== '');

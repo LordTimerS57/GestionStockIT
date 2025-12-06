@@ -9,6 +9,8 @@
 #  #  `MAIL_HOST`      -> Email expéditeur pour notification   -> `monapp@gmail.com`                  
 #  #  `MAIL_PASSWORD`  -> Mot de passe email ou App Password   -> `xxxx...`
 
+# Modèle de prompt et base de données utilisés: Voir dans le dossier SQL/Tables.sql
+
 # IntellIJ IDE utilisée.
 # Gestionnaire de dépendance: Maven
 # Apache Tomcat version supérieur à 9 
