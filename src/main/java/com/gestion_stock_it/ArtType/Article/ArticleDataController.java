@@ -99,7 +99,6 @@ public List<Article> getArticleList(String Nom_article, String Nom_type) throws 
             art.setDate_derniere_entree((dateDerniereEntree != null) ? dateDerniereEntree.toLocalDateTime() : null);
 			art.setDate_derniere_sortie((dateDerniereSortie != null) ? dateDerniereSortie.toLocalDateTime() : null);
 			
-			System.out.println("Article chargé : " + art.getTag_article() + " - " + art.getNom_article() + "-" + art.getSituation_article() + " - Dernière entrée : " + art.getDate_derniere_entree() + " - Dernière sortie : " + art.getDate_derniere_sortie() + " - CMD : " + art.getCMD() + " - Délai réappro estimé : " + art.getDelai_reappro_estime() + " - Seuil critique arrondi : " + art.getSeuil_critique_arrondi());
             listArticle.add(art);
         }
     }
