@@ -9,10 +9,16 @@
 <html>
 	<head>
 		<meta charset="UTF-8">
+    	<link rel="icon" type="image/png" href="<%= request.getContextPath() %>/IMAGES/logo_spat.png"/>
 		<link rel="stylesheet" href="<%= request.getContextPath() %>/CSS/ModalArticle.css?v=<%=System.currentTimeMillis()%>" type="text/css"/>
 		<script src="<%= request.getContextPath() %>/JS/Handle.js?v=<%= System.currentTimeMillis() %>" defer></script>
 		<script src="<%= request.getContextPath() %>/JS/HandleError.js?v=<%= System.currentTimeMillis() %>" defer></script>
 		<title>Création d'un nouvel article</title>
+		<script type="text/javascript">
+			document.addEventListener("pagehide", function() {
+	            closeEmployeWebSocket();
+	        });
+    	</script>
 	</head>
 	<body>
 		<h1>Ajouter un nouvel article</h1>

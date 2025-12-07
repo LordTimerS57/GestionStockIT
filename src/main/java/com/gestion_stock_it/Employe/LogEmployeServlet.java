@@ -32,50 +32,54 @@ public class LogEmployeServlet extends HttpServlet {
         System.out.println("Received " + path + " request");
 
         String matricule = req.getParameter("matricule");
-        String email = req.getParameter("email");
-        String motDePasse = req.getParameter("mot_de_passe");
-
-        Employe e;
 
         EmployeDataController fn = new EmployeDataController();
         try {
-            e = fn.testMotDePasse(matricule, motDePasse, email);
             switch (path) {
                 case "/LogoutServlet": {
-                    fn.connect(c,  e.getMatricule(), email, motDePasse, "non");
-
-                    HttpSession session = SessionRegistryEmploye.getHttpSession(e.getMatricule());
+                    HttpSession session = SessionRegistryEmploye.getHttpSession(matricule);
 
                     if (session != null) {
                         session.invalidate();
-                        SessionRegistryEmploye.remove(e.getMatricule());
+                        SessionRegistryEmploye.remove(matricule);
                     } else {
-                        System.out.println("Logout : session déjà inexistante pour " + e.getMatricule());
+                        System.out.println("Logout : session déjà inexistante pour " + matricule);
                     }
-                    Session ws = EmployeWebSocket.getWebSocketSession(e.getMatricule());
+                    Session ws = EmployeWebSocket.getWebSocketSession(matricule);
                     if (ws != null && ws.isOpen()) {
                         try {
                             ws.close();
-                            System.out.println("WebSocket fermé pour " + e.getMatricule());
+                            System.out.println("WebSocket fermé pour " + matricule);
                         } catch (IOException ex) {
                             ex.printStackTrace();
                         }
                     }
+                    
+                    fn.connect(c,  matricule, null, null, "non");
+                    
                     resp.setStatus(HttpServletResponse.SC_OK);
                     resp.getWriter().write("Logout success");
                     break;
                 }
 
                 case "/LoginServlet": {
-                    fn.connect(c,  e.getMatricule(), email, motDePasse, "oui");
 
-                    HttpSession session = req.getSession();
-                    session.setAttribute("login_role",e.getRole());
-                    session.setAttribute("login_profil",e);
+                    String email = req.getParameter("email");
+                    String motDePasse = req.getParameter("mot_de_passe");
+                    
+                	Employe e = fn.testMotDePasse(matricule, motDePasse, email);
+                	if(e != null) {
+                		fn.connect(c,  e.getMatricule(), email, motDePasse, "oui");
 
-                    SessionRegistryEmploye.register(e.getMatricule(), session);
-                    resp.setStatus(HttpServletResponse.SC_OK);
-                    break;
+                        HttpSession session = req.getSession();
+                        session.setAttribute("login_role",e.getRole());
+                        session.setAttribute("login_profil",e);
+
+                        SessionRegistryEmploye.register(e.getMatricule(), session);
+                        resp.setStatus(HttpServletResponse.SC_OK);
+                        resp.getWriter().write("Login success");
+                        break;		
+                	}
                 }
             }
             EmployeWebSocket.notifyAllEmployes("refresh_data", "Mise à jour des données");

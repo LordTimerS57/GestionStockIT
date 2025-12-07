@@ -1,5 +1,6 @@
 package com.gestion_stock_it.Employe;
 
+import com.gestion_stock_it.DatabaseConnection;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import jakarta.servlet.http.HttpSession;
@@ -31,8 +32,37 @@ public class EmployeWebSocket {
     // ✅ Lorsqu’une connexion WebSocket se ferme
     @OnClose
     public void onClose(Session session, @PathParam("matricule") String matricule) {
-        sessions.remove(matricule);
         removeFromSessionsRole(session);
+        
+    	/*
+    	HttpSession httpSession = getHttpSessionFromMatricule(matricule);
+    	 
+        if (httpSession != null) {
+        	Employe e = (Employe) httpSession.getAttribute("login_profil");
+        	if(e != null && e.getConnection()) {
+    	      DatabaseConnection db = new DatabaseConnection();
+    	      db.connect();
+    	      try {
+                  EmployeDataController fn = new EmployeDataController();
+                  // Mise à jour de la BDD
+                  fn.connect(db.getConnection(),  matricule, null, null, "non");
+                  
+                  System.out.println("Statut BDD mis à jour pour déconnexion inattendue : " + matricule);
+                  
+              } finally {
+                  db.disconnect(); // Garantit la fermeture de la connexion BDD
+              }
+    	      
+    	      httpSession.invalidate(); 
+              SessionRegistryEmploye.remove(matricule);
+              
+              System.out.println("Session HTTP invalidée par fermeture WS pour : " + matricule);
+              
+        	}
+        	 EmployeWebSocket.notifyAllEmployes("refresh_data", "Mise à jour des données");
+        }
+        */
+        sessions.remove(matricule);
         System.out.println("WebSocket fermé pour : " + matricule);
     }
 
@@ -41,7 +71,6 @@ public class EmployeWebSocket {
     public void onError(Session session, Throwable throwable, @PathParam("matricule") String matricule) {
         sessions.remove(matricule);
         removeFromSessionsRole(session);
-
         throwable.printStackTrace();
     }
 

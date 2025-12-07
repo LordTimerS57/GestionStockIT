@@ -5,6 +5,7 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Page d'accueil</title>
+    <link rel="icon" type="image/png" href="<%= request.getContextPath() %>/IMAGES/logo_spat.png"/>
 	<link rel="stylesheet" href="<%= request.getContextPath() %>/CSS/WelcomePage.css?v=<%= System.currentTimeMillis() %>"  type="text/css"/>
 	<script src="JS/Handle.js?v=<%=System.currentTimeMillis()%>" defer></script>
 </head>

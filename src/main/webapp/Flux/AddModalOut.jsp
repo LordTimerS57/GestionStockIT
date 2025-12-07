@@ -14,9 +14,15 @@
 <head>
 	<title>Sortir un article</title>
 	<meta charset="UTF-8">
+    <link rel="icon" type="image/png" href="<%= request.getContextPath() %>/IMAGES/logo_spat.png"/>
 	<link rel="stylesheet" href="<%= request.getContextPath() %>/CSS/ModalFlux.css?v=<%=System.currentTimeMillis()%>" type="text/css"/>
 	<script src="<%= request.getContextPath() %>/JS/Handle.js?v=<%= System.currentTimeMillis() %>" defer></script>
 	<script src="<%= request.getContextPath() %>/JS/HandleError.js?v=<%= System.currentTimeMillis() %>" defer></script>
+	<script>
+		document.addEventListener("pagehide", function() {
+            closeEmployeWebSocket();
+        });
+	</script>
 </head>
 <body>
 <h1>Sortir un article</h1>

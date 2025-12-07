@@ -346,24 +346,18 @@ public class EmployeDataController {
 
 	public void connect(Connection c, String matricule, String Email, String Mot_de_passe, String connection) {
 		boolean connected = connection != null && !connection.trim().isEmpty();
+		System.out.println("Connection value: " + connection + ", connected: " + connected);
 		try {
-			Employe emp = testMotDePasse(matricule, Mot_de_passe, Email);
-
-			if (emp == null) {
-				System.out.println("Mot de passe ou email incorrect.");
-				return;
-			}
-
 			StringBuilder updateQuery = new StringBuilder("UPDATE Employe SET Connecte = ?, Date_modification = NOW() WHERE Matricule = ?");
 			try (PreparedStatement p_stmt = c.prepareStatement(updateQuery.toString())) {
 				p_stmt.setBoolean(1, connected && connection.equals("oui"));
-				p_stmt.setString(2, emp.getMatricule());
+				p_stmt.setString(2, matricule);
 
 				int rows = p_stmt.executeUpdate();
 				if (rows > 0) {
-					System.out.println("Employé connecté avec succès : " + emp.getEmail());
+					System.out.println( (connected && connection.equals("oui")) ? "Employé connecté avec succès : " + Email : "Employé déconnecté avec succès : " + matricule);	
 				} else {
-					System.out.println("Échec de la mise à jour de la connexion pour : " + emp.getEmail());
+					System.out.println( (connected && connection.equals("oui")) ? "Échec de la mise à jour de la connexion pour : " + Email : "Échec de la mise à jour de la déconnexion pour : " + matricule);
 				}
 			}
 

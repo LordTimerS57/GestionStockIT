@@ -10,9 +10,15 @@
 <html>
 <head>
     <title>Title</title>
+    <link rel="icon" type="image/png" href="<%= request.getContextPath() %>/IMAGES/logo_spat.png"/>
     <link rel="stylesheet" href="<%= request.getContextPath() %>/CSS/ModalFournisseur.css?v=<%=System.currentTimeMillis()%>" type="text/css"/>
     <script src="<%= request.getContextPath() %>/JS/Handle.js?v=<%= System.currentTimeMillis() %>" defer></script>
     <script src="<%= request.getContextPath() %>/JS/HandleError.js?v=<%= System.currentTimeMillis() %>" defer></script>
+    <script>
+		document.addEventListener("pagehide", function() {
+            closeEmployeWebSocket();
+        });
+	</script>
 </head>
 <body>
     <form id="addForm_fournisseur" onsubmit="setForm(event, 'Ajout', 'Fournisseur', null);">

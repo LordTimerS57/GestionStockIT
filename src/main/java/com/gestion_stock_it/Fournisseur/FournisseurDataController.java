@@ -76,7 +76,7 @@ public class FournisseurDataController {
                         res.getString("Telephone_fournisseur")
                 );
 
-                fournisseur.setNombre_occurence_entree(res.getLong("Occurence_fournisseur"));
+                fournisseur.setNombre_occurence_entree_fournisseur(res.getLong("Occurence_fournisseur"));
 
                 listFournisseur.add(fournisseur);
             }

@@ -1,4 +1,5 @@
 const ctx = "/StockIT";
+let wsInstance = null;
 
 function initEmployeWebSocket(contextPath, matricule, role) {
     if (!matricule && !role) {
@@ -9,16 +10,16 @@ function initEmployeWebSocket(contextPath, matricule, role) {
     const protocol = window.location.protocol === "https:" ? "wss://" : "ws://";
     const wsUrl = protocol + window.location.host + contextPath + "/EmployeLog/" + matricule + "/" + role;
 
-    let ws, params;
+    let params;
 
     function initWebSocket() {
-        ws = new WebSocket(wsUrl);
+        wsInstance = new WebSocket(wsUrl);
 
-        ws.onopen = () => {
+        wsInstance.onopen = () => {
             console.log("✅ WebSocket connecté pour l'employé :", matricule);
         };
 
-        ws.onmessage = (event) => {
+        wsInstance.onmessage = (event) => {
             try {
                 const data = JSON.parse(event.data);
                 if (data.type === "refresh_data") {
@@ -53,7 +54,7 @@ function initEmployeWebSocket(contextPath, matricule, role) {
                         })
                         .then(() => {
                             // 2️⃣ Une fois la requête HTTP terminée, notifier le serveur WebSocket
-                            ws.send(JSON.stringify({
+                            wsInstance.send(JSON.stringify({
                                 type: "passage_logout",
                                 message: "Ok to log out"
                             }));
@@ -66,14 +67,14 @@ function initEmployeWebSocket(contextPath, matricule, role) {
                 console.log(data.message + " " + data.type);
                 if (data.type === "notify_decision") {
                     if(confirm(data.message + "\n" + "Accepteririez - vous ce nouveau compte")){
-                        ws.send(JSON.stringify({
+                        wsInstance.send(JSON.stringify({
                             type: "accept_admin",
                             message: "l'admin a accepté l'employé concerné en tant que nouvel utilisateur",
                             matricule: data.matricule
                         }));
                     }
                     else{
-                        ws.send(JSON.stringify({
+                        wsInstance.send(JSON.stringify({
                             type: "deny_admin",
                             message: "l'admin a refusé l'employé concerné en tant en tant que nouvel utilisateur",
                             matricule: data.matricule
@@ -88,18 +89,127 @@ function initEmployeWebSocket(contextPath, matricule, role) {
             }
         };
 
-        ws.onclose = (event) => {
-            console.warn("❌ WebSocket déconnecté :", event.reason || "connexion fermée");
-
-            setTimeout(initWebSocket, 5000);
+        wsInstance.onclose = (event) => {
+			if (event.code !== 1000) { 
+                setTimeout(initWebSocket, 5000);
+            }
         };
 
-        ws.onerror = (err) => {
+        wsInstance.onerror = (err) => {
             console.error("⚠️ Erreur WebSocket :", err);
         };
     }
 
     initWebSocket();
+}
+
+function closeEmployeWebSocket() {
+    // 1. Fermeture du WebSocket
+    if (wsInstance && wsInstance.readyState === WebSocket.OPEN) {
+        // Code 1000 pour éviter la reconnexion auto
+        wsInstance.close(1000, "Fermeture de l'onglet par l'utilisateur.");
+        console.log("🚀 Tentative de fermeture propre du WebSocket.");
+    }
+    
+    // 2. Notification de déconnexion par sendBeacon
+    if (navigator.sendBeacon) {
+        // Envoi simple d'une requête POST
+        navigator.sendBeacon(LOGOUT_URL, null); 
+        console.log("📡 SendBeacon envoyé au LogoutServlet.");
+    }
+}
+
+
+function logOut(contextPath, matricule) {
+    // Le serveur Java s'occupera d'invalider la session.
+    fetch(contextPath + "/LogoutServlet", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams({
+            matricule: matricule
+        })
+    })
+        .then(res => {
+            if (!res.ok) throw new Error("Échec de la déconnexion HTTP.");
+            alert("Déconnexion pour l'employé " + matricule + " est terminée");
+            window.location.href = contextPath + "/Connexion";
+        })
+        .catch(err => {
+            console.error("ErrorLogOut:", err);
+            window.location.href = contextPath + "/Connexion";
+        });
+}
+
+
+/**
+ * Gère la navigation interne sans recharger la page complète (maintient le WS actif).
+ * @param {string} url - L'URL du contenu à charger (ex: /StockIT/Articles).
+ */
+function navigateTo(url) {
+    const currentContentDiv = document.querySelector(".content");
+    
+    // Mise à jour visuelle et de l'URL
+    currentContentDiv.innerHTML = "<p class='loading-indicator'>Chargement en cours...</p>";
+    history.pushState(null, '', url); 
+    
+    fetch(url)
+        .then(res => {
+            if (!res.ok) throw new Error("Erreur de chargement de la page : " + res.status);
+            return res.text();
+        })
+        .then(html => {
+            // Créer un div temporaire pour trouver le nouveau contenu
+            const tempDiv = document.createElement("div");
+            tempDiv.innerHTML = html;
+            
+            // On extrait la DIV de contenu du HTML de la réponse
+            const newContent = tempDiv.querySelector(".content");
+
+            if (newContent) {
+                currentContentDiv.innerHTML = newContent.innerHTML;
+                updateActiveClass(url); 
+                console.log(`Contenu de ${url} chargé (Soft Navigation).`);
+                
+                // --- Ré-exécution des scripts et fonctions spécifiques ---
+                // Si votre contenu dynamique contient des scripts (event listeners, initialisations)
+                // vous devrez les ré-exécuter manuellement ici après l'injection.
+            } else {
+                currentContentDiv.innerHTML = "<p>Erreur: Contenu non trouvé dans la réponse.</p>";
+            }
+        })
+        .catch(err => {
+            console.error("Erreur de navigation asynchrone:", err);
+            currentContentDiv.innerHTML = `<p>Erreur lors du chargement de la page: ${url}</p>`;
+        });
+}
+
+/**
+ * Met à jour les classes 'active' et 'active-sub' dans la barre de navigation.
+ * @param {string} currentUrl - L'URL actuelle.
+ */
+function updateActiveClass(currentUrl) {
+    // Nettoyer toutes les classes actives
+    document.querySelectorAll('nav a').forEach(link => {
+        link.classList.remove('active', 'active-sub');
+    });
+
+    // Trouver et activer le nouveau lien
+    document.querySelectorAll('nav a').forEach(link => {
+        // Normaliser les chemins pour la comparaison
+        const linkHref = link.getAttribute('href').replace(ctx, '').toLowerCase();
+        const path = new URL(currentUrl).pathname.replace(ctx, '').toLowerCase();
+
+        if (path === linkHref) {
+            if (link.closest('.dropdown-content')) {
+                // Si c'est un sous-lien, active-sub et ouvrir le parent
+                link.classList.add('active-sub');
+                link.closest('.dropdown-menu').classList.add('open');
+            } else {
+                // Si c'est un lien principal
+                link.classList.add('active');
+            }
+        }
+    });
 }
 
 function searchArticle() {
@@ -301,23 +411,6 @@ function setUpdateType(tag) {
     }
 }
 
-function logOut(contextPath,data) {
-    fetch(contextPath + "/LogoutServlet", {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: new URLSearchParams({
-            matricule: data.dataset.matricule,
-            email: data.dataset.email,
-            mot_de_passe: data.dataset.mot_de_passe
-        })
-    })
-        .then(res => {
-            alert("Deconnexion pour l'employé " + data.dataset.matricule + " est terminé");
-            window.location.href = contextPath + "/Connexion";
-        })
-        .catch(err => console.error("ErrorLogOut:", err));
-}
-
 function searchEntree(data){
     const params = new URLSearchParams();
     if (data.trim() === "article"){
@@ -402,15 +495,43 @@ function setDetails(e, action, type, data) {
                     document.getElementById("dialog_nombre_article").textContent = "Stock: " + data.dataset.stock_article;
                     document.getElementById("dialog_tag_article").value = data.dataset.tag_article;
                 } else if (action === 'Close') {
-                    resetFields(["dialog_nom_article", "dialog_type_article", "dialog_nombre_article", "dialog_tag_article"]);
+                    resetFields([
+						"dialog_nom_article", 
+						"dialog_type_article", 
+						"dialog_nombre_article", 
+						"dialog_tag_article"
+					]);
+                }
+                break;
+			case "Article-Info":
+                dialog = document.getElementById("dialog_info_article");
+                if (action === 'Show' && data) {
+                    document.getElementById("dialog_nom_article_info").textContent = data.dataset.nom_article;
+					document.getElementById("dialog_stock_actuel_article").textContent = "Stock actuel: " + data.dataset.stock_article;
+					document.getElementById("dialog_consommation_moyen_article").textContent = "Consommation moyen journalière: " + data.dataset.cmd_article;
+					document.getElementById("dialog_delai_reapprovisionnement_article").textContent = "Delai inter-réception moyen: " + data.dataset.dirm_article;
+					document.getElementById("dialog_seuil_critique_article").textContent = "Quantité à seuil critique: " + data.dataset.seuil_stock_article;
+					document.getElementById("dialog_situation_article").textContent = "Situation du stock: " + data.dataset.situation_article;
+					document.getElementById("dialog_entree_article").textContent = data.dataset.derniere_entree_article;
+					document.getElementById("dialog_sortie_article").textContent = data.dataset.derniere_sortie_article;
+				} else if (action === 'Close') {
+                    resetFields([
+						"dialog_nom_article_info",
+						"dialog_stock_actuel_article",
+						"dialog_consommation_moyen_article",
+						"dialog_delai_reapprovisionnement_article",
+						"dialog_seuil_critique_article",
+						"dialog_situation_article",
+						"dialog_entree_article",
+						"dialog_sortie_article" 
+					]);
                 }
                 break;
 
             case "Destinataire-Employe":
                 dialog = document.getElementById("dialog_destinataire");
                 if (action === 'Show' && data) {
-                    document.getElementById("dialog_destinataire_nom_complet").textContent =
-                        data.dataset.nom + " " + data.dataset.prenom;
+                    document.getElementById("dialog_destinataire_nom_complet").textContent = data.dataset.nom + " " + data.dataset.prenom;
                     document.getElementById("dialog_destinataire_id").textContent = "Matricule: " + data.dataset.matricule;
                     document.getElementById("dialog_destinataire_role").textContent = "Role: " + data.dataset.role;
                     document.getElementById("dialog_destinataire_matricule").value = data.dataset.matricule;
@@ -725,7 +846,7 @@ function setForm(e, style, type, subType){
             form = document.getElementById(formPrefix + 'Form_article');
             submitButton = form.querySelector('.submit_article');
             url = "/"+ urlPrefix + "ArticleServlet";
-            nextUrl = "/Articles-Types/Articles";
+            nextUrl = "/Articles";
             break;
         }
 
@@ -786,7 +907,7 @@ function setForm(e, style, type, subType){
             form = document.getElementById(formPrefix + 'Form_type');
             submitButton = form.querySelector('.submit_type');
             url = "/"+ urlPrefix + "TypeServlet";
-            nextUrl = "/Articles-Types/Types";
+            nextUrl = "/Types";
             break;
         }
         default: break;
@@ -848,7 +969,7 @@ function removeData(data, type){
         case "Article":
         {
             url = "/DeleteArticleServlet";
-            nextUrl = "/Articles-Types/Articles";
+            nextUrl = "/Articles";
             tag = "tag_article";
             break;
         }
@@ -872,7 +993,7 @@ function removeData(data, type){
         case "Type":
         {
             url = "/DeleteTypeServlet";
-            nextUrl = "/Articles-Types/Types";
+            nextUrl = "/Types";
             tag = "tag_type";
             break;
         }

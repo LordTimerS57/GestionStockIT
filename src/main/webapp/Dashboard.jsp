@@ -19,6 +19,7 @@
     integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" 
     crossorigin="anonymous" 
     referrerpolicy="no-referrer" />
+    <link rel="icon" type="image/png" href="<%= ctx %>/IMAGES/logo_spat.png"/>
     <link rel="stylesheet" href="<%= request.getContextPath() %>/CSS/AcceuilArtType.css?v=<%=System.currentTimeMillis()%>" type="text/css"/>
     <link rel="stylesheet" href="<%= request.getContextPath() %>/CSS/AcceuilEmploye.css?v=<%=System.currentTimeMillis()%>" type="text/css"/>
     <link rel="stylesheet" href="<%= request.getContextPath() %>/CSS/AcceuilFlux.css?v=<%=System.currentTimeMillis()%>" type="text/css"/>
@@ -56,95 +57,118 @@
                 }
             });
         });
+        document.addEventListener("pagehide", function() {
+            closeEmployeWebSocket();
+        });
     </script>
 </head>
+
 <body>
 
-<header>
-    <h1>Gestion Stock IT - Tableau de Bord</h1>
-
-    <div>
-    	<a href="<%= ctx %>/Profil" class="<%= "/Profil".equals(uri) ? "active" : "" %>"><%= employe.getNomPrenom() %></a>
-        <button
-                onclick="logOut('<%= ctx %>',this)"
-                data-email="<%=employe.getEmail()%>"
-                data-mot_de_passe="<%=employe.getMot_de_passe()%>"
-                data-matricule="<%=employe.getMatricule()%>"
-        >
-            Se déconnecter
-        </button>
-    </div>
-</header>
-
-<main>
-
-    <nav>
-    
-	    <div class="dropdown-menu"> 
-            <a href="javascript:void(0)" class="dropdown-toggle <%= "/Articles-Types".equals(uri) || uri.startsWith("/Articles-Types/") ? "active" : "" %>">
-                <i class="fas fa-box-open"></i> Articles et Types
-                <i class="fas fa-caret-down dropdown-icon"></i>
-            </a>
-            <ul class="dropdown-content">
-                <li>
-                    <a href="<%= ctx %>/Articles" class="<%= "/Articles".equals(uri) ? "active-sub" : "" %>">
-                        <i class="fas fa-list-alt"></i> Voir les articles
-                    </a>
-                </li>
-                <li>
-                    <a href="<%= ctx %>/Types" class="<%= "/Types".equals(uri) ? "active-sub" : "" %>">
-                        <i class="fas fa-sitemap"></i> Voir les types
-                    </a>
-                </li>
-            </ul>
-        </div>
-	    
-		<% if(Objects.equals(role, "Administrateur") || Objects.equals(role, "Super Administrateur")) { %>
-	        <div class="dropdown-menu"> 
-	            <a href="<%= ctx %>/Employes" class="<%= "/Employes".equals(uri) ? "active" : "" %>">
-	                <i class="fas fa-users"></i> Employés
-	            </a>
-	        </div>
-	        <div class="dropdown-menu"> 
-	            <a href="<%= ctx %>/Fournisseurs" class="<%= "/Fournisseurs".equals(uri) ? "active" : "" %>">
-	                <i class="fas fa-truck"></i> Fournisseurs
-	            </a>
-	        </div>
-        <% } %>	
-       
-       	<div class="dropdown-menu">
-	       	<a href="javascript:void(0)" class="dropdown-toggle <%= "/Mouvements".equals(uri) || uri.startsWith("/Mouvements/") ? "active" : "" %>">
-		            <i class="fas fa-exchange-alt"></i> Mouvements d'articles
-	                <i class="fas fa-caret-down dropdown-icon"></i>
-        	</a>
-        	<ul class="dropdown-content">
-        		<li>
-                    <a href="<%= ctx %>/Entrees" class="<%= "/Entrees".equals(uri) ? "active-sub" : "" %>">
-                        <i class="fas fa-arrow-down"></i> Voir les entrées
-                    </a>
-                </li>
-                <li>
-                    <a href="<%= ctx %>/Sorties" class="<%= "/Sorties".equals(uri) ? "active-sub" : "" %>">
-                        <i class="fas fa-arrow-up"></i> Voir les sorties
-                    </a>
-                </li>
-        	</ul>
-       	</div>
-       
-        <div class="dropdown-menu">
-	        <a href="<%= ctx %>/Chatbot" class="<%= "/Chatbot".equals(uri) ? "active" : "" %>">
-	            <i class="fas fa-robot"></i> Chatbot
+	<header>
+		<image src="<%= ctx %>/IMAGES/logo_spat.png" alt="Logo SPAT" class="logo"/>
+	    <h1>Gestion Stock IT - Tableau de Bord</h1>
+	
+	    <div>
+	    	<a href="<%= ctx %>/Profil" 
+	           onclick="navigateTo(this.href); return false;"
+	           class="<%= "/Profil".equals(uri) ? "active" : "" %>">
+	           <%= employe.getNomPrenom() %>
 	        </a>
-        </div>
-    </nav>
-
-    <div class="content">
-        <jsp:include page="<%= contentPage %>" />
-    </div>
-
-</main>
-<footer>
-    <p>&copy; <%= java.time.Year.now() %> Gestion Stock IT. Tous droits réservés.</p>
-</footer>
+	        <button
+	                onclick="logOut('<%= ctx %>', '<%= employe.getMatricule() %>')"
+	                data-matricule="<%=employe.getMatricule()%>"
+	        >
+	            Se déconnecter
+	        </button>
+	    </div>
+	</header>
+	
+	<main>
+	
+	    <nav>
+	    
+		    <div class="dropdown-menu"> 
+	            <a href="javascript:void(0)" class="dropdown-toggle <%= "/Articles".equals(uri) || "/Types".equals(uri) ? "active" : "" %>">
+	                <i class="fas fa-box-open"></i> Articles et Types
+	                <i class="fas fa-caret-down dropdown-icon"></i>
+	            </a>
+	            <ul class="dropdown-content">
+	                <li>
+	                    <a href="<%= ctx %>/Articles" 
+	                       onclick="navigateTo(this.href); return false;"
+	                       class="<%= "/Articles".equals(uri) ? "active-sub" : "" %>">
+	                        <i class="fas fa-list-alt"></i> Voir les articles
+	                    </a>
+	                </li>
+	                <li>
+	                    <a href="<%= ctx %>/Types" 
+	                       onclick="navigateTo(this.href); return false;"
+	                       class="<%= "/Types".equals(uri) ? "active-sub" : "" %>">
+	                        <i class="fas fa-sitemap"></i> Voir les types
+	                    </a>
+	                </li>
+	            </ul>
+	        </div>
+		    
+			<% if(Objects.equals(role, "Administrateur") || Objects.equals(role, "Super Administrateur")) { %>
+		        <div class="dropdown-menu"> 
+		            <a href="<%= ctx %>/Employes" 
+	                   onclick="navigateTo(this.href); return false;"
+	                   class="<%= "/Employes".equals(uri) ? "active" : "" %>">
+		                <i class="fas fa-users"></i> Employés
+		            </a>
+		        </div>
+		        <div class="dropdown-menu"> 
+		            <a href="<%= ctx %>/Fournisseurs" 
+	                   onclick="navigateTo(this.href); return false;"
+	                   class="<%= "/Fournisseurs".equals(uri) ? "active" : "" %>">
+		                <i class="fas fa-truck"></i> Fournisseurs
+		            </a>
+		        </div>
+	        <% } %>	
+	       
+	       	<div class="dropdown-menu">
+		       	<a href="javascript:void(0)" class="dropdown-toggle <%= "/Entrees".equals(uri) || "/Sorties".equals(uri) ? "active" : "" %>">
+			            <i class="fas fa-exchange-alt"></i> Mouvements d'articles
+		                <i class="fas fa-caret-down dropdown-icon"></i>
+	        	</a>
+	        	<ul class="dropdown-content">
+	        		<li>
+	                    <a href="<%= ctx %>/Entrees" 
+	                       onclick="navigateTo(this.href); return false;"
+	                       class="<%= "/Entrees".equals(uri) ? "active-sub" : "" %>">
+	                        <i class="fas fa-arrow-down"></i> Voir les entrées
+	                    </a>
+	                </li>
+	                <li>
+	                    <a href="<%= ctx %>/Sorties" 
+	                       onclick="navigateTo(this.href); return false;"
+	                       class="<%= "/Sorties".equals(uri) ? "active-sub" : "" %>">
+	                        <i class="fas fa-arrow-up"></i> Voir les sorties
+	                    </a>
+	                </li>
+	        	</ul>
+	       	</div>
+	       
+	        <div class="dropdown-menu">
+		        <a href="<%= ctx %>/Chatbot" 
+	               onclick="navigateTo(this.href); return false;"
+	               class="<%= "/Chatbot".equals(uri) ? "active" : "" %>">
+		            <i class="fas fa-robot"></i> Chatbot
+		        </a>
+	        </div>
+	    </nav>
+	
+	    <div class="content">
+	        <jsp:include page="<%= contentPage %>" />
+	    </div>
+	
+	</main>
+	<footer>
+	    <p>&copy; <%= java.time.Year.now() %> Gestion Stock IT. Tous droits réservés.</p>
+	</footer>
 </body>
+
+
 </html>

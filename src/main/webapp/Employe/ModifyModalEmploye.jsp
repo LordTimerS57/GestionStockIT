@@ -9,9 +9,12 @@
 <html>
 <head>
 	<meta charset="UTF-8">
-	<link rel="stylesheet" href="<%= request.getContextPath() %>/CSS/ModalEmploye.css?v=<%=System.currentTimeMillis()%>" type="text/css"/>
+    <link rel="icon" type="image/png" href="<%= request.getContextPath() %>/IMAGES/logo_spat.png"/>
+    <link rel="stylesheet" href="<%= request.getContextPath() %>/CSS/ModalEmploye.css?v=<%=System.currentTimeMillis()%>" type="text/css"/>
 	<script src="<%= request.getContextPath() %>/JS/Handle.js?v=<%= System.currentTimeMillis() %>" defer></script>
-	<script defer>
+	<script src="<%= request.getContextPath() %>/JS/HandleError.js?v=<%= System.currentTimeMillis() %>" defer></script>
+	<title>Modification du compte</title>
+	<script>
 		document.addEventListener("DOMContentLoaded", () => {
 			const form = document.getElementById("modifyForm_employe");
 			if (!form) return;
@@ -23,9 +26,10 @@
 				btn.addEventListener("click", (e) => handleSubmitWithPasswordDialog(e, section));
 			});
 		});
+		document.addEventListener("pagehide", function() {
+            closeEmployeWebSocket();
+        });
 	</script>
-	<script src="<%= request.getContextPath() %>/JS/HandleError.js?v=<%= System.currentTimeMillis() %>" defer></script>
-	<title>Modification du compte</title>
 </head>
 <body>
 <form id="modifyForm_employe">
