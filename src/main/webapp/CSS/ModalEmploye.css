@@ -2,6 +2,68 @@
 /* Styles de la Modale/Formulaire de Création/Modification d'Employé */
 /* ------------------------------------ */
 
+body {
+    font-family: 'Arial', sans-serif;
+    color: #212529; /* Gris foncé pour le texte */
+    background-color: #FFFFFF; /* Fond principal BLANC */
+}
+
+header {
+    background-color: #F8F9FA; /* GRIS TRÈS CLAIR (comme fond initial) */
+    color: #212529; /* Texte foncé sur fond clair */
+    padding: 15px 0 15px 15px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* Ombre très légère */
+}
+
+header h1 {
+    margin: auto;
+    font-size: 24px;
+    font-weight: normal;
+}
+
+header > div {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-right: 34px;
+}
+
+header a {
+    color: #6C757D; /* Gris moyen pour les liens */
+    text-decoration: none;
+    font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 4px;
+}
+
+header img{
+	background-color: #FFFFFF;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+}
+
+main {
+    display: flex; 
+    flex-grow: 1; 
+    height: 100%;
+}
+
+footer {
+    background-color: #F8F9FA; /* GRIS TRÈS CLAIR (comme le header) */
+    color: #6C757D; /* Gris moyen */
+    padding: 10px;
+    text-align: center;
+    font-size: 0.8em;
+    flex-shrink: 0;
+    border-top: 1px solid #E9ECEF; /* Séparation très fine */
+}
+
 /* Style du formulaire principal */
 #addForm_employe, #modifyForm_employe {
     font-family: 'Arial', sans-serif;

@@ -68,7 +68,8 @@ label {
 }
 
 input[type="email"],
-input[type="password"] {
+input[type="password"],
+input[type="text"] {
     /* Prend toute la largeur disponible dans le label */
     width: 100%;
     /* Ajoute un petit espace au-dessus du champ */
@@ -88,11 +89,59 @@ input[type="password"] {
 }
 
 input[type="email"]:focus,
-input[type="password"]:focus {
+input[type="password"]:focus,
+input[type="text"]:focus {
     /* Bordure bleue quand le champ est sélectionné */
     border-color: #007bff;
     /* Supprime la bordure d'outline par défaut du navigateur */
     outline: none;
+}
+
+/* ------------------------------------ */
+/* 3.1. POSITIONNEMENT DU MOT DE PASSE  */
+/* ------------------------------------ */
+
+.password-wrapper {
+    /* Utilise Flexbox pour aligner l'input et le bouton côte à côte */
+    display: flex;
+    /* Assure que l'input et le bouton remplissent bien la largeur disponible */
+    width: 100%;
+    /* Petite marge en haut si l'input n'est pas déjà inclus */
+    margin-top: 5px; 
+}
+
+.password-wrapper input[type="password"], .password-wrapper input[type="text"] {
+    /* Laisse l'input prendre l'espace maximum disponible */
+    flex-grow: 1;
+    /* Important : retire l'ancienne valeur 'width: 100%' pour qu'il cohabite avec le bouton */
+    width: auto; 
+    /* Ajoute une petite marge à droite pour ne pas coller au bouton */
+    margin-right: 5px;
+}
+
+#btn_toggle_password {
+   	height: 45px;
+	width: 40px;
+	background: transparent;
+	align-self: stretch;
+	padding: 0;
+    border: none;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	cursor: pointer;
+	margin-top: 5px;
+}
+
+#btn_toggle_password:hover {
+    opacity: 0.4;
+}
+
+#btn_toggle_password i {
+    /* S'assurer que l'icône est bien visible */
+    color: black;
+    font-size: 18px;
+    font-weight: 700;
 }
 
 /* ------------------------------------ */

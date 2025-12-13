@@ -1,9 +1,11 @@
 <%@ page import="com.gestion_stock_it.ArtType.Type.TypeArticle" %>
+<%@ page import="com.gestion_stock_it.Employe.Employe" %>
 <%@ page import="java.util.List" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 		 pageEncoding="UTF-8"%>
 <%
 	List<TypeArticle> data = (List<TypeArticle>) request.getAttribute("types");
+	Employe profil = (Employe) session.getAttribute("login_profil"); 
 %>
 <!DOCTYPE html>
 <html>
@@ -21,7 +23,12 @@
     	</script>
 	</head>
 	<body>
-		<h1>Ajouter un nouvel article</h1>
+		<header>
+			<image src="<%= request.getContextPath() %>/IMAGES/logo_spat.png" alt="Logo SPAT" class="logo"/>
+			<h1>Gestion de Stock IT - Ajouter un nouvel article</h1>
+			<a><%= profil.getNomPrenom() %></a>
+		</header>
+		<main>
 		   <form id="addForm_article" onsubmit="setForm(event, 'Ajout', 'Article', null)">
 			<fieldset>
 				<legend>Informations sur le nouvel article</legend>
@@ -64,5 +71,9 @@
 			</fieldset>
 			<input type="submit" class="submit_article btn" value="Confirmer">
 		   </form>
+	   	</main>
+   		<footer>
+		    <p>&copy; <%= java.time.Year.now() %> Gestion Stock IT. Tous droits réservés.</p>
+		</footer>
 	</body>
 </html>

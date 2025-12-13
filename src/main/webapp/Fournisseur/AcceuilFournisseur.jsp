@@ -6,14 +6,15 @@
   List<Fournisseur> fournisseurs = (List<Fournisseur>) request.getAttribute("fournisseurs");
 %>
 <section class="fournisseur-section">
+  <div class="content-fournisseur-create">
+    <a href="<%= request.getContextPath() %>/Fournisseurs/Creation"><i class="fas fa-plus"></i> Ajouter un fournisseur </a>
+  </div>
+  
   <label class="search-label">
     <input placeholder="Rechercher par raison sociale" type="search" name="nom_fournisseur" oninput="searchFournisseur()">
     <i class="fas fa-search"></i>
   </label>
   
-  <div class="content-fournisseur-create">
-    <a href="<%= request.getContextPath() %>/Fournisseurs/Creation"> Ajouter un fournisseur </a>
-  </div>
   
   <% if(!fournisseurs.isEmpty()) { %>
   <dialog id="dialog_fournisseur">
@@ -50,9 +51,9 @@
         </td>
         <td>
             <div class="table-actions">
-              <button class="action-modifier" onclick="setUpdateFournisseur('<%=f.getTag_fournisseur()%>')">Modifier</button>
-              <% if(f.getNombre_occurence_entree() == 0) { %>
-              <button class="action-supprimer" onclick="removeData('<%=f.getTag_fournisseur()%>', 'Fournisseur')">Supprimer</button>
+              <button class="action-modifier" onclick="setUpdateFournisseur('<%=f.getTag_fournisseur()%>')"><i class="fas fa-pencil-alt"></i></button>
+              <% if(f.getNombre_occurence_entrees_fournisseur() == 0) { %>
+              <button class="action-supprimer" onclick="removeData('<%=f.getTag_fournisseur()%>', 'Fournisseur')"><i class="fas fa-trash"></i></button>
               <% } %>
             </div>
         </td>

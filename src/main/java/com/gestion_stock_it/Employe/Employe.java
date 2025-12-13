@@ -13,7 +13,7 @@ public class Employe {
   private String mot_de_passe;
   private String telephone;
   private String adresse;
-  private LocalDate date_naissance;
+  private LocalDate date_de_naissance;
   private String role;
   private boolean connecte;
   private boolean actif;
@@ -30,7 +30,7 @@ public class Employe {
 	  this.mot_de_passe = mot_de_passe;
 	  this.telephone = telephone;
 	  this.adresse = adresse;
-	  this.date_naissance = date_naissance;
+	  this.date_de_naissance = date_naissance;
 	  switch(role) {
 	  	case 1:
 	  		this.role = "Super Administrateur";
@@ -58,7 +58,7 @@ public class Employe {
   public String getMot_de_passe() { return mot_de_passe; }
   public String getTelephone() { return telephone; }
   public String getAdresse() { return adresse; }
-  public LocalDate getDate_naissance() { return date_naissance; }
+  public LocalDate getDate_de_naissance() { return date_de_naissance; }
   public String getRole() { return role; }
   public boolean getActivite() {return actif;}
   public boolean getConnection() { return connecte; }
@@ -72,7 +72,7 @@ public class Employe {
       return date_modification.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss.SSSSSSSSS "));
   }
   public String getDate_de_naissance_formatter() {
-      return date_naissance.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+      return date_de_naissance.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
   }
   public String getNomPrenom() { return nom + " " + prenom; }
 
@@ -123,7 +123,7 @@ public class Employe {
   }
   public void setDate_modification(LocalDateTime date_modification) {this.date_modification = date_modification;}
   public void setMot_de_passe(String mot_de_passe){this.mot_de_passe = mot_de_passe;}
-  public void setDate_naissance(LocalDate date_naissance) {this.date_naissance = date_naissance;}
+  public void setDate_de_naissance(LocalDate date_naissance) {this.date_de_naissance = date_naissance;}
   public void setTelephone(String telephone) {this.telephone = telephone;}
   public void setEmail(String email) {this.email = email;}
   public void setDateCreation(LocalDateTime now) {this.date_creation = now;}

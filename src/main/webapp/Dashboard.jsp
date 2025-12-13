@@ -50,7 +50,7 @@
                         e.preventDefault(); 
                         dropdownMenu.classList.toggle('open');
                     });
-                    const activeSubLink = dropdownMenu.querySelector('.dropdown-content a.active-sub');
+                    const activeSubLink = dropdownMenu.querySelector('.dropdown-content a.active');
                     if (activeSubLink) {
                         dropdownMenu.classList.add('open');
                     }
@@ -72,7 +72,7 @@
 	    <div>
 	    	<a href="<%= ctx %>/Profil" 
 	           onclick="navigateTo(this.href); return false;"
-	           class="<%= "/Profil".equals(uri) ? "active" : "" %>">
+	           class="<%= "/Profil".equals(uri) ? "profil_active" : "" %>">
 	           <%= employe.getNomPrenom() %>
 	        </a>
 	        <button
@@ -89,7 +89,7 @@
 	    <nav>
 	    
 		    <div class="dropdown-menu"> 
-	            <a href="javascript:void(0)" class="dropdown-toggle <%= "/Articles".equals(uri) || "/Types".equals(uri) ? "active" : "" %>">
+	            <a href="javascript:void(0)" class="dropdown-toggle <%= "/Articles".equals(uri) || "/Types".equals(uri) ? "active-menu" : "" %>">
 	                <i class="fas fa-box-open"></i> Articles et Types
 	                <i class="fas fa-caret-down dropdown-icon"></i>
 	            </a>
@@ -97,14 +97,14 @@
 	                <li>
 	                    <a href="<%= ctx %>/Articles" 
 	                       onclick="navigateTo(this.href); return false;"
-	                       class="<%= "/Articles".equals(uri) ? "active-sub" : "" %>">
+	                       class="<%= "/Articles".equals(uri) ? "active" : "" %>">
 	                        <i class="fas fa-list-alt"></i> Voir les articles
 	                    </a>
 	                </li>
 	                <li>
 	                    <a href="<%= ctx %>/Types" 
 	                       onclick="navigateTo(this.href); return false;"
-	                       class="<%= "/Types".equals(uri) ? "active-sub" : "" %>">
+	                       class="<%= "/Types".equals(uri) ? "active" : "" %>">
 	                        <i class="fas fa-sitemap"></i> Voir les types
 	                    </a>
 	                </li>
@@ -129,7 +129,7 @@
 	        <% } %>	
 	       
 	       	<div class="dropdown-menu">
-		       	<a href="javascript:void(0)" class="dropdown-toggle <%= "/Entrees".equals(uri) || "/Sorties".equals(uri) ? "active" : "" %>">
+		       	<a href="javascript:void(0)" class="dropdown-toggle <%= "/Entrees".equals(uri) || "/Sorties".equals(uri) ? "active-menu" : "" %>">
 			            <i class="fas fa-exchange-alt"></i> Mouvements d'articles
 		                <i class="fas fa-caret-down dropdown-icon"></i>
 	        	</a>
@@ -137,14 +137,14 @@
 	        		<li>
 	                    <a href="<%= ctx %>/Entrees" 
 	                       onclick="navigateTo(this.href); return false;"
-	                       class="<%= "/Entrees".equals(uri) ? "active-sub" : "" %>">
+	                       class="<%= "/Entrees".equals(uri) ? "active" : "" %>">
 	                        <i class="fas fa-arrow-down"></i> Voir les entrées
 	                    </a>
 	                </li>
 	                <li>
 	                    <a href="<%= ctx %>/Sorties" 
 	                       onclick="navigateTo(this.href); return false;"
-	                       class="<%= "/Sorties".equals(uri) ? "active-sub" : "" %>">
+	                       class="<%= "/Sorties".equals(uri) ? "active" : "" %>">
 	                        <i class="fas fa-arrow-up"></i> Voir les sorties
 	                    </a>
 	                </li>
@@ -155,7 +155,7 @@
 		        <a href="<%= ctx %>/Chatbot" 
 	               onclick="navigateTo(this.href); return false;"
 	               class="<%= "/Chatbot".equals(uri) ? "active" : "" %>">
-		            <i class="fas fa-robot"></i> Chatbot
+		            <i class="fas fa-robot"></i> ChatBot
 		        </a>
 	        </div>
 	    </nav>

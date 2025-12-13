@@ -68,7 +68,7 @@ public class UpdateEmployeServlet extends HttpServlet {
                     e.setPrenom(prenom);
                     e.setAdresse(adresse);
                     e.setTelephone(telephone);
-                    e.setDate_naissance(LocalDate.parse(dateDeNaissance));
+                    e.setDate_de_naissance(LocalDate.parse(dateDeNaissance));
 
                 }
                 else if (section == 2) {

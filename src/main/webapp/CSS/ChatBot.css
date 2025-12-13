@@ -1,32 +1,126 @@
+/* --- VARIABLES CSS (BASE DE VOTRE THÈME) --- */
+/* Les variables sont conservées pour les NOUVEAUX éléments (Textarea/Bouton) */
+:root {
+    --color-text-dark: #212529;           /* Texte sombre (Anthracite) */
+    --color-text-light: #FFFFFF;          /* Texte clair (Blanc) */
+    --color-border: #DEE2E6;              /* Bordure moyenne */
+    --color-accent: #004085;              /* Primaire: BLEU MARINE */
+    --color-success: #28A745;             /* Succès: VERT ÉMERAUDE */
+}
+
+/* ------------------------------------ */
+/* 0. Zone de Messages (Logique du PREMIER BLOC, Hauteur Fixe) */
+/* ------------------------------------ */
+
 .content .chatbot-content form #message {
-    height: 300px;
+    height: 300px; /* Logique du 1er bloc: Hauteur fixe */
     border: 1px solid #ccc;
     overflow-y: scroll;
     padding: 10px;
     margin-bottom: 10px;
+    /* NOUVEAU: Définition de la police pour toute la zone de messages */
+    font-family: Arial, sans-serif; 
 }
+
+/* Conteneur Fieldset (Logique du 1er bloc) */
+.content .chatbot-content fieldset {
+    padding: 15px;
+    border: none;
+}
+
+.content .chatbot-content fieldset .messages {
+   	border: 1px solid #dee2e6;	
+}
+
+/* Message Utilisateur (Logique du 1er bloc: Couleurs Hexa Brutes) */
 .content .chatbot-content form #message .user-msg {
     text-align: right;
-    color: #007bff; /* Bleu Bootstrap */
+    color: #0048ff; /* Bleu Bootstrap (Conservé) */
     background-color: #e9f0f9;
     padding: 5px;
     margin: 5px 0;
     border-radius: 10px 10px 0 10px;
     max-width: 80%;
     margin-left: auto;
+    font-family: inherit; 
 }
+
+/* Message Bot (Logique du 1er bloc: Couleurs Hexa Brutes) */
 .content .chatbot-content fieldset #message .bot-msg {
     text-align: left;
-    color: #28a745; /* Vert Success */
+    color: #28a745; /* Vert Success (Conservé) */
     background-color: #e6f7e8;
     padding: 5px;
     margin: 5px 0;
     border-radius: 10px 10px 10px 0;
     max-width: 80%;
     margin-right: auto;
+    /* NOUVEAU: Assure l'héritage de la police */
+    font-family: inherit;
 }
-.content .chatbot-content fieldset {
-    border: 1px solid #dee2e6;
-    padding: 15px;
+
+/* Légende (Ajouté pour la cohérence des couleurs de votre thème) */
+.content .chatbot-content fieldset legend {
+    font-size: 1.4em;
+    font-weight: bold;
+    color: var(--color-accent); /* Utilise la variable Bleu Marine */
+    padding: 0 10px;
+}
+
+/* ------------------------------------ */
+/* 1. Zone de Saisie (Textarea) - Styles basés sur les variables */
+/* ------------------------------------ */
+
+.content .chatbot-content form fieldset > label[for="question-area"] {
+    display: block; 
+    margin-bottom: 10px;
+}
+
+.content .chatbot-content form #question-area {
+    width: 100% !important; 
+    box-sizing: border-box;
+    
+    padding: 10px;
+    border: 1px solid var(--color-border); 
     border-radius: 5px;
+    resize: vertical;
+    
+    color: var(--color-text-dark);
+    font-size: 1em;
+    /* NOUVEAU: Assure la cohérence de la police dans le textarea */
+    font-family: Arial, sans-serif; 
+    transition: border-color 0.3s;
+}
+
+/* Effet au focus sur la zone de saisie */
+.content .chatbot-content form #question-area:focus {
+    border-color: var(--color-accent); 
+    outline: none;
+}
+
+/* ------------------------------------ */
+/* 2. Bouton de Soumission - Styles basés sur les variables */
+/* ------------------------------------ */
+
+.content .chatbot-content form .submit_chat.btn {
+    background-color: var(--color-success); 
+    color: var(--color-text-light);
+    border: none;
+    
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    /* NOUVEAU: Assure la cohérence de la police du bouton */
+    font-family: Arial, sans-serif; 
+    transition: opacity 0.3s;
+    
+    display: flex;
+    justify-content: center;
+    width: auto;
+}
+
+/* Effet au survol du bouton */
+.content .chatbot-content form .submit_chat.btn:hover {
+    opacity: 0.8;
 }

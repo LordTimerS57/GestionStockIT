@@ -8,7 +8,7 @@
 <section class="article-section">
   <% if(role.equals("Administrateur") || role.equals("Super Administrateur")) { %>
   <div class="content-article-create">
-    <a href="<%= request.getContextPath() %>/Articles/Creation">Ajouter un nouvel article</a>
+    <a href="<%= request.getContextPath() %>/Articles/Creation"><i class="fas fa-plus"></i> Ajouter un nouvel article</a>
   </div>
   <% } %>
   
@@ -76,25 +76,27 @@
             <%= a.getType_article().getNom_type() %>
           </button>
         </td>
-        <td><%= a.getNombre_article() %></td>
+        <td><%= a.getStock_article() %></td>
         <td><%= a.getDescription_article() %></td>
           <% if(role.equals("Administrateur") || role.equals("Super Administrateur")) { %>
         <td>
           <div class="table-actions">
-            <button class="action-modifier" onclick="setUpdateArticle('<%=a.getTag_article()%>')">Modifier</button>
+            <button class="action-modifier" onclick="setUpdateArticle('<%=a.getTag_article()%>')"><i class="fas fa-pencil-alt"></i></button>
             <% if(a.getNombre_occurence_entrees_article() + a.getNombre_occurence_sorties_article() == 0) { %>
-            <button class="action-supprimer" onclick="removeData('<%=a.getTag_article()%>', 'Article', null)">Supprimer</button>
+            <button class="action-supprimer" onclick="removeData('<%=a.getTag_article()%>', 'Article', null)"><i class="fas fa-trash"></i></button>
             <% } %>
             <button class="action-details" 
             		onclick="setDetails(event, 'Show', 'Article-Info', this)"
+            		onmouseover="toggleIcon(this, true)"
+            		onmouseout="toggleIcon(this, false)"
             		data-nom_article="<%= a.getNom_article() %> "
-            		data-stock_article="<%= a.getNombre_article() %>"
+            		data-stock_article="<%= a.getStock_article() %>"
             		data-cmd_article="<%= a.getCMD() %>"
             		data-dirm_article="<%= a.getDelai_reappro_estime() %>"
             		data-seuil_stock_article="<%= (a.getSeuil_critique_arrondi() > 0) ? a.getSeuil_critique_arrondi() : "N/A" %>"
             		data-situation_article="<%= a.getSituation_article() %>"
             		data-derniere_entree_article="<%= a.getDate_derniere_entree() %>"
-            		data-derniere_sortie_article="<%= a.getDate_derniere_sortie() %>"><i class="fa-solid fa-eye"></i>
+            		data-derniere_sortie_article="<%= a.getDate_derniere_sortie() %>"><i class="fa-solid fa-eye-slash"></i>
       		</button>
           </div>
         </td>

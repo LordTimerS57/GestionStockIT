@@ -17,74 +17,78 @@
 <section class="content-flux-out">
     <% if(role.equals("Administrateur") || role.equals("Super Administrateur") ) { %>
     <div class="content-flux-create">
-        <a href="<%=request.getContextPath()%>/Sorties/Creation">Sortir un article</a>
+        <a href="<%=request.getContextPath()%>/Sorties/Creation"> <i class="fa-solid fa-cash-register"></i> Sortir un article</a>
     </div>
     <% } %>
-    <div class="search">
-        <fieldset id="date_param_search_container">
-            <legend>Recherche par date</legend>
-            <label id="date_type_select_label">
-                Chercher la date de déplacement suivant
-                <select name="date" onchange="updateSearchFlux('Date_flux')">
-                    <option value="date">la date</option>
-                    <option value="mois">le mois et l'année seulement</option>
-                </select>
-            </label>
-
-            <div id="date_input_fields">
-
-                <div id="date_search_1">
-                    <label>
-                        <select name="precision_date" id="precision_date">
-                            <option value="">...</option>
-                            <option value="before">Avant</option>
-                            <option value="after">Après</option>
-                            <option value="equals">Durant</option>
-                        </select>
-                        le
-                        <input type="date" name="date_flux" id="date_flux" oninput="searchFlux('Sortie')">
-                    </label>
-                </div>
-
-                <div id="date_search_2" style="display: none">
-                    <label>
-                        <select name="month_date_flux_1" id="month_flux" onchange="searchFlux('Sortie')">
-                            <option value="01">Janvier</option>
-                            <option value="02">Février</option>
-                            <option value="03">Mars</option>
-                            <option value="04">Avril</option>
-                            <option value="05">Mai</option>
-                            <option value="06">Juin</option>
-                            <option value="07">Juillet</option>
-                            <option value="08">Août</option>
-                            <option value="09">Septembre</option>
-                            <option value="10">Octobre</option>
-                            <option value="11">Novembre</option>
-                            <option value="12">Décembre</option>
-                        </select> -
-                        <input type="search" name="month_date_flux_2" id="year_flux" pattern="^[0-9]+$" oninput="searchFlux('Sortie')">
-                    </label>
-                </div>
-            </div>
-        </fieldset>
-        
-        <fieldset id="employe_param_search_container">
-            <legend>Recherche par employé</legend>
-            <div id="employe_search_input">
-            	<label id="expediteur_search">
-            		<input type="search" name="expediteur" id="expediteur" placeholder="Rechercher l'expéditeur par son nom et/ou prénoms..." oninput="searchFlux('Sortie')"><i class="fas fa-search"></i>
-            	</label>
-            	<label id="destinataire_search">
-            		<input type="search" name="destinataire" id="destinataire" placeholder="Rechercher la destinataire par son nom et/ou prénoms..." oninput="searchFlux('Sortie')"><i class="fas fa-search"></i>
-            	</label>
-        	</div>
-        </fieldset>
-
-        <label id="article_search">
-            <input type="search" name="nom_article" id="nom_article" placeholder="Rechercher l'article souhaité ..." oninput="searchFlux('Sortie')">
-        	<i class="fas fa-search"></i>
-        </label>
-    </div>
+	<div class="search">
+	    <fieldset id="date_param_search_container">
+	        <legend class="collapsible" onclick="toggleFieldset(this,'date')">Recherche par date <i class="fas fa-caret-down"></i></legend>
+	        
+	        <div class="fieldset-content" style="display: none;">
+	            <label id="date_type_select_label">
+	                Chercher la date de déplacement suivant
+	                <select name="date" onchange="updateSearchFlux('Date_flux')">
+	                    <option value="date">la date</option>
+	                    <option value="mois">le mois et l'année seulement</option>
+	                </select>
+	            </label>
+	
+	            <div id="date_input_fields">
+	
+	                <div id="date_search_1">
+	                    <label>
+	                        <select name="precision_date" id="precision_date">
+	                            <option value="">...</option>
+	                            <option value="before">Avant</option>
+	                            <option value="after">Après</option>
+	                            <option value="equals">Durant</option>
+	                        </select>
+	                        le
+	                        <input type="date" name="date_flux" id="date_flux" oninput="searchFlux('Sortie')">
+	                    </label>
+	                </div>
+	
+	                <div id="date_search_2" style="display: none">
+	                    <label>
+	                        <select name="month_date_flux_1" id="month_flux" onchange="searchFlux('Sortie')">
+	                            <option value="01">Janvier</option>
+	                            <option value="02">Février</option>
+	                            <option value="03">Mars</option>
+	                            <option value="04">Avril</option>
+	                            <option value="05">Mai</option>
+	                            <option value="06">Juin</option>
+	                            <option value="07">Juillet</option>
+	                            <option value="08">Août</option>
+	                            <option value="09">Septembre</option>
+	                            <option value="10">Octobre</option>
+	                            <option value="11">Novembre</option>
+	                            <option value="12">Décembre</option>
+	                        </select> -
+	                        <input type="search" name="month_date_flux_2" id="year_flux" pattern="^[0-9]+$" oninput="searchFlux('Sortie')">
+	                    </label>
+	                </div>
+	            </div>
+	        </div>
+	    </fieldset>
+	    
+	    <fieldset id="employe_param_search_container">
+	        <legend class="collapsible" onclick="toggleFieldset(this,'employe')">Recherche par employé <i class="fas fa-caret-down"></i></legend>
+	        
+	        <div id="employe_search_input" class="fieldset-content" style="display: none;">
+	            <label id="expediteur_search">
+	                <input type="search" name="expediteur" id="expediteur" placeholder="Rechercher l'expéditeur par son nom et/ou prénoms..." oninput="searchFlux('Sortie')"><i class="fas fa-search"></i>
+	            </label>
+	            <label id="destinataire_search">
+	                <input type="search" name="destinataire" id="destinataire" placeholder="Rechercher la destinataire par son nom et/ou prénoms..." oninput="searchFlux('Sortie')"><i class="fas fa-search"></i>
+	            </label>
+	        </div>
+	    </fieldset>
+	
+	    <label id="article_search">
+	        <input type="search" name="nom_article" id="nom_article" placeholder="Rechercher l'article souhaité ..." oninput="searchFlux('Sortie')">
+	        <i class="fas fa-search"></i>
+	    </label>
+	</div>
     <div id="result_sortie">
         <% if (!sorties.isEmpty()) { %>
         <dialog id="dialog_employe">
@@ -132,7 +136,7 @@
                                 data-email="<%= s.getExpediteur().getEmail() %>"
                                 data-telephone="<%= s.getExpediteur().getTelephone() %>"
                                 data-adresse="<%= s.getExpediteur().getAdresse() %>"
-                                data-date_naissance="<%= s.getExpediteur().getDate_naissance() %>"
+                                data-date_naissance="<%= s.getExpediteur().getDate_de_naissance() %>"
                                 data-matricule="<%= s.getExpediteur().getMatricule() %>"
                                 data-role="<%= s.getExpediteur().getRole() %>"
                                 data-activite="<%= s.getExpediteur().getActivite() %>"
@@ -147,7 +151,7 @@
                                 data-email="<%= s.getDestinataire().getEmail() %>"
                                 data-telephone="<%= s.getDestinataire().getTelephone() %>"
                                 data-adresse="<%= s.getDestinataire().getAdresse() %>"
-                                data-date_naissance="<%= s.getDestinataire().getDate_naissance() %>"
+                                data-date_naissance="<%= s.getDestinataire().getDate_de_naissance() %>"
                                 data-matricule="<%= s.getDestinataire().getMatricule() %>"
                                 data-role="<%= s.getDestinataire().getRole() %>"
                                 data-activite="<%= s.getDestinataire().getActivite() %>"
@@ -165,7 +169,7 @@
         </table>
         <% if(visibleRapportButton) { %>
         <div id="excel">
-            <button onclick="setExcelTransform('Sortie')">Faire un rapport excel</button>
+            <button onclick="setExcelTransform('Sortie')"><i class="fa-solid fa-download"></i> Faire un rapport excel</button>
         </div>
         <% } %>
         <% } else { %>

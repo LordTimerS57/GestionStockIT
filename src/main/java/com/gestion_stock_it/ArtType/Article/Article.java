@@ -12,7 +12,7 @@ public class Article{
   private final String nom_article;
   private final String description_article;
   private final TypeArticle type_article;
-  private final long nombre_article;
+  private final long stock_article;
   
   private double cmd;
   private double delai_reappro_estime;
@@ -26,12 +26,12 @@ public class Article{
   private long nombre_occurence_sorties_article = 0;
   private LocalDateTime date_derniere_sortie;
   
-  public Article(String tag_article, String nom_article, String description_article, TypeArticle type_article, long nombre_article) {
+  public Article(String tag_article, String nom_article, String description_article, TypeArticle type_article, long stock_article) {
 	  this.tag_article = tag_article;
 	  this.nom_article = nom_article;
 	  this.description_article = description_article;
 	  this.type_article = type_article;
-	  this.nombre_article = nombre_article;
+	  this.stock_article = stock_article;
   }
 
   public void setNombre_occurence_entrees_article(long occ) {this.nombre_occurence_entrees_article = occ;}
@@ -51,7 +51,7 @@ public class Article{
   public String getNom_article() { return nom_article; }
   public String getDescription_article() { return description_article; }
   public TypeArticle getType_article() { return type_article; }
-  public long getNombre_article() { return nombre_article; }
+  public long getStock_article() { return stock_article; }
   public String getSituation_article() { return situation_article; }
   public long getNombre_occurence_entrees_article() {return nombre_occurence_entrees_article;}
   public long getNombre_occurence_sorties_article() {return nombre_occurence_sorties_article;}

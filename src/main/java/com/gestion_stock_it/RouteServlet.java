@@ -60,7 +60,7 @@ public class RouteServlet extends HttpServlet {
 
                 // ---- CHATBOT ----
                 case "/Chatbot":
-                    request.setAttribute("content", "/IA/Chatbot.jsp");
+                    request.setAttribute("content", "/ChatBot/Chatbot.jsp");
                     request.getRequestDispatcher("/Dashboard.jsp").forward(request, response);
                     break;
 

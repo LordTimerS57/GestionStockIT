@@ -4,19 +4,19 @@
 
 .fournisseur-section {
     padding: 20px;
-    background-color: var(--color-background-white);
+    background-color: #FFFFFF; /* Fond BLANC */
 }
 
 /* --- Style de la barre de recherche --- */
 .fournisseur-section .search-label {
     display: flex;
     align-items: center;
-    border: 1px solid var(--color-border);
+    border: 1px solid #DEE2E6; /* Bordure GRIS CLAIR */
     border-radius: 20px;
     padding: 5px 15px;
     width: 350px;
     margin-bottom: 25px;
-    background-color: var(--color-background-white);
+    background-color: #FFFFFF; /* Fond BLANC */
 }
 
 .fournisseur-section .search-label input[type="search"] {
@@ -28,7 +28,7 @@
 }
 
 .fournisseur-section .search-label .fas.fa-search {
-    color: var(--color-accent);
+    color: #004085; /* BLEU MARINE (Accent principal) */
     margin-left: 10px;
 }
 
@@ -38,18 +38,18 @@
 }
 
 .content-fournisseur-create a {
-    background-color: var(--color-accent);
-    color: var(--color-text-light);
+    background-color: #28A745; /* VERT ÉMERAUDE (Action "Ajouter") */
+    color: #FFFFFF; /* Texte BLANC */
     text-decoration: none;
     padding: 10px 20px;
     border-radius: 4px;
     font-weight: bold;
     transition: background-color 0.3s;
-    display: inline-block; /* Pour l'alignement */
+    display: inline-block;
 }
 
 .content-fournisseur-create a:hover {
-    background-color: var(--color-table-header);
+    background-color: #1E7E34; /* Vert légèrement plus foncé au survol */
 }
 
 /* Conteneur des résultats */
@@ -73,16 +73,16 @@
     text-align: left;
     font-size: 1.3em;
     font-weight: bold;
-    color: var(--color-text-dark);
-    border-bottom: 2px solid var(--color-accent);
+    color: #212529; /* Gris Anthracite */
+    border-bottom: 2px solid #004085; /* Bordure BLEU MARINE (Accent principal) */
     padding: 15px 0 5px 0;
     margin-bottom: 5px; 
 }
 
 /* En-tête de tableau */
 .fournisseur-section table th {
-    background-color: var(--color-table-header);
-    color: var(--color-text-light);
+    background-color: #F8F9FA; /* GRIS TRÈS CLAIR (Fond de l'en-tête) */
+    color: #212529; /* Texte GRIS ANTHRACITE sur fond clair */
     padding: 12px 15px;
     text-align: left;
     font-weight: 600;
@@ -90,17 +90,17 @@
 
 /* Lignes alternées et hover */
 .fournisseur-section table tr:nth-child(even) {
-    background-color: var(--color-background-light);
+    background-color: #F8F9FA; /* GRIS TRÈS CLAIR */
 }
 .fournisseur-section table tr:hover {
-    background-color: #e6f7ff;
+    background-color: #E6F0F8; /* Bleu très très pâle au survol */
     cursor: pointer;
 }
 
 /* Cellules de tableau */
 .fournisseur-section table td {
     padding: 10px 15px;
-    border-bottom: 1px solid var(--color-border-light);
+    border-bottom: 1px solid #E9ECEF; /* Gris très clair pour la bordure */
     vertical-align: middle;
 }
 
@@ -108,7 +108,7 @@
 .show-details-fournisseur {
     background: none;
     border: none;
-    color: var(--color-accent);
+    color: #004085; /* BLEU MARINE (Accent principal) */
     cursor: pointer;
     text-align: left;
     padding: 0;
@@ -117,7 +117,7 @@
 }
 
 .show-details-fournisseur:hover {
-    color: var(--color-table-header);
+    color: #007BFF; /* BLEU SIMPLE au survol */
     text-decoration: underline;
 }
 
@@ -139,8 +139,8 @@
 
 /* Bouton Modifier (Action secondaire/avertissement) */
 .fournisseur-section .table-actions .action-modifier {
-    background-color: var(--color-warning-neutral); /* Jaune neutre */
-    color: var(--color-text-dark);
+    background-color: #FFC107; /* JAUNE STANDARD */
+    color: #212529; /* Texte foncé pour contraste sur jaune clair */
 }
 .fournisseur-section .table-actions .action-modifier:hover {
     opacity: 0.8;
@@ -148,8 +148,8 @@
 
 /* Bouton Supprimer (Danger) */
 .fournisseur-section .table-actions .action-supprimer {
-    background-color: var(--color-danger); /* Rouge */
-    color: var(--color-text-light);
+    background-color: #DC3545; /* ROUGE VIF */
+    color: #FFFFFF; /* Texte BLANC */
 }
 .fournisseur-section .table-actions .action-supprimer:hover {
     opacity: 0.8;
@@ -167,12 +167,12 @@
     left: 50%;
     transform: translate(-50%, -50%);
     
-    border: 1px solid var(--color-border);
+    border: 1px solid #DEE2E6; /* Bordure GRIS CLAIR */
     border-radius: 8px;
     padding: 30px;
     max-width: 500px;
     width: 90%;
-    background-color: var(--color-background-white);
+    background-color: #FFFFFF; /* Fond BLANC */
     
     &::backdrop {
         background-color: rgba(0, 0, 0, 0.4); 
@@ -180,7 +180,7 @@
 }
 
 #dialog_fournisseur fieldset {
-    border: 1px solid var(--color-border);
+    border: 1px solid #DEE2E6; /* Bordure GRIS CLAIR */
     border-radius: 6px;
     padding: 15px;
     margin-bottom: 20px;
@@ -189,12 +189,12 @@
 #dialog_fournisseur legend {
     font-size: 1.4em;
     font-weight: bold;
-    color: var(--color-accent);
+    color: #004085; /* BLEU MARINE (Accent principal) */
 }
 
 #dialog_fournisseur button {
-    background-color: var(--color-accent);
-    color: var(--color-text-light);
+    background-color: #DC3545; /* BLEU MARINE */
+    color: #FFFFFF; /* Texte BLANC */
     padding: 8px 15px;
     border-radius: 4px;
     cursor: pointer;

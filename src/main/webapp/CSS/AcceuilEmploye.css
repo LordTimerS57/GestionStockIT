@@ -1,14 +1,17 @@
-/* --- Palette Neutre (Variables CSS) --- */
+/* --- Palette Minimaliste (Variables CSS) --- */
 :root {
-    --color-text-dark: #333;
-    --color-text-light: #fff;
-    --color-background-light: #f8f9fa;
-    --color-background-white: #fff;
-    --color-border-light: #eee;
-    --color-border: #ccc;
-    --color-accent: #6c757d;
-    --color-table-header: #495057;
-    --color-danger: #dc3545;
+    --color-text-dark: #212529;           /* Texte sombre (Anthracite) */
+    --color-text-light: #FFFFFF;          /* Texte clair (Blanc) */
+    --color-background-light: #F8F9FA;    /* Fond léger des blocs (Gris très clair) */
+    --color-background-white: #FFFFFF;    /* Blanc pur */
+    --color-border-light: #E9ECEF;        /* Bordure très légère */
+    --color-border: #DEE2E6;              /* Bordure moyenne */
+    --color-accent: #004085;              /* Primaire: BLEU MARINE */
+    --color-secondary-action: #17A2B8;    /* Action secondaire: CYN/INFO */
+    --color-success: #28A745;             /* Succès: VERT ÉMERAUDE */
+    --color-table-header-bg: #F8F9FA;     /* Fond de l'en-tête (Gris très clair) */
+    --color-table-header-text: #212529;   /* Texte de l'en-tête (Anthracite) */
+    --color-danger: #DC3545;              /* Rouge pour les actions dangereuses */
 }
 
 /* ------------------------------------ */
@@ -24,7 +27,7 @@
 .employe-section label {
     display: flex;
     align-items: center;
-    border: 1px solid var(--color-border);
+    border: 1px solid var(--color-border); /* Gris Bordure */
     border-radius: 20px;
     padding: 5px 15px;
     width: 350px;
@@ -41,37 +44,25 @@
 }
 
 .employe-section label .fas.fa-search {
-    color: var(--color-accent);
+    color: var(--color-accent); /* BLEU MARINE */
     margin-left: 10px;
 }
 
 /* --- Style des titres de liste (CAPTION) --- */
-
-/* Suppression de l'ancien style h3:
-.employe-section h3 {
-    border-bottom: 2px solid var(--color-accent);
-    padding-bottom: 5px;
-    margin-top: 30px;
-    color: var(--color-text-dark);
-}
-*/
-
 .employe-section table caption {
-    /* Style du titre de tableau */
     caption-side: top;
     text-align: left;
     font-size: 1.3em;
     font-weight: bold;
-    color: var(--color-text-dark);
+    color: var(--color-text-dark); /* Texte Anthracite */
 
-    padding: 15px 0 5px 0; /* Ajout de padding pour espacer le titre */
+    padding: 15px 0 5px 0;
     margin-bottom: 5px;
 }
 
 
 /* Conteneurs des listes */
 #result_employe_connected, #result_employe_not_connected {
-    /* Supprimez le margin-top si vous utilisez la caption qui a déjà un padding top */
     margin-bottom: 40px;
     border-radius: 4px;
 }
@@ -84,35 +75,35 @@
 .employe-section table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 5px; /* Réduit la marge pour coller au caption */
+    margin-top: 5px;
 }
 
 .employe-section table th {
-    background-color: var(--color-table-header);
-    color: var(--color-text-light);
+    background-color: var(--color-table-header-bg); /* GRIS TRÈS CLAIR */
+    color: var(--color-table-header-text); /* Texte ANTHRACITE */
     padding: 12px 15px;
     text-align: left;
     font-weight: 600;
 }
 
 .employe-section table tr:nth-child(even) {
-    background-color: var(--color-background-light);
+    background-color: var(--color-background-light); /* GRIS TRÈS CLAIR */
 }
 .employe-section table tr:hover {
-    background-color: #e6f7ff;
+    background-color: #E6F0F8; /* Bleu très très pâle au survol */
     cursor: pointer;
 }
 
 .employe-section table td {
     padding: 10px 15px;
-    border-bottom: 1px solid var(--color-border-light);
+    border-bottom: 1px solid var(--color-border-light); /* Bordure très légère */
     vertical-align: middle;
 }
 
 .show-details-employe {
     background: none;
     border: none;
-    color: var(--color-accent);
+    color: var(--color-accent); /* BLEU MARINE */
     cursor: pointer;
     text-align: left;
     padding: 0;
@@ -121,13 +112,12 @@
 }
 
 .show-details-employe:hover {
-    color: var(--color-table-header);
+    color: #007BFF; /* BLEU SIMPLE au survol */
     text-decoration: underline;
 }
 
-.activation-employe {
-    background-color: var(--color-border);
-    color: var(--color-text-dark);
+/* Bouton d'activation/désactivation (Gris par défaut -> Bleu Marine au hover) */
+.activation-employe, .desactivation-employe{
     border: none;
     padding: 5px 10px;
     border-radius: 4px;
@@ -137,9 +127,17 @@
     transition: background-color 0.2s, color 0.2s;
 }
 
-.activation-employe:hover {
-    background-color: var(--color-accent);
+.activation-employe {
+	background-color: var(--color-success);
     color: var(--color-text-light);
+}
+.desactivation-employe{
+	background-color: var(--color-danger);
+    color: var(--color-text-light);
+}
+
+.activation-employe:hover, .desactivation-employe:hover {
+    opacity: 0.8;
 }
 
 
@@ -148,7 +146,7 @@
 /* ------------------------------------ */
 
 #dialog_employe {
-    border: 1px solid var(--color-border);
+    border: 1px solid var(--color-border); /* Gris Bordure */
     border-radius: 8px;
     padding: 30px;
     max-width: 600px;
@@ -160,15 +158,15 @@
 /* Titre des détails */
 #employe_details h1 {
     font-size: 1.8em;
-    border-bottom: 2px solid var(--color-border);
+    border-bottom: 2px solid var(--color-border); /* Gris Bordure */
     padding-bottom: 10px;
     margin-bottom: 20px;
-    color: var(--color-accent);
+    color: var(--color-accent); /* BLEU MARINE */
 }
 
 /* Fieldsets */
 #employe_details fieldset, #modify_role fieldset {
-    border: 1px solid var(--color-border);
+    border: 1px solid var(--color-border); /* Gris Bordure */
     border-radius: 6px;
     padding: 15px;
     margin-bottom: 15px;
@@ -176,13 +174,13 @@
 
 #employe_details legend, #modify_role legend {
     font-weight: bold;
-    color: var(--color-text-dark);
+    color: var(--color-text-dark); /* Texte Anthracite */
 }
 
 /* Conteneur pour l'alignement des boutons de la modale */
 #employe_action_buttons {
     display: flex;
-    justify-content: flex-start;
+    justify-content: center;
     gap: 10px;
     margin-top: 20px;
 }
@@ -195,23 +193,22 @@
     margin-right: 10px;
     font-weight: 500;
     transition: opacity 0.2s;
+    border: none; /* Assure que tous les boutons n'ont pas de bordure par défaut */
 }
 
-/* Bouton Fermer */
-#dialog_employe button:first-of-type {
-    background-color: var(--color-accent);
-    color: var(--color-text-light);
-    border: none;
+/* Bouton Fermer (Action principale de la modale) */
+#dialog_employe button:last-of-type {
+    background-color: var(--color-danger); /* BLEU MARINE */
+    color: var(--color-text-light); /* Texte BLANC */
 }
-#dialog_employe button:first-of-type:hover {
+#dialog_employe button:last-of-type:hover {
     opacity: 0.8;
 }
 
-/* Bouton Modifier Rôle */
+/* Bouton Modifier Rôle (Action secondaire/Info) */
 #modify_role_btn {
-    background-color: #17a2b8; /* Gris/Cyan neutre */
-    color: var(--color-text-light);
-    border: none;
+    background-color: var(--color-secondary-action); /* CYAN/INFO */
+    color: var(--color-text-light); /* Texte BLANC */
 }
 #modify_role_btn:hover {
     opacity: 0.8;
@@ -219,29 +216,40 @@
 
 /* Formulaire de modification de rôle */
 #modify_role label {
-    display: block;
-    margin-bottom: 15px;
-    font-weight: 500;
+	display: block;
+	margin-bottom: 15px;
+	font-weight: 500;
+	padding: 15px 25px 25px 25px;
 }
 
 #modify_role select {
     padding: 8px;
-    border: 1px solid var(--color-border);
+    border: 1px solid var(--color-border); /* Gris Bordure */
     border-radius: 4px;
     width: 100%;
     margin-top: 5px;
     box-sizing: border-box;
+    /* Rendre le focus cohérent */
+    transition: border-color 0.3s; 
+}
+#modify_role select:focus {
+    border-color: var(--color-accent); /* BLEU MARINE au focus */
+    outline: none;
 }
 
-/* Bouton Attribuer */
+/* Bouton Attribuer (Action de succès) */
 #modify_role .submit_employe.btn {
-    background-color: #28a745; /* Gris/Vert neutre */
-    color: var(--color-text-light);
-    border: none;
+    background-color: var(--color-success); /* VERT ÉMERAUDE */
+    color: var(--color-text-light); /* Texte BLANC */
     margin-top: 15px;
     align-self: flex-start;
     margin-right: 0;
 }
-#modify_role .submit_employe.btn:hover {
+#modify_role .cancel.btn {
+	margin-top: 15px;
+	margin-right: 0;
+}
+
+#modify_role .submit_employe.btn:hover  .cancel.btn:hover {
     opacity: 0.8;
 }

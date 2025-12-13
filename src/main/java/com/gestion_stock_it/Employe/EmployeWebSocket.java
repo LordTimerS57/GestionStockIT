@@ -119,17 +119,30 @@ public class EmployeWebSocket {
     }
 
     // ✅ Forcer la déconnexion d’un employé
-    public static void forceLogout(String matricule) {
+    public static void forceLogout(String matricule) throws Exception {
         Session session = sessions.get(matricule);
         if (session != null && session.isOpen()) {
             try {
-                String jsonMessage = gson.toJson(Map.of(
+                EmployeDataController fn = new EmployeDataController();
+                
+                Employe e = fn.getEmployeByMatricule(matricule);
+            	if(e != null && e.getConnection()) {
+        	      DatabaseConnection db = new DatabaseConnection();
+        	      db.connect();
+        	      try {
+                      fn.connect(db.getConnection(),  matricule, null, null, "non");
+                  } finally {
+                      db.disconnect();
+                  }
+            	}
+            	String jsonMessage = gson.toJson(Map.of(
                         "type", "force_logout",
                         "message", "Votre compte a été désactivé."
                 ));
+                
                 session.getBasicRemote().sendText(jsonMessage);
-            } catch (IOException e) {
-                e.printStackTrace();
+            } catch (Exception ex) {
+                ex.printStackTrace();
             }
         }
     }

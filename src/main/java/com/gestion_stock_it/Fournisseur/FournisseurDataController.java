@@ -76,7 +76,7 @@ public class FournisseurDataController {
                         res.getString("Telephone_fournisseur")
                 );
 
-                fournisseur.setNombre_occurence_entree_fournisseur(res.getLong("Occurence_fournisseur"));
+                fournisseur.setNombre_occurence_entrees_fournisseur(res.getLong("Occurence_fournisseur"));
 
                 listFournisseur.add(fournisseur);
             }
@@ -187,7 +187,7 @@ public class FournisseurDataController {
             errors.add("tag_fournisseur: Veuillez entrer un numéro d'identification valide !");
         } else if (f != null){
             errors.add("tag_fournisseur: Le tag que vous avez édité est déjà présente chez un autre fournisseur !");
-        } else if (!tag.matches("^\\d{13}$")) {
+        } else if (!tag.matches("^\\d{10}$")) {
             errors.add("tag_fournisseur: Le numéro d'identification doit contenir exactement 13 chiffres !");
         }
 

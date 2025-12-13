@@ -17,62 +17,68 @@
 <section class="content-flux-in">
     <% if(role.equals("Administrateur") || role.equals("Super Administrateur") ) { %>
     <div class="content-flux-create">
-        <a href="<%=request.getContextPath()%>/Entrees/Creation">Entrer un article au stock</a>
+        <a href="<%=request.getContextPath()%>/Entrees/Creation"><i class="fa-solid fa-box-archive"></i> Entrer un article au stock</a>
     </div>
     <% } %>
+    
+    
     <div class="search">
-        <fieldset id="date_param_search_container">
-			<legend>Recherche par date</legend>
-            <label id="date_type_select_label">
-                Chercher la date de déplacement suivant
-                <select name="date" onchange="updateSearchFlux('Date_flux')">
-                    <option value="date">la date</option>
-                    <option value="mois">le mois et l'année seulement</option>
-                </select>
-            </label>
-
-            <div id="date_input_fields">
-                <div id="date_search_1">
-                    <label>
-                        <select name="precision_date" id="precision_date">
-                            <option value="">...</option>
-                            <option value="before">Avant</option>
-                            <option value="after">Après</option>
-                            <option value="equals">Durant</option>
-                        </select>
-                        le
-                        <input type="date" name="date_flux" id="date_flux" oninput="searchFlux('Entree')">
-                    </label>
-                </div>
-
-                <div id="date_search_2" style="display: none">
-                    <label>
-                        <select name="month_date_flux_1" id="month_flux" onselect="searchFlux('Entree')">
-                            <option value="01">Janvier</option>
-                            <option value="02">Février</option>
-                            <option value="03">Mars</option>
-                            <option value="04">Avril</option>
-                            <option value="05">Mai</option>
-                            <option value="06">Juin</option>
-                            <option value="07">Juillet</option>
-                            <option value="08">Août</option>
-                            <option value="09">Septembre</option>
-                            <option value="10">Octobre</option>
-                            <option value="11">Novembre</option>
-                            <option value="12">Décembre</option>
-                        </select> -
-                        <input type="search" name="month_date_flux_2" id="year_flux" pattern="^[0-9]+$" oninput="searchFlux('Entree')">
-                    </label>
-                </div>
-            </div>
-        </fieldset>
-
-        <label id="article_search">
-            <input type="search" name="nom_article" id="nom_article" placeholder="Rechercher l'article souhaité ..." oninput="searchFlux('Entree')">
-        	<i class="fas fa-search"></i>
-        </label>
- 
-    </div>
+	    <fieldset id="date_param_search_container">
+	        <legend class="collapsible" onclick="toggleFieldset(this,'date')">Recherche par date <i class="fas fa-caret-down"></i></legend>
+	        
+	        <div class="fieldset-content" style="display: none;">
+	            <label id="date_type_select_label">
+	                Chercher la date de déplacement suivant
+	                <select name="date" onchange="updateSearchFlux('Date_flux')">
+	                    <option value="date">la date</option>
+	                    <option value="mois">le mois et l'année seulement</option>
+	                </select>
+	            </label>
+	
+	            <div id="date_input_fields">
+	
+	                <div id="date_search_1">
+	                    <label>
+	                        <select name="precision_date" id="precision_date">
+	                            <option value="">...</option>
+	                            <option value="before">Avant</option>
+	                            <option value="after">Après</option>
+	                            <option value="equals">Durant</option>
+	                        </select>
+	                        le
+	                        <input type="date" name="date_flux" id="date_flux" oninput="searchFlux('Entree')">
+	                    </label>
+	                </div>
+	
+	                <div id="date_search_2" style="display: none">
+	                    <label>
+	                        <select name="month_date_flux_1" id="month_flux" onchange="searchFlux('Entree')">
+	                            <option value="01">Janvier</option>
+	                            <option value="02">Février</option>
+	                            <option value="03">Mars</option>
+	                            <option value="04">Avril</option>
+	                            <option value="05">Mai</option>
+	                            <option value="06">Juin</option>
+	                            <option value="07">Juillet</option>
+	                            <option value="08">Août</option>
+	                            <option value="09">Septembre</option>
+	                            <option value="10">Octobre</option>
+	                            <option value="11">Novembre</option>
+	                            <option value="12">Décembre</option>
+	                        </select> -
+	                        <input type="search" name="month_date_flux_2" id="year_flux" pattern="^[0-9]+$" oninput="searchFlux('Entree')">
+	                    </label>
+	                </div>
+	            </div>
+	        </div>
+	    </fieldset>
+	
+	    <label id="article_search">
+	        <input type="search" name="nom_article" id="nom_article" placeholder="Rechercher l'article souhaité ..." oninput="searchFlux('Entree')">
+	        <i class="fas fa-search"></i>
+	    </label>
+	</div>
+    
     <div id="result_entree">
         <% if (!entrees.isEmpty()) { %>
         <table>
@@ -107,7 +113,7 @@
         </table>
         <% if(visibleRapportButton) { %>
         <div id="excel">
-            <button onclick="setExcelTransform('Entree')">Faire un rapport excel</button>
+            <button onclick="setExcelTransform('Entree')"><i class="fa-solid fa-download"></i> Faire un rapport excel</button>
         </div>
         <% } %>
         <% } else { %>

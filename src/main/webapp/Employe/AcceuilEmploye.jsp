@@ -8,6 +8,7 @@
 	List<Employe> connectes, nonConnectes;
 	connectes = (List<Employe>) request.getAttribute("connectes");
 	nonConnectes = (List<Employe>) request.getAttribute("non_connectes");
+	Employe self = (Employe) session.getAttribute("login_profil");
 %>
 
 <section class="employe-section">
@@ -35,8 +36,8 @@
 			</fieldset>
 
 			<div id="employe_action_buttons">
-				<button onclick="setDetails(event, 'Close', 'Employe', null)">Fermer</button>
 				<button id="modify_role_btn" onclick="passModification()">Modifier le rôle</button>
+				<button onclick="setDetails(event, 'Close', 'Employe', null)">Fermer</button>
 			</div>
 		</div>
 
@@ -53,7 +54,10 @@
 				</label>
 				<input type="hidden" id="emp_matricule" name="matricule">
 				<input type="hidden" id="emp_email" name="email">
-				<button class="submit_employe btn">Attribuer</button>
+				<div id="employe_action_buttons">
+					<button class="submit_employe btn">Attribuer</button>
+					<button class="cancel btn" onclick="setDetails(event, 'Close', 'Employe', null)">Fermer</button>
+				</div>
 			</fieldset>
 		</form>
 	</dialog>
@@ -87,7 +91,7 @@
 						<%= c.getNomPrenom() %>
 					</button>
 				</td>
-				<% if(!Objects.equals(c.getRole(), "Super Administrateur")) { %>
+				<% if(!Objects.equals(c.getRole(), "Super Administrateur") || ( !Objects.equals(self.getMatricule(), c.getMatricule()) ) ) { %>
 				<td>
 					<button class="activation-employe" onclick="removeData('<%=c.getMatricule()%>', 'Employe')"><%= c.getActivite() ? "Désactiver" : "Activer" %> le compte</button>
 				</td>
@@ -132,7 +136,7 @@
 				</td>
 				<% if(!Objects.equals(nc.getRole(), "Super Administrateur")) { %>
 				<td>
-					<button class="activation-employe" onclick="removeData('<%=nc.getMatricule()%>', 'Employe')"><%= nc.getActivite() ? "Désactiver" : "Activer" %> le compte</button>
+					<button class="<%= nc.getActivite() ? "desactivation" : "activation" %>-employe" onclick="removeData('<%=nc.getMatricule()%>', 'Employe')"><%= nc.getActivite() ? "Désactiver" : "Activer" %> le compte</button>
 				</td>
 				<% } else { %>
 				<td>—</td> <% } %>

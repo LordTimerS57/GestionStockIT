@@ -1,14 +1,15 @@
-/* --- Palette Neutre (Variables CSS) --- */
+/* --- Palette Minimaliste (Variables CSS) --- */
 :root {
-    --color-text-dark: #333;           /* Texte sombre */
-    --color-text-light: #fff;          /* Texte clair (utilisé uniquement sur les fonds foncés) */
-    --color-background-light: #f8f9fa; /* Fond léger des blocs (Gris très clair) */
-    --color-background-white: #fff;    /* Blanc pur */
-    --color-border-light: #eee;        /* Bordure très légère */
-    --color-border: #ccc;              /* Bordure moyenne */
-    --color-accent: #6c757d;           /* Gris foncé pour les accents et le hover */
-    --color-table-header: #495057;     /* Gris foncé pour l'en-tête de tableau */
-    --color-danger: #dc3545;           /* Rouge pour l'action "Se déconnecter" (non neutre, conservé pour l'action de sécurité) */
+    --color-text-dark: #212529;           /* Texte sombre (Anthracite) */
+    --color-text-light: #FFFFFF;          /* Texte clair (Blanc) */
+    --color-background-light: #F8F9FA;    /* Fond léger des blocs (Gris très clair) */
+    --color-background-white: #FFFFFF;    /* Blanc pur */
+    --color-border-light: #E9ECEF;        /* Bordure très légère (pour les séparateurs de ligne) */
+    --color-border: #DEE2E6;              /* Bordure moyenne (pour les champs) */
+    --color-accent: #004085;              /* Primaire: BLEU MARINE */
+    --color-table-header: #F8F9FA;        /* En-tête: Gris très clair (texte noir) */
+    --color-danger: #DC3545;              /* Supprimer: Rouge (non utilisé ici, mais conservé pour l'action) */
+    --color-success: #28A745;             /* Succès: VERT ÉMERAUDE (pour Excel/Ajouter) */
     --shadow-light: 0 1px 3px rgba(0, 0, 0, 0.05);
     --shadow-medium: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
@@ -16,71 +17,41 @@
 /* ------------------------------------ */
 /* 1. Page d'Accueil des Mouvements (Accueil Flux) */
 /* ------------------------------------ */
-
-.flux-section {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 40px;
-    padding: 40px;
-    margin: 20px auto;
-    max-width: 900px;
-    background-color: var(--color-background-white);
-    border-radius: 8px;
-    box-shadow: var(--shadow-medium);
-}
-
-.flux-section div {
-    display: flex;
-    padding: 20px;
-    border-radius: 6px;
-    gap: 30px;
-    width: 100%;
-    box-sizing: border-box;
-    justify-content: center;
-    box-shadow: var(--shadow-light);
-}
-
-.content-flux-create {
-    background-color: var(--color-background-light);
-    border: 1px solid var(--color-border);
-}
-
-.content-flux {
-    background-color: var(--color-background-white);
-    border: 1px solid var(--color-border);
-}
-
-.flux-section a {
-    text-decoration: none;
-    padding: 12px 25px;
-    border-radius: 4px;
-    font-weight: bold;
-    transition: background-color 0.3s, opacity 0.3s;
-    text-align: center;
-    min-width: 180px;
-    box-shadow: var(--shadow-light);
-}
-
-/* Styles pour les boutons d'action (Gris) */
 .content-flux-create a {
-    background-color: var(--color-border);
-    color: var(--color-text-dark);
+    background-color: var(--color-success); /* VERT ÉMERAUDE */
+    color: var(--color-text-light); /* Texte BLANC */
+    
+    /* Spécificités pour l'aspect bouton */
+    display: inline-flex; 
+    align-items: center;
+    padding: 10px 15px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s, box-shadow 0.3s;
+    box-shadow: var(--shadow-light);
 }
 
 .content-flux-create a:hover {
-    background-color: var(--color-accent);
+    background-color: #1E7E34; /* Vert plus foncé au survol */
     color: var(--color-text-light);
-    opacity: 1;
+    box-shadow: var(--shadow-medium); /* Ombre plus marquée au survol */
 }
 
+/* Espacement de l'icône */
+.content-flux-create a i {
+    margin-right: 8px;
+    font-size: 1.1em;
+}
+
+/* Boutons de Consultation (Bleu Marine) */
 .content-flux a {
-    background-color: var(--color-accent);
-    color: var(--color-text-light);
+    background-color: var(--color-accent); /* BLEU MARINE */
+    color: var(--color-text-light); /* Texte BLANC */
 }
 
 .content-flux a:hover {
-    background-color: var(--color-table-header);
+    background-color: #007BFF; /* Bleu Simple au survol */
     opacity: 1;
 }
 
@@ -88,26 +59,60 @@
 /* 2. Organisation et Style des Barres de Recherche (.search) */
 /* ------------------------------------ */
 
-/* Ces classes restent pour définir les marges de la zone de contenu */
 .content .content-flux-in, .content .content-flux-out {
     padding: 20px;
 }
 
-/* Conteneur de recherche principal (Organisation Flexbox) */
-/* Cible maintenant TOUS les éléments .search à l'intérieur de .content */
-.content .search { 
-    background-color: var(--color-background-light);
-    border-radius: 8px;
-    box-shadow: var(--shadow-light);
-    padding: 20px;
-    margin-bottom: 30px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 15px 20px;
-    align-items: center;
+/* Conteneur de recherche principal (Disposition Verticale) */
+.content .search {
+	background-color: var(--color-background-white);
+	border: none;
+	padding: 20px 7px 20px 8px;
+	margin-bottom: 30px;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 15px;
+	width: 99%;
 }
 
-/* Organisation du conteneur des paramètres de date */
+/* Style des Fieldsets pour l'effet accordéon */
+.content .search fieldset {
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-bottom: 3px solid var(--color-border); /* Gris Bordure */
+    padding: 0;
+    margin: 0 0 5px 0;
+    width: 100%; 
+}
+
+/* --- Styles pour l'effet accordéon (Collapsible Fieldset) --- */
+
+.collapsible {
+    cursor: pointer;
+    padding: 5px 0;
+    user-select: none; 
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold; 
+    color: var(--color-accent); /* BLEU MARINE pour le titre cliquable */
+}
+
+.collapsible .fas {
+    margin-left: 10px;
+    transition: transform 0.3s ease;
+}
+
+.fieldset-content {
+	color: var(--color-text-dark); /* Texte Anthracite */
+    padding: 15px 0 15px 0; 
+    border-top: 3px solid var(--color-border); /* Gris Bordure */
+    margin: 5px 0 0 0; 
+}
+
+/* Organisation des conteneurs internes */
 #date_param_search_container {
     display: flex;
     flex-direction: column;
@@ -117,7 +122,17 @@
 	display: flex;
     flex-direction: column;
     gap: 10px;
-    width: 20%;
+}
+
+/* Alignement Horizontal pour les champs Expéditeur/Destinataire */
+.fieldset-content#employe_search_input {
+    display: flex;
+    flex-direction: row; 
+    flex-wrap: wrap; 
+    gap: 15px; 
+    align-items: center;
+    width: 100%;
+    padding: 15px 0 15px 0;
 }
 
 /* Organisation du sélecteur de type de date (label) */
@@ -129,7 +144,7 @@
     font-weight: 600;
 }
 
-/* Alignement des champs de date/mois (Avant/Après/Durant, le, input) */
+/* Alignement des champs de date/mois */
 #date_input_fields > div {
     display: flex;
     align-items: center;
@@ -137,7 +152,6 @@
 }
 
 /* Style des champs de recherche (Inputs/Selects) */
-/* Cible maintenant TOUS les inputs et selects à l'intérieur de .content .search */
 .content .search select, 
 .content .search input {
     padding: 8px 10px;
@@ -150,37 +164,53 @@
 /* Style au focus */
 .content .search input:focus,
 .content .search select:focus {
-    border-color: var(--color-accent);
+    border-color: var(--color-accent); /* BLEU MARINE au focus */
     outline: none;
 }
 
-/* Style spécifique au champ de recherche d'article (peut nécessiter d'être généralisé si d'autres modules ont un champ principal) */
-#article_search, #destinataire_search, #expediteur_search {
-    /* Styles de base copiés de .type-section .search-label */
+/* Style spécifique au champ de recherche d'article et employés */
+#article_search{
     display: flex;
     align-items: center;
     border: 1px solid var(--color-border);
-    border-radius: 20px; /* Forme arrondie */
+    border-radius: 20px; 
     padding: 5px 15px;
-    background-color: var(--color-background-white);
+    background-color: var(--color-background-white); /* Fond BLANC */
     
-    /* Gestion de l'espace dans la barre de recherche */
-    flex-grow: 1; /* Permet de prendre l'espace restant dans la barre */
-    min-width: 250px;
-    max-width: 350px; /* Limiter la largeur si elle est dans la même barre Flex */
+    flex-grow: 1; 
+    flex-basis: 48%; 
+    min-width: 300px; 
+    max-width: none; 
 }
 
+#destinataire_search, 
+#expediteur_search {
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--color-border);
+    border-radius: 20px; 
+    padding: 5px 15px;
+    background-color: var(--color-background-white); /* Fond BLANC */
+    
+    flex-grow: 1;
+    min-width: 200px; 
+    max-width: none; 
+}
+
+/* Assure que l'input article prend toute la largeur verticale */
+#article_search {
+    flex-basis: 100%;
+    max-width: 100%;
+}
+
+
 #nom_article , #destinataire, #expediteur {
-    /* Styles de l'input copiés de .type-section .search-label input */
     border: none;
     outline: none;
     flex-grow: 1;
     padding: 5px;
     font-size: 1em;
-
-    /* Assure qu'il prend toute la place du conteneur Flexbox */
     width: 100%;
-    min-width: 250px;
 }
 
 
@@ -189,7 +219,7 @@
 /* ------------------------------------ */
 
 .content #result_entree, .content #result_sortie {
-    background-color: var(--color-background-white);
+    background-color: var(--color-background-white); /* Fond BLANC */
     border-radius: 4px;
     box-shadow: var(--shadow-light);
     padding: 0;
@@ -203,8 +233,8 @@
 }
 
 .content .content-flux-in table th, .content .content-flux-out table th {
-    background-color: var(--color-table-header);
-    color: var(--color-text-light);
+    background-color: var(--color-table-header); /* GRIS TRÈS CLAIR */
+    color: var(--color-text-dark); /* Texte ANTHRACITE */
     padding: 12px 15px;
     text-align: left;
     font-weight: 600;
@@ -212,16 +242,16 @@
 }
 
 .content .content-flux-in table tr:nth-child(even), .content .content-flux-out table tr:nth-child(even) {
-    background-color: var(--color-background-light);
+    background-color: var(--color-background-light); /* GRIS TRÈS CLAIR */
 }
 .content .content-flux-in table tr:hover, .content .content-flux-out table tr:hover {
-    background-color: #e6f7ff; /* Bleu très léger pour l'effet de survol */
+    background-color: #E6F0F8; /* Bleu très très pâle au survol */
     cursor: pointer;
 }
 
 .content .content-flux-in table td, .content .content-flux-out table td {
     padding: 10px 15px;
-    border-bottom: 1px solid var(--color-border-light);
+    border-bottom: 1px solid var(--color-border-light); /* Bordure très légère */
     vertical-align: middle;
 }
 
@@ -231,10 +261,11 @@
     font-size: 0.9em;
 }
 
+/* Bouton de détail dans le tableau (Sortie) */
 .content .content-flux-out td button {
     background: none;
     border: none;
-    color: var(--color-accent);
+    color: var(--color-accent); /* BLEU MARINE */
     cursor: pointer;
     text-align: left;
     padding: 0;
@@ -243,7 +274,7 @@
 
 .content .content-flux-out td button:hover {
     text-decoration: underline;
-    color: var(--color-table-header);
+    color: #007BFF; /* Bleu Simple au survol */
 }
 
 /* Bouton Rapport Excel */
@@ -253,8 +284,8 @@
 }
 
 .content #excel button {
-    background-color: var(--color-accent);
-    color: var(--color-text-light);
+    background-color: var(--color-success); /* VERT ÉMERAUDE */
+    color: var(--color-text-light); /* Texte BLANC */
     border: none;
     padding: 10px 20px;
     border-radius: 4px;
@@ -265,5 +296,5 @@
 }
 
 .content #excel button:hover {
-    background-color: var(--color-table-header);
+    background-color: #1E7E34; /* Vert plus foncé au survol */
 }

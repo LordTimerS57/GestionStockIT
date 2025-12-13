@@ -48,8 +48,7 @@
 /* ------------------------------------ */
 
 .content .profile fieldset {
-    border: 1px solid #dee2e6;
-    border-radius: 6px;
+    border: none;
     padding: 20px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     background-color: #ffffff;
@@ -58,7 +57,7 @@
 .content .profile legend {
     font-size: 1.25em;
     font-weight: bold;
-    /* color: #007bff; */
+    color: #004085;
     padding: 0 10px;
 }
 
@@ -79,11 +78,15 @@
     margin-bottom: 8px;
 }
 
-#details-connexion ul li a {
+#details-connexion a, #details-personnels a{
     display: block;
-    /* color: #28a745; */
+    color: #005195;  
     text-decoration: none;
     font-weight: 500;
+}
+
+#details-connexion a:hover, #details-personnels a:hover{
+    font-weight: bold;  
 }
 
 /* ------------------------------------ */

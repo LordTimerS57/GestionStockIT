@@ -6,14 +6,18 @@
   <form id="chatService" onsubmit="return submitQuestion('<%= request.getContextPath() %>')">
     <fieldset>
       <legend>Assistant IA IT</legend>
-      <div>
+      
+      <div id="messages">
         <p> Bonjour ! Je suis l'assistant AI. Posez-moi une question sur les stock, nos fournisseurs, les entrées ou sorties d'articles, les employés ou les articles.</p>
+        
         <div id="message">
         </div>
       </div>
+      
       <label for="question-area">
         <textarea id="question-area" name="question" placeholder="Poser les questions que vous voulez..." rows="3" style="width: 90%;"></textarea>
       </label>
+      
       <button type="submit" class="submit_chat btn">Soumettre</button>
     </fieldset>
   </form>
@@ -28,6 +32,7 @@
   (function() {
     const messageDiv = document.getElementById('message');
     if (messageDiv) {
+      // Défilement vers le bas
       messageDiv.scrollTop = messageDiv.scrollHeight;
     }
   })();

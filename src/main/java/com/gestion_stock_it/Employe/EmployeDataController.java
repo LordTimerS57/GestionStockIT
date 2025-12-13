@@ -278,7 +278,7 @@ public class EmployeDataController {
 			p_stmt.setString(1, employe.getMatricule()); // set value
 			p_stmt.setString(2, employe.getNom()); // set value
 			p_stmt.setString(3, employe.getPrenom());
-			p_stmt.setTimestamp(4, Timestamp.valueOf(employe.getDate_naissance().atStartOfDay()));
+			p_stmt.setTimestamp(4, Timestamp.valueOf(employe.getDate_de_naissance().atStartOfDay()));
 			p_stmt.setString(5, employe.getEmail());
 			p_stmt.setString(6, employe.getMot_de_passe());
 			p_stmt.setString(7, employe.getAdresse());
@@ -305,7 +305,7 @@ public class EmployeDataController {
 			params.add(employe.getPrenom());
 			params.add(employe.getAdresse());
 			params.add(employe.getTelephone());
-			params.add(Timestamp.valueOf(employe.getDate_naissance().atStartOfDay()));
+			params.add(Timestamp.valueOf(employe.getDate_de_naissance().atStartOfDay()));
 		}
 
 		else if (section == 2) {

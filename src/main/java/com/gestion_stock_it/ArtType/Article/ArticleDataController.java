@@ -164,7 +164,7 @@ public List<Article> getArticleList(String Nom_article, String Nom_type) throws 
 			p_stmt.setString(2, article.getType_article().getTag_type());
 			p_stmt.setString(3, article.getNom_article());
 			p_stmt.setString(4, article.getDescription_article());
-			p_stmt.setLong(5, article.getNombre_article());
+			p_stmt.setLong(5, article.getStock_article());
 			p_stmt.executeUpdate();
 		}
 		catch (SQLException e) {

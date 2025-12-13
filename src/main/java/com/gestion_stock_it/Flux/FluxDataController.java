@@ -112,15 +112,15 @@ public class FluxDataController {
 
 						"	SELECT "
 
-								+ " 	e.* ,"
+								+ " e.* ,"
 
-								+ "		exp.Raison_sociale AS exp_Raison_sociale ,"
-								+ "		exp.Email_fournisseur AS exp_Email,"
-								+ "		exp.Telephone_fournisseur AS exp_Telephone,"
+								+ "	exp.Raison_sociale AS exp_Raison_sociale ,"
+								+ "	exp.Email_fournisseur AS exp_Email,"
+								+ "	exp.Telephone_fournisseur AS exp_Telephone,"
 
 								+ "	art.Tag_article, art.Nom_article, art.Description_article,"
 
-								+ "	n.Nombre, "
+								+ "	n.Stock_theorique, "
 
 								+ "	t.Tag_type, t.Nom_type, t.Description_type	"
 
@@ -128,7 +128,7 @@ public class FluxDataController {
 								+ "		Entree e "
 								+ " JOIN Article art "
 								+ "		ON art.Tag_article = e.Tag_article "
-								+ " JOIN Nombre_article n "
+								+ " JOIN Stock_theorique_article n "
 								+ "		ON n.Tag_article = e.Tag_article "
 								+ " JOIN Type t "
 								+ "		ON t.Tag_Type = art.Tag_Type "
@@ -145,19 +145,21 @@ public class FluxDataController {
 			ResultSet res = p_stmt.executeQuery();
 
 			while (res.next()) {
-				/*Employe destinataire = new Employe(
-						res.getString("Destinataire"),
-						res.getString("des_Nom"),
-						res.getString("des_Prenom"),
-						res.getString("des_Email"),
-						null,
-						res.getString("des_Telephone"),
-						res.getString("des_Adresse"),
-						desDateNaissance != null ? desDateNaissance.toLocalDateTime().toLocalDate() : null,
-						res.getInt("des_Role"),
-						desDateCreation != null ? desDateCreation.toLocalDateTime() : null,
-						desDateModification != null ? desDateModification.toLocalDateTime() : null
-				);*/
+				/*
+				 * Employe destinataire = new Employe(
+				 * 		res.getString("Destinataire"),
+				 * 		res.getString("des_Nom"),
+				 * 		res.getString("des_Prenom"),
+				 * 		res.getString("des_Email"),
+				 * 		null,
+				 * 		res.getString("des_Telephone"),
+				 * 		res.getString("des_Adresse"),
+				 * 		desDateNaissance != null ? desDateNaissance.toLocalDateTime().toLocalDate() : null,
+				 * 		res.getInt("des_Role"),
+				 * 		desDateCreation != null ? desDateCreation.toLocalDateTime() : null,
+				 * 		desDateModification != null ? desDateModification.toLocalDateTime() : null
+				 * );
+				 */
 
 				Fournisseur expediteur = new Fournisseur(
 						res.getString("Expediteur"),
@@ -174,7 +176,7 @@ public class FluxDataController {
 								res.getString("Nom_type"),
 								res.getString("Description_type")
 						),
-						res.getLong("Nombre")
+						res.getLong("Stock_theorique")
 				);
 				Entree f = new Entree(
 						res.getString("Tag_entree"),
@@ -312,7 +314,7 @@ public class FluxDataController {
 
 								+ "	art.Tag_article, art.Nom_article, art.Description_article,"
 
-								+ "	n.Nombre, "
+								+ "	n.Stock_theorique, "
 
 								+ "	t.Tag_type, t.Nom_type, t.Description_type	"
 
@@ -320,7 +322,7 @@ public class FluxDataController {
 								+ "		Sortie s "
 								+ " JOIN Article art "
 								+ "		ON art.Tag_article = s.Tag_article "
-								+ " JOIN Nombre_article n "
+								+ " JOIN Stock_theorique_article n "
 								+ "		ON n.Tag_article = s.Tag_article "
 								+ " JOIN Type t "
 								+ "		ON t.Tag_Type = art.Tag_Type "
@@ -387,7 +389,7 @@ public class FluxDataController {
 								res.getString("Nom_type"),
 								res.getString("Description_type")
 						),
-						res.getLong("Nombre")
+						res.getLong("Stock_theorique")
 				);
 				Sortie f = new Sortie(
 						res.getString("Tag_sortie"),
@@ -412,17 +414,19 @@ public class FluxDataController {
 		try{
 			c.setAutoCommit(false);
 
-			try (PreparedStatement post_stmt1 = c.prepareStatement("SELECT COALESCE(Nombre,0) AS Stock_defaut FROM Nombre_article WHERE Tag_article = ?")) {
-
-				post_stmt1.setString(1, flux.getArticle().getTag_article());
-				ResultSet rs = post_stmt1.executeQuery();
-				while (rs.next()) {
-					if (rs.getLong("Stock_defaut") == 0) {
-
-					}
-				}
-			}
-
+			/*
+			 * 
+			 * try (PreparedStatement post_stmt1 = c.prepareStatement("SELECT COALESCE(Stock_theorique,0) AS Stock_defaut FROM Stock_theorique_article WHERE Tag_article = ?")) {
+			 * post_stmt1.setString(1, flux.getArticle().getTag_article());
+			 * ResultSet rs = post_stmt1.executeQuery();
+			 * while (rs.next()) {
+			 *		if (rs.getLong("Stock_defaut") == 0) {
+			 *			System.out.println("Stock_defaut ok");	
+			 *			}
+			 *		}
+			 *	}
+			 *
+			 */
             try(PreparedStatement p_stmt = c.prepareStatement("INSERT INTO Entree ( "
 							+ "  Tag_entree, "
 							+ "  Tag_article, "
@@ -474,7 +478,7 @@ public class FluxDataController {
 		ArticleDataController fn = new ArticleDataController();
 		try{
 			c.setAutoCommit(false);
-			try (PreparedStatement post_stmt1 = c.prepareStatement("SELECT COALESCE(Nombre,0) AS Stock_defaut FROM Nombre_article WHERE Tag_article = ?")) {
+			try (PreparedStatement post_stmt1 = c.prepareStatement("SELECT COALESCE(Stock_theorique,0) AS Stock_defaut FROM Stock_theorique_article WHERE Tag_article = ?")) {
 				post_stmt1.setString(1, flux.getArticle().getTag_article());
 				ResultSet rs = post_stmt1.executeQuery();
 				while (rs.next()) {
@@ -533,12 +537,12 @@ public class FluxDataController {
 			}
 		}
 	}
-
+	
 	public static String nextTagFlux(Connection c, String type) throws Exception {
 		DatabaseConnection db = new DatabaseConnection();
 		db.connect();
 
-		String query,  typeTag, searchTag;
+		String query, searchTag;
 		if (type.trim().equals("Entree")){
 			query = """
 						SELECT Tag_entree

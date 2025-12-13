@@ -12,6 +12,11 @@
 <head>
     <meta charset="UTF-8">
     <link rel="icon" type="image/png" href="<%= request.getContextPath() %>/IMAGES/logo_spat.png"/>
+    <link rel="stylesheet" 
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" 
+    integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" 
+    crossorigin="anonymous" 
+    referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="<%= request.getContextPath() %>/CSS/Login.css?v=<%= System.currentTimeMillis() %>"  type="text/css"/>
     <script src="<%= request.getContextPath() %>/JS/HandleError.js?v=<%= System.currentTimeMillis() %>" defer></script>
     <script src="<%= request.getContextPath() %>/JS/Handle.js?v=<%= System.currentTimeMillis() %>" defer></script>
@@ -24,44 +29,95 @@
             <legend><h1>Se connecter</h1></legend>
             <label id="content_login" for="email_matricule">
                 <label id="check_matricule">
-                    <span>Matricule de l'utilisateur: </span><input type="text" id="matricule" name="matricule" value="<%= (e != null) ? e.getMatricule() : "" %>" >
+                    <span id="name_matricule"></span><input type="hidden" id="matricule" name="matricule" value="<%= (e != null) ? e.getMatricule() : "" %>" >
                 </label>
                 <label id="check_email">
-                    <span>Email de l'utilisateur: </span><input type="email" id="email" name="email" value="<%= (e != null) ? e.getEmail() : "" %>" >
+                    <span id="name_email">Email de l'utilisateur: </span><input type="email" id="email" name="email" value="<%= (e != null) ? e.getEmail() : "" %>" >
                 </label>
                 <span id="error_email_matricule_login"></span>
             </label>
             <label for="mot_de_passe" id="content_login">
-                <span>Mot de passe: </span><input type="password" id="mot_de_passe" name="mot_de_passe" value="<%= (e != null) ? e.getMot_de_passe() : "" %>" required>
+                <span>Mot de passe: </span>
+                <div class="password-wrapper"> 
+			        <input type="password" id="mot_de_passe" name="mot_de_passe" value="<%= (e != null) ? e.getMot_de_passe() : "" %>" required>
+			        <button type="button" id="btn_toggle_password">
+			            <i class="fa-solid fa-eye-slash" id="togglePassword"></i>
+			        </button>
+			    </div>
                 <span id="error_mot_de_passe_login"></span>
             </label>
             <input type="submit" id="submit" class="submit_login" value="Se connecter" <%= !activite ? "disabled" : "" %> >
             <label for="check_matricule">
-                <input type="checkbox" id="check" class="checkbox_login" >
+                <input type="checkbox" id="check" class="checkbox_login" checked>
                 <span>J'ai oublié mon matricule</span>
             </label>
         </fieldset>
     </form>
+    
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const checkbox = document.getElementById('check');
-            const matriculeInput = document.getElementById('matricule');
-            const emailInput = document.getElementById('email');
-
-            function updateFields() {
-                if (checkbox.checked) {
-                    emailInput.required = true;
-                    emailInput.disabled = false;
-                } else {
-                    matriculeInput.disabled = false;
-                    emailInput.disabled = true;
-                }
-            }
-
-            // Initialisation et écoute
-            updateFields();
-            checkbox.addEventListener('change', updateFields);
-        });
-    </script>
+		    document.addEventListener('DOMContentLoaded', function() {
+		        const checkbox = document.getElementById('check');
+		        
+		        const matriculeInput = document.getElementById('matricule');
+		        const matriculeLabel = document.getElementById('name_matricule');
+		        
+		        const emailInput = document.getElementById('email');
+		        const emailLabel = document.getElementById('name_email');
+		        
+		        const passwordInput = document.getElementById('mot_de_passe');
+		        const toggleButton = document.getElementById('btn_toggle_password');
+		
+		        // 1. Logique Matricule / Email
+		        function updateFields() {
+		            if (checkbox.checked) {
+		                // Si coché (utiliser Email)
+		                emailInput.type = "email";
+		                emailLabel.textContent = 'Email de l\'utilisateur: ';
+		                emailInput.required = true;
+		                
+		                matriculeInput.type = "hidden";
+		                matriculeInput.required = false;
+		                matriculeLabel.textContent = '';
+		            } else {
+		                // Si non coché (utiliser Matricule)
+		                matriculeInput.type = "text";
+		                matriculeInput.required = true;
+		                matriculeLabel.textContent = 'Matricule de l\'utilisateur: ';
+		                
+		                emailInput.type = "hidden";
+		                emailLabel.textContent = '';
+		                emailInput.required = false;
+		            }
+		        }
+		        
+		        // 2. Logique Affichage Mot de Passe
+		        function togglePasswordVisibility(e) {
+		            e.preventDefault();
+		            e.stopPropagation();
+		            const iconElement = e.currentTarget.querySelector('i');
+		            
+		            if (passwordInput.type === "password") {
+		                passwordInput.type = "text";
+		                iconElement.classList.remove('fa-eye-slash');
+		                iconElement.classList.add('fa-eye');
+		            } else {
+		                passwordInput.type = "password";
+		                iconElement.classList.remove('fa-eye');
+		                iconElement.classList.add('fa-eye-slash');
+		            }
+		        }
+		
+		        // Initialisation et Écouteurs d'événements
+		        
+		        // Corriger l'état initial
+		        updateFields(); 
+		        
+		        // Écouter le changement de la case à cocher
+		        checkbox.addEventListener('change', updateFields);
+		        
+		        // Écouter le clic sur le bouton de bascule du mot de passe
+		        toggleButton.addEventListener('click', togglePasswordVisibility);
+		    });
+		</script>
 </body>
 </html>

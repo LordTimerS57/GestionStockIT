@@ -9,7 +9,7 @@
 <section class="type-section">
     <% if(role.equals("Administrateur") || role.equals("Super Administrateur")) { %>
     <div class="content-type-create">
-        <a href="<%= request.getContextPath() %>/Types/Creation">Ajouter un nouveau type d'article</a>
+        <a href="<%= request.getContextPath() %>/Types/Creation"><i class="fas fa-plus"></i> Ajouter un nouveau type d'article</a>
     </div>
     <% } %>
     
@@ -40,9 +40,9 @@
             <% if(role.equals("Administrateur") || role.equals("Super Administrateur")) { %>
           <td>
             <div class="table-actions">
-              <button class="action-modifier" onclick="setUpdateType('<%=t.getTag_type()%>')">Modifier</button>
+              <button class="action-modifier" onclick="setUpdateType('<%=t.getTag_type()%>')"><i class="fas fa-pencil-alt"></i></button>
               <% if(t.getNombre_occurence_article() == 0) { %>
-              <button class="action-supprimer" onclick="removeData('<%=t.getTag_type()%>', 'Type')">Supprimer</button>
+              <button class="action-supprimer" onclick="removeData('<%=t.getTag_type()%>', 'Type')"><i class="fas fa-trash"></i></button>
               <% } %>
             </div>
           </td>

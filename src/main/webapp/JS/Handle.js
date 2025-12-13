@@ -212,6 +212,23 @@ function updateActiveClass(currentUrl) {
     });
 }
 
+function toggleIcon(buttonElement, isHovering) {
+    // 1. Trouver l'icône Font Awesome à l'intérieur du bouton
+    const iconElement = buttonElement.querySelector('i');
+
+    if (iconElement) {
+        if (isHovering) {
+            // AU SURVOL (isHovering est true) : Afficher l'œil ouvert
+            iconElement.classList.remove('fa-eye-slash'); // Supprime l'œil barré
+            iconElement.classList.add('fa-eye');         // Ajoute l'œil ouvert
+        } else {
+            // LORSQUE LA SOURIS QUITTE (isHovering est false) : Revenir à l'œil barré
+            iconElement.classList.remove('fa-eye');      // Supprime l'œil ouvert
+            iconElement.classList.add('fa-eye-slash');   // Ajoute l'œil barré
+        }
+    }
+}								
+
 function searchArticle() {
     const article = document.querySelector('input[name="nom_article"]').value;
     const type = document.querySelector('input[name="nom_type"]').value;
@@ -314,6 +331,7 @@ function searchType() {
 }
 
 function searchFlux(type) {
+	
     let dateFlux = "", param = "", nomArticle = "", destinataire = "", expediteur = "";
 
     const nom = document.getElementById("nom_article").value;
@@ -391,23 +409,51 @@ function updateSearchFlux(style) {
 	}
 }
 
+/**
+ * Bascule l'affichage du contenu d'un fieldset pour créer un effet accordéon.
+ * @param {HTMLElement} element - L'élément cliquable (ex: le <legend>) qui déclenche le basculement.
+ */
+function toggleFieldset(element, type) {
+    // 1. Trouver le parent <fieldset>
+    const fieldset = element.closest('fieldset');
+    if (!fieldset) return; // Sécurité
+	
+	if(type == null || type === "") return;
+
+    // 2. Trouver le contenu masquable/affichable
+    const content = fieldset.querySelector('.fieldset-content');
+
+    // 3. Basculer l'affichage
+    if (content) {
+        if (content.style.display === "none" || content.style.display === "") {
+            content.style.display = type == "date" ? "block" : "flex" ; // Afficher
+            // Optionnel: Mettre à jour l'icône
+            element.querySelector('.fas').className = 'fas fa-caret-up';
+        } else {
+            content.style.display = "none"; // Masquer
+            // Optionnel: Mettre à jour l'icône
+            element.querySelector('.fas').className = 'fas fa-caret-down';
+        }
+    }
+}
+
 function setUpdateArticle(tag) {
     if (tag.trim() !== "") {
         console.log(tag)
-        window.location.href = "/Articles-Types/SessionModifyArtType.jsp?section=Article&id=" + encodeURIComponent(tag);
+        window.location.href = ctx + "/Articles-Types/SessionModifyArtType.jsp?section=Article&id=" + encodeURIComponent(tag);
     }
 }
 
 function setUpdateFournisseur(tag){
     const params = new URLSearchParams();
     if(tag.trim() !== ""){
-        window.location.href = ctx+"/Fournisseur/SessionModifyFournisseur.jsp?id=" + encodeURIComponent(tag);
+        window.location.href = ctx + "/Fournisseur/SessionModifyFournisseur.jsp?id=" + encodeURIComponent(tag);
     }
 }
 
 function setUpdateType(tag) {
     if (tag.trim() !== "") {
-        window.location.href = ctx+"/Articles-Types/SessionModifyArtType.jsp?section=Type&id=" + encodeURIComponent(tag);
+        window.location.href = ctx + "/Articles-Types/SessionModifyArtType.jsp?section=Type&id=" + encodeURIComponent(tag);
     }
 }
 

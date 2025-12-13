@@ -69,16 +69,20 @@ public class LogEmployeServlet extends HttpServlet {
                     
                 	Employe e = fn.testMotDePasse(matricule, motDePasse, email);
                 	if(e != null) {
-                		fn.connect(c,  e.getMatricule(), email, motDePasse, "oui");
+                		if(!e.getActivite()) {
+    						throw new ErrorConfirmException("mot_de_passe_login: Vous ne pouvez pas vous connecter car votre compte est désactivé.");
+    					} else {
+                			fn.connect(c,  e.getMatricule(), email, motDePasse, "oui");
 
-                        HttpSession session = req.getSession();
-                        session.setAttribute("login_role",e.getRole());
-                        session.setAttribute("login_profil",e);
+                            HttpSession session = req.getSession();
+                            session.setAttribute("login_role",e.getRole());
+                            session.setAttribute("login_profil",e);
 
-                        SessionRegistryEmploye.register(e.getMatricule(), session);
-                        resp.setStatus(HttpServletResponse.SC_OK);
-                        resp.getWriter().write("Login success");
-                        break;		
+                            SessionRegistryEmploye.register(e.getMatricule(), session);
+                            resp.setStatus(HttpServletResponse.SC_OK);
+                            resp.getWriter().write("Login success");
+                            break;		
+                		}
                 	}
                 }
             }
