@@ -29,12 +29,10 @@ public class ChatBotService {
      * @param question La question de l'utilisateur.s
      */
     public String processQuestion(String question, int role) throws Exception {
-
-        DatabaseConnection db = new DatabaseConnection();
-        DatabaseExecutor dbExecutor = new DatabaseExecutor(db);
+    	
+        DatabaseExecutor dbExecutor = new DatabaseExecutor();
 
         try {
-            db.connect();
 
             // --- ÉTAPE 1 : Traduction (CohereClient) ---
             // L'historique complet est passé pour maintenir le contexte
@@ -66,8 +64,6 @@ public class ChatBotService {
             System.err.println("Erreur inattendue: " + question);
             e.printStackTrace();
             return "Désolé, une erreur inattendue est survenue lors du traitement.";
-        } finally {
-            db.disconnect();
-        }
+        } 
     }
 }

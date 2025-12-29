@@ -18,6 +18,9 @@
 	<script src="<%= request.getContextPath() %>/JS/HandleError.js?v=<%= System.currentTimeMillis() %>" defer></script>
 	<title>Modification d'un type d'article</title>
 	<script type="text/javascript">
+		document.addEventListener("DOMContentLoaded", () => {		
+			initEmployeWebSocket('<%= request.getContextPath() %>', null, null);
+		});
 		document.addEventListener("pagehide", function() {
             closeEmployeWebSocket();
         });
@@ -44,9 +47,12 @@
 						<label>Description: <textarea name="description_type"> <%= t.getDescription_type() %> </textarea></label>
 						<span id="error_description_type"></span>
 					</div>
+					<div>
+			        	<input type="submit" class="submit_type btn" value="Confirmer l'action">
+			        	<input type="button" class="cancel_type btn" value="Retourner au tableau de bord" onClick="closeForm()">
+			        </div>
 				</div>
 			</fieldset>
-			<input type="submit" class="submit_type btn" value="Confirmer">
 	    </form>
     </main>
     <footer>

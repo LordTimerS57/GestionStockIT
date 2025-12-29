@@ -67,6 +67,12 @@
     /* color: #007bff; */
 }
 
+.content .profile fieldset p span{
+    font-weight: 700;
+    text-decoration: underline;
+    /* color: #007bff; */
+}
+
 /* Style des listes (pour la connexion) */
 #details-connexion ul {
     list-style: none;

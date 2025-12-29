@@ -9,7 +9,9 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList; 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @WebServlet("/ChatServlet")
@@ -21,7 +23,6 @@ public class ChatServlet extends HttpServlet {
     @Override
     public void init() throws ServletException {
         try {
-            // Initialisation du service (CohereClient)
             this.chatbotService = new ChatBotService();
         } catch (Exception e) {
             System.err.println("Impossible de démarrer le service Chatbot.");
@@ -29,37 +30,56 @@ public class ChatServlet extends HttpServlet {
         }
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-
-        // 1. Récupération des paramètres (Question et Employe de la session)
         String question = request.getParameter("question");
         Employe employe = (Employe) request.getSession().getAttribute("login_profil");
 
+        List<Chat> history = (List<Chat>) request.getSession().getAttribute("chats");
+        if (history == null) {
+            history = new ArrayList<>();
+            if (employe != null) {
+				Chat welcomeChat = new Chat("Bot",  "Bonjour ! Je suis l'assistant AI. Posez-moi une question sur les stock, nos fournisseurs, les entrées ou sorties d'articles, les employés ou les articles.");
+				history.add(welcomeChat);
+			}
+            request.getSession().setAttribute("chats", history);
+        }
+
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-
+                
         int role = -1;
 
         Map<String, String> jsonResponse = new HashMap<>();
 
         if (employe != null){
             role = employe.getRoleInt();
+        } else {
+             jsonResponse.put("statut", "ERREUR");
+             jsonResponse.put("reponse", "Veuillez vous connecter pour utiliser le chatbot.");
+             response.getWriter().write(gson.toJson(jsonResponse));
+             return;
         }
 
         if (question == null || question.trim().isEmpty()) {
             jsonResponse.put("statut", "ERREUR");
-            jsonResponse.put("reponse", "Veuillez vous connecter et fournir une question valide.");
+            jsonResponse.put("reponse", "Veuillez fournir une question valide.");
             response.getWriter().write(gson.toJson(jsonResponse));
             return;
         }
 
         try {
-            // 2. Traitement de la question (NL2SQL pur)
-            // L'historique sera lu/mis à jour via le ChatWebSocket par le service
             String botResponse = chatbotService.processQuestion(question, role);
 
-            // 3. Réponse réussie
+            Chat responseChat = new Chat("Bot", botResponse);
+            Chat questionChat = new Chat("User", question);
+            
+            history.add(questionChat);
+            history.add(responseChat);
+            
+            request.getSession().setAttribute("chats", history);
+            
             jsonResponse.put("statut", "OK");
             jsonResponse.put("reponse", botResponse);
 

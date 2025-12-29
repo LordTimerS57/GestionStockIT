@@ -3,6 +3,6 @@
 <%@ page import="java.util.Objects" %>
 <%@ page import="com.gestion_stock_it.Employe.Employe" %>
 <% Employe employe = (Employe) session.getAttribute("login_profil"); %>
-<section>
-	<h2>Bienvenue <%= employe.getNomPrenom() %> </h2>
+<section class="welcome-section">
+	<h2 class="welcome-content">Bienvenue <%= employe.getNomPrenom() %> </h2>
 </section>

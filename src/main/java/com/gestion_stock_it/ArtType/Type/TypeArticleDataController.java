@@ -8,11 +8,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TypeArticleDataController {
+	
+	private static final DatabaseConnection DB_CONNECTION = DatabaseConnection.getInstance();
+	
     public List<TypeArticle> getTypeArticleList(String Nom_type) throws Exception {
         List<TypeArticle> listType = new ArrayList<>();
-
-        DatabaseConnection db = new DatabaseConnection();
-        db.connect();
 
         StringBuilder subQuery = new StringBuilder();
         List<Object> params = new ArrayList<>();
@@ -28,9 +28,8 @@ public class TypeArticleDataController {
 
         String finalQuery = subQuery.toString();
 
-        try(
-                Connection conn = db.getConnection();
-                PreparedStatement p_stmt = conn.prepareStatement(
+        try(	Connection c = DB_CONNECTION.getConnection();
+        		PreparedStatement p_stmt = c.prepareStatement(
                         "SELECT "
                                 + "t.*, "
                                 + "a.nombre_articles AS Occurence_article "
@@ -65,15 +64,16 @@ public class TypeArticleDataController {
         return listType;
     }
 
-    public TypeArticle getTypeArticleByTag(Connection c, String tagType) throws Exception {
+    public TypeArticle getTypeArticleByTag(String tagType) throws Exception {
 
         if (tagType == null || tagType.trim().isEmpty()) {
-            return null; // Rien à faire si le tag est vide
+            return null;
         }
 
         String query = "SELECT * FROM Type WHERE Tag_type = ?";
 
-        try (PreparedStatement stmt = c.prepareStatement(query)) {
+        try (	Connection c = DB_CONNECTION.getConnection();
+        		PreparedStatement stmt = c.prepareStatement(query)) {
 
             stmt.setString(1, tagType);
 
@@ -95,8 +95,8 @@ public class TypeArticleDataController {
     }
 
 
-    public void addTypeArticle(Connection c, TypeArticle typeArticle) {
-        try(
+    public void addTypeArticle(TypeArticle typeArticle) {
+        try(	Connection c = DB_CONNECTION.getConnection();
                 PreparedStatement p_stmt = c.prepareStatement("INSERT INTO Type "
                         + "(Tag_type, Nom_type, Description_type ) "
                         + "VALUES "
@@ -114,8 +114,8 @@ public class TypeArticleDataController {
         }
     }
 
-    public void updateTypeArticle(Connection c, String tag_type, TypeArticle typeArticle) {
-        try(
+    public void updateTypeArticle(String tag_type, TypeArticle typeArticle) {
+        try(	Connection c = DB_CONNECTION.getConnection();
                 PreparedStatement p_stmt = c.prepareStatement("UPDATE Type SET "
                         + "Nom_type = ?, "
                         + "Description_type = ? "
@@ -134,8 +134,8 @@ public class TypeArticleDataController {
         }
     }
 
-    public void deleteTypeArticle(Connection c, String tag_type) {
-        try(
+    public void deleteTypeArticle(String tag_type) {
+        try(	Connection c = DB_CONNECTION.getConnection();
                 PreparedStatement p_stmt = c.prepareStatement("DELETE FROM Type WHERE Tag_type = ?")
         ){
             p_stmt.setString(1, tag_type);
@@ -147,9 +147,7 @@ public class TypeArticleDataController {
         }
     }
 
-    public String nextTagTypeArticle(Connection c) throws Exception {
-        DatabaseConnection db = new DatabaseConnection();
-        db.connect();
+    public String nextTagTypeArticle() throws Exception {
 
         String query = """
         SELECT Tag_type
@@ -159,7 +157,8 @@ public class TypeArticleDataController {
 
         String nextTagType = null;
 
-        try (Statement stmt = c.createStatement()) {
+        try (	Connection c = DB_CONNECTION.getConnection();
+        		Statement stmt = c.createStatement()) {
 
             try (ResultSet rs = stmt.executeQuery(query)) {
                 if (rs.next()) {
@@ -172,7 +171,7 @@ public class TypeArticleDataController {
         return nextTagType;
     }
 
-    public static void testError(String nom, String description) {
+    public TypeArticle testError(String nom, String description, String type) {
         List<String> errors = new ArrayList<>();
 
         if (nom == null || nom.trim().isEmpty()) {
@@ -188,6 +187,22 @@ public class TypeArticleDataController {
 
         if (!errors.isEmpty()) {
             throw new ErrorConfirmException(errors);
+        } else {
+        	TypeArticle t = new TypeArticle
+		                    (
+	                            null,
+	                            nom,
+	                            description
+		                    );
+        	if(type != null && type.trim() == "add") {
+				try {
+					t.setTag_type(nextTagTypeArticle());
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+			return t;
+        	
         }
     }
 

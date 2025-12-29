@@ -1,25 +1,21 @@
 package com.gestion_stock_it.ArtType.Type;
 
-import com.gestion_stock_it.DatabaseConnection;
 import com.gestion_stock_it.Employe.EmployeWebSocket;
 import com.gestion_stock_it.ErrorConfirmException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 
 import java.io.IOException;
-import java.sql.Connection;
 
 @WebServlet("/AddTypeServlet")
 public class AddTypeServlet extends HttpServlet {
 
-    private DatabaseConnection db;
-    private Connection c;
-    @Override
+   private TypeArticleDataController fn;
+   
+   @Override
     public void init() {
-        db = new DatabaseConnection();
-        db.connect();
-        c = db.getConnection();
-    }
+		fn = new TypeArticleDataController();
+	}
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -27,20 +23,11 @@ public class AddTypeServlet extends HttpServlet {
         String nom = req.getParameter("nom_type");
         String description = req.getParameter("description_type");
         try{
-            TypeArticleDataController.testError(nom, description);
-            TypeArticle t = new TypeArticle
-                    (
-                            null,
-                            nom,
-                            description
-                    );
+            TypeArticle t = fn.testError(nom, description, "add");
 
-            TypeArticleDataController fn = new TypeArticleDataController();
-            t.setTag_type(fn.nextTagTypeArticle(c));
+            fn.addTypeArticle(t);
 
-            fn.addTypeArticle(c, t);
-
-            EmployeWebSocket.notifyAllEmployes("refresh_data", "Mise à jour des données");
+            EmployeWebSocket.notifyEmployes("refresh_data", "Mise à jour des données", 1,2,3);
             resp.setStatus(200);
 
         }
@@ -58,11 +45,6 @@ public class AddTypeServlet extends HttpServlet {
             throw new RuntimeException(ex);
         }
 
-    }
-
-    @Override
-    public void destroy() {
-        db.disconnect();
     }
 
 }

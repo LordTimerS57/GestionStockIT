@@ -1,95 +1,106 @@
-/* ------------------------------------ */
-/* Styles de la Modale/Formulaire de Création/Modification d'Employé */
-/* ------------------------------------ */
+/* --- Palette de Couleurs --- */
+:root {
+    --color-primary: #004085;       /* Bleu Marine */
+    --color-success: #28A745;       /* Vert Émeraude */
+    --color-danger: #DC3545;        /* Rouge Erreur */
+    --color-bg-light: #F8F9FA;      /* Gris Clair */
+    --color-border: #DEE2E6;        /* Bordure Neutre */
+    --color-text: #212529;          /* Texte Sombre */
+}
 
+/* ------------------------------------ */
+/* 1. STRUCTURE GLOBALE                 */
+/* ------------------------------------ */
 body {
-    font-family: 'Arial', sans-serif;
-    color: #212529; /* Gris foncé pour le texte */
-    background-color: #FFFFFF; /* Fond principal BLANC */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: var(--color-text);
+    background-color: #FFFFFF;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }
 
 header {
-    background-color: #F8F9FA; /* GRIS TRÈS CLAIR (comme fond initial) */
-    color: #212529; /* Texte foncé sur fond clair */
-    padding: 15px 0 15px 15px;
+    background-color: var(--color-bg-light);
+    color: var(--color-text);
+    padding: 15px 25px;
     display: flex;
-    justify-content: flex-start;
+    justify-content: space-between;
     align-items: center;
-    width: 100%;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* Ombre très légère */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 header h1 {
-    margin: auto;
-    font-size: 24px;
-    font-weight: normal;
+    margin: 0 auto; /* Centre le titre */
+    font-size: 22px;
+    font-weight: 500;
 }
 
-header > div {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    margin-right: 34px;
-}
-
-header a {
-    color: #6C757D; /* Gris moyen pour les liens */
-    text-decoration: none;
-    font-weight: bold;
-    padding: 5px 10px;
-    border-radius: 4px;
-}
-
-header img{
-	background-color: #FFFFFF;
+header img.logo {
+    background-color: #FFFFFF;
     border-radius: 50%;
     width: 50px;
     height: 50px;
     object-fit: cover;
 }
 
+header a {
+    color: #6C757D;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 0.9em;
+}
+
 main {
     display: flex; 
     flex-grow: 1; 
-    height: 100%;
+    flex-direction: column; /* Empile les éléments verticalement */
+    justify-content: center; /* CENTRE VERTICALEMENT le contenu dans le main */
+    align-items: center;     /* CENTRE HORIZONTALEMENT le contenu dans le main */
+    padding: 30px 20px;
 }
-
 footer {
-    background-color: #F8F9FA; /* GRIS TRÈS CLAIR (comme le header) */
-    color: #6C757D; /* Gris moyen */
-    padding: 10px;
+    background-color: var(--color-bg-light);
+    color: #6C757D;
+    padding: 15px;
     text-align: center;
     font-size: 0.8em;
+    border-top: 1px solid #E9ECEF;
     flex-shrink: 0;
-    border-top: 1px solid #E9ECEF; /* Séparation très fine */
 }
 
-/* Style du formulaire principal */
+/* ------------------------------------ */
+/* 2. FORMULAIRES (ADD & MODIFY)        */
+/* ------------------------------------ */
 #addForm_employe, #modifyForm_employe {
-    font-family: 'Arial', sans-serif;
+    width: 100%;
     max-width: 600px;
-    margin: 30px auto;
-    padding: 30px;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    /* Suppression du margin: 0 auto; car le parent main gère déjà le centrage */
+    background-color: #FFFFFF;
+}
+
+#addForm_employe {
+    margin-bottom: auto; /* Pousse le formulaire vers le haut si nécessaire */
 }
 
 /* Style des Fieldsets */
 #addForm_employe fieldset, #modifyForm_employe fieldset {
-    border: 1px solid #ccc; /* Bordure neutre */
-    border-radius: 6px;
-    padding: 20px;
-    margin-bottom: 30px;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    padding: 25px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
-/* Style de la Légende de Fieldset */
+/* Style de la Légende */
 #addForm_employe legend, #modifyForm_employe legend {
-    font-size: 1.3em;
+    font-size: 1.25em;
     font-weight: bold;
-    padding: 0 10px;
+    color: var(--color-primary); /* Bleu Marine */
+    padding: 0 12px;
 }
 
-/* Conteneur pour les labels */
+/* Conteneur pour l'espacement vertical */
 #addForm_employe fieldset > div,
 #modifyForm_employe fieldset > div {
     display: flex;
@@ -101,61 +112,135 @@ footer {
 /* Style des Labels */
 #addForm_employe label, #modifyForm_employe label {
     display: block;
-    font-weight: 500;
-    margin-bottom: 1.5%;
+    font-weight: 600;
+    margin-bottom: 5px;
+    font-size: 0.95em;
 }
 
-
-/* Style des champs de saisie (input[text, email, number, date] et textarea) */
+/* ------------------------------------ */
+/* 3. INPUTS ET TEXTAREAS               */
+/* ------------------------------------ */
 #addForm_employe input[type="text"],
 #addForm_employe input[type="email"],
 #addForm_employe input[type="number"],
 #addForm_employe input[type="password"],
-#addForm_employe input[type="date"], /* <-- AJOUTÉ */
+#addForm_employe input[type="date"],
 #addForm_employe textarea,
 #modifyForm_employe input[type="text"],
 #modifyForm_employe input[type="email"],
 #modifyForm_employe input[type="number"],
 #modifyForm_employe input[type="date"],
-#modifyForm_employe input[type="password"], /* <-- AJOUTÉ */
+#modifyForm_employe input[type="password"],
 #modifyForm_employe textarea {
     width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc; /* Bordure neutre */
+    padding: 12px;
+    border: 1px solid var(--color-border);
     border-radius: 4px;
     box-sizing: border-box;
-    margin-top: 5px;
     font-size: 1em;
+    font-family: inherit;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+/* Focus : Forme de texte lors de la saisie */
+#addForm_employe input:focus, #modifyForm_employe input:focus, textarea:focus {
+    border-color: var(--color-primary);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 64, 133, 0.1);
 }
 
 #addForm_employe textarea, #modifyForm_employe textarea {
-    resize: vertical; /* Permet uniquement le redimensionnement vertical */
+    resize: vertical;
     min-height: 100px;
-    font-family: 'Arial', sans-serif;
 }
 
-/* Style pour les liens */
-#addForm_employe fieldset a {
-    text-decoration: none;
-    font-weight: bold;
-    display: block;
-    margin-top: 10px;
-    padding: 5px 0;
-}
-
-/* Style du Bouton Confirmer */
+/* ------------------------------------ */
+/* 4. BOUTON ET MODALE (DIALOG)         */
+/* ------------------------------------ */
 .submit_employe.btn {
     display: block;
     width: 100%;
-    padding: 12px;
+    padding: 14px;
+    background-color: var(--color-success); /* Vert Émeraude */
+    color: #FFFFFF;
     font-size: 1.1em;
     font-weight: bold;
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    transition: opacity 0.2s;
+    transition: opacity 0.2s, transform 0.1s;
+    margin-top: 10px;
 }
 
-.submit_employe.btn:hover {
+.cancel_employe.btn {
+    display: block;
+    width: 100%;
+    padding: 14px;
+    background-color: var(--color-danger); /* Rouge Erreur */
+    color: #FFFFFF;
+    font-size: 1.1em;
+    font-weight: bold;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.1s;
+    margin-top: 10px;
+}
+
+.submit_employe.btn:hover, .cancel_employe.btn:hover {
     opacity: 0.9;
+}
+
+.submit_employe.btn:active, .cancel_employe.btn:active {
+    transform: scale(0.98);
+}
+
+/* Fenêtre de confirmation (Dialog) */
+dialog#passwordDialog {
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    padding: 25px;
+    width: 100%;
+    max-width: 400px;
+}
+
+dialog p {
+    font-weight: bold;
+    text-align: center;
+}
+
+dialog button {
+    padding: 10px 15px;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+/* Ciblage spécifique du menu dans le dialogue */
+dialog#passwordDialog menu {
+    display: flex;
+    justify-content: center; /* Centre les boutons horizontalement */
+    gap: 20px;               /* Espace entre les deux boutons */
+    padding: 0;
+    margin-top: 25px;        /* Espace entre le champ password et les boutons */
+}
+
+/* Styles respectant vos couleurs d'origine */
+#confirmBtn {
+    background-color: var(--color-success);
+    color: white;
+}
+
+#cancelBtn {
+    background-color: var(--color-danger);
+    color: white;
+}
+
+/* Erreurs */
+span[id^="error_"] {
+    color: var(--color-danger);
+    font-size: 0.85em;
+    font-weight: 500;
 }

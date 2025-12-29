@@ -1,10 +1,11 @@
-package com.gestion_stock_it.Employe;
+package com.gestion_stock_it.Employe.Connection;
 
 import java.io.IOException;
-import java.sql.Connection;
 
-import com.gestion_stock_it.DatabaseConnection;
 import com.gestion_stock_it.ErrorConfirmException;
+import com.gestion_stock_it.Employe.Employe;
+import com.gestion_stock_it.Employe.EmployeDataController;
+import com.gestion_stock_it.Employe.EmployeWebSocket;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -16,24 +17,21 @@ import jakarta.websocket.Session;
 
 @WebServlet({"/LoginServlet","/LogoutServlet"})
 public class LogEmployeServlet extends HttpServlet {
+	
+	private EmployeDataController fn;
 
-    private DatabaseConnection db;
-    private Connection c;
     @Override
     public void init() {
-        db = new DatabaseConnection();
-        db.connect();
-        c = db.getConnection();
+        fn = new EmployeDataController();
     }
-
+    
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String path = req.getServletPath();
         System.out.println("Received " + path + " request");
 
         String matricule = req.getParameter("matricule");
-
-        EmployeDataController fn = new EmployeDataController();
+        
         try {
             switch (path) {
                 case "/LogoutServlet": {
@@ -55,7 +53,7 @@ public class LogEmployeServlet extends HttpServlet {
                         }
                     }
                     
-                    fn.connect(c,  matricule, null, null, "non");
+                    fn.connect(matricule, null, null, "non");
                     
                     resp.setStatus(HttpServletResponse.SC_OK);
                     resp.getWriter().write("Logout success");
@@ -72,11 +70,12 @@ public class LogEmployeServlet extends HttpServlet {
                 		if(!e.getActivite()) {
     						throw new ErrorConfirmException("mot_de_passe_login: Vous ne pouvez pas vous connecter car votre compte est désactivé.");
     					} else {
-                			fn.connect(c,  e.getMatricule(), email, motDePasse, "oui");
+                			fn.connect(e.getMatricule(), email, motDePasse, "oui");
 
                             HttpSession session = req.getSession();
                             session.setAttribute("login_role",e.getRole());
                             session.setAttribute("login_profil",e);
+                            session.setAttribute("chats", null);
 
                             SessionRegistryEmploye.register(e.getMatricule(), session);
                             resp.setStatus(HttpServletResponse.SC_OK);
@@ -86,7 +85,7 @@ public class LogEmployeServlet extends HttpServlet {
                 	}
                 }
             }
-            EmployeWebSocket.notifyAllEmployes("refresh_data", "Mise à jour des données");
+            EmployeWebSocket.notifyEmployes("refresh_data", "Mise à jour des données", 1,2);
         } catch (ErrorConfirmException errors) {
             resp.setStatus(400);
             resp.setContentType("text/plain;charset=UTF-8");
@@ -118,9 +117,5 @@ public class LogEmployeServlet extends HttpServlet {
             resp.setStatus(200);
         }
     }
-
-    @Override
-    public void destroy() {
-        db.disconnect();
-    }
+    
 }

@@ -1,44 +1,33 @@
 package com.gestion_stock_it.ArtType.Type;
 
-import com.gestion_stock_it.DatabaseConnection;
-
 import com.gestion_stock_it.Employe.EmployeWebSocket;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-import java.sql.Connection;
-
 @WebServlet("/DeleteTypeServlet")
 public class DeleteTypeServlet extends HttpServlet {
 
-    private DatabaseConnection db;
-    private Connection c;
+	private TypeArticleDataController fn;
+	
     @Override
     public void init() {
-        db = new DatabaseConnection();
-        db.connect();
-        c = db.getConnection();
+    	fn = new TypeArticleDataController();
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
 
         String tagType = req.getParameter("tag_type");
-
-        TypeArticleDataController fn = new TypeArticleDataController();
+        
         try {
-            fn.deleteTypeArticle(c, tagType);
-            EmployeWebSocket.notifyAllEmployes("refresh_data", "Mise à jour des données");
+            fn.deleteTypeArticle(tagType);
+            EmployeWebSocket.notifyEmployes("refresh_data", "Mise à jour des données", 1,2,3);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
 
     }
 
-    @Override
-    public void destroy() {
-        db.disconnect();
-    }
 }

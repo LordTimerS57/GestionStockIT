@@ -1,25 +1,19 @@
 package com.gestion_stock_it.Fournisseur;
 
-import com.gestion_stock_it.DatabaseConnection;
-
 import com.gestion_stock_it.Employe.EmployeWebSocket;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-import java.sql.Connection;
-
 @WebServlet("/DeleteFournisseurServlet")
 public class DeleteFournisseurServlet extends HttpServlet {
 
-    private DatabaseConnection db;
-    private Connection c;
+	private FournisseurDataController fn;
+	
     @Override
     public void init() {
-        db = new DatabaseConnection();
-        db.connect();
-        c = db.getConnection();
+    	fn = new FournisseurDataController();
     }
 
     @Override
@@ -30,15 +24,10 @@ public class DeleteFournisseurServlet extends HttpServlet {
 
         FournisseurDataController fn = new FournisseurDataController();
         try {
-            fn.deleteFournisseur(c, tagFournisseur);
-            EmployeWebSocket.notifyAllEmployes("refresh_data", "Mise à jour des données");
+            fn.deleteFournisseur(tagFournisseur);
+            EmployeWebSocket.notifyEmployes("refresh_data", "Mise à jour des données", 1,2);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-    }
-
-    @Override
-    public void destroy() {
-        db.disconnect();
     }
 }

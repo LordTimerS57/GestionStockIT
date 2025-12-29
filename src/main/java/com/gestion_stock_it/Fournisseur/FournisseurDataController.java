@@ -8,11 +8,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FournisseurDataController {
+
+	private static final DatabaseConnection DB_CONNECTION = DatabaseConnection.getInstance();
+	
     public List<Fournisseur> getFournisseurList(String Tag_fournisseur, String Raison_sociale, String Telephone, String Email) throws Exception {
         List<Fournisseur> listFournisseur = new ArrayList<>();
-
-        DatabaseConnection db = new DatabaseConnection();
-        db.connect();
 
         StringBuilder subQuery = new StringBuilder();
         List<Object> params = new ArrayList<>();
@@ -47,8 +47,9 @@ public class FournisseurDataController {
         String finalQuery = subQuery.toString();
 
 
-        try(Connection conn = db.getConnection();
-            PreparedStatement p_stmt = conn.prepareStatement(
+        try(
+                Connection c = DB_CONNECTION.getConnection();
+        		PreparedStatement p_stmt = c.prepareStatement(
                     "SELECT "
                         + "f.*, "
                         + "e.nombre_fournisseurs AS Occurence_fournisseur "
@@ -87,14 +88,15 @@ public class FournisseurDataController {
         return listFournisseur;
     }
 
-    public Fournisseur getFournisseurByTag(Connection c, String tagFournisseur) throws Exception {
+    public Fournisseur getFournisseurByTag(String tagFournisseur) throws Exception {
         if (tagFournisseur == null || tagFournisseur.trim().isEmpty()) {
-            return null; // Rien à chercher si le tag est vide
+            return null; 
         }
 
         String query = "SELECT * FROM Fournisseur WHERE Tag_fournisseur = ?";
 
-        try (PreparedStatement stmt = c.prepareStatement(query)) {
+        try (	Connection c = DB_CONNECTION.getConnection();
+        		PreparedStatement stmt = c.prepareStatement(query)) {
 
             stmt.setString(1, tagFournisseur);
 
@@ -115,8 +117,8 @@ public class FournisseurDataController {
         return null;
     }
 
-    public void addFournisseur(Connection c, Fournisseur fournisseur) throws Exception {
-        try(
+    public void addFournisseur(Fournisseur fournisseur) throws Exception {
+        try(	Connection c = DB_CONNECTION.getConnection();
                 PreparedStatement p_stmt = c.prepareStatement("INSERT INTO Fournisseur ("
                         + "Tag_fournisseur, "
                         + "Raison_sociale, "
@@ -138,8 +140,8 @@ public class FournisseurDataController {
         }
     }
 
-    public void updateFournisseur(Connection c, String tag_fournisseur, Fournisseur fournisseur) throws Exception {
-        try(
+    public void updateFournisseur(String tag_fournisseur, Fournisseur fournisseur) throws Exception {
+        try(	Connection c = DB_CONNECTION.getConnection();
                 PreparedStatement p_stmt = c.prepareStatement("UPDATE Fournisseur SET "
                         + "Tag_fournisseur = ?, "
                         + "Raison_sociale = ?, "
@@ -161,8 +163,8 @@ public class FournisseurDataController {
         }
     }
 
-    public void deleteFournisseur(Connection c, String tag_fournisseur) {
-        try(
+    public void deleteFournisseur(String tag_fournisseur) {
+        try(	Connection c = DB_CONNECTION.getConnection();
                 PreparedStatement p_stmt = c.prepareStatement("DELETE FROM Fournisseur WHERE Tag_fournisseur = ?")
         ){
             p_stmt.setString(1, tag_fournisseur);
@@ -174,18 +176,14 @@ public class FournisseurDataController {
         }
     }
 
-    public static void testError(String tag, String nom, String email, String telephone) throws Exception {
+    public Fournisseur testError(String tag, String oldTag, String nom, String email, String telephone) throws Exception {
         List<String> errors = new ArrayList<>();
 
-        DatabaseConnection db = new DatabaseConnection();
-        db.connect();
-        Connection c = db.getConnection();
-
-        Fournisseur f = new FournisseurDataController().getFournisseurByTag(c, tag);
+        Fournisseur f1 = tag.equals(oldTag) && !(tag == null || tag.trim().isEmpty()) && !(oldTag == null || oldTag.trim().isEmpty()) ? null : getFournisseurByTag(tag);
 
         if(tag == null || tag.trim().isEmpty()) {
             errors.add("tag_fournisseur: Veuillez entrer un numéro d'identification valide !");
-        } else if (f != null){
+        } else if (f1 != null && tag.equals(f1.getTag_fournisseur())){
             errors.add("tag_fournisseur: Le tag que vous avez édité est déjà présente chez un autre fournisseur !");
         } else if (!tag.matches("^\\d{10}$")) {
             errors.add("tag_fournisseur: Le numéro d'identification doit contenir exactement 13 chiffres !");
@@ -207,10 +205,11 @@ public class FournisseurDataController {
             errors.add("tel_fournisseur: Le numéro de téléphone doit contenir exactement 10 chiffres !");
         }
 
-        db.disconnect();
-
         if (!errors.isEmpty()) {
             throw new ErrorConfirmException(errors);
+        } else {
+        	Fournisseur f = new Fournisseur(tag, nom, email, telephone);
+        	return f;
         }
     }
 }

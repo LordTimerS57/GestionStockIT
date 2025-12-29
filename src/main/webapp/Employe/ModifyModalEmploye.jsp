@@ -21,14 +21,23 @@
 
 			const section = form.querySelector('input[name="section"]').value;
 			const submitButtons = form.querySelectorAll(".submit_employe");
+			
+			initEmployeWebSocket('<%= request.getContextPath() %>', null, null);
 
 			submitButtons.forEach(btn => {
 				btn.addEventListener("click", (e) => handleSubmitWithPasswordDialog(e, section));
 			});
 		});
-		document.addEventListener("pagehide", function() {
-            closeEmployeWebSocket();
-        });
+		document.addEventListener("pagehide", function(event) {
+	        const contextPath = '<%= request.getContextPath() %>';
+	        if (event.persisted === false) {
+	            closeEmployeWebSocket(true, contextPath);
+	            console.log("Sortie définitive détectée par pagehide (persisted: false). SendBeacon envoyé.");
+	        } else {
+	            closeEmployeWebSocket(false, contextPath);
+	            console.log("Navigation interne détectée par pagehide (persisted: true). Connexion maintenue.");
+	        }
+	    });
 	</script>
 </head>
 <body>
@@ -48,10 +57,11 @@
 						<p>Veuillez confirmer votre mot de passe actuel :</p>
 						<label>
 							<input type="password" name="mot_de_passe" id="motDePasseDialog" required>
+							<span id="error_mot_de_passe_login"></span>
 						</label>
 						<menu>
-							<button id="cancelBtn">Annuler</button>
 							<button id="confirmBtn" type="submit">Confirmer</button>
+							<button id="cancelBtn">Annuler</button>
 						</menu>
 					</form>
 				</dialog>
@@ -81,7 +91,10 @@
 							<label>Telephone: <input type="text" value="<%= emp.getTelephone() %>" name="telephone"> </label>
 							<span id="error_tel"></span>
 						</div>
-						<input type="button" class="submit_employe btn" value="Confirmer l'action">
+						<div>
+				        	<input type="submit" class="submit_employe btn" value="Confirmer l'action">
+				        	<input type="button" class="cancel_employe btn" value="Retourner au profil" onClick="closeForm()">
+				        </div>
 					</div>
 				</fieldset>
 				<%
@@ -97,8 +110,9 @@
 							<span id="error_email"></span>
 						</div>
 						<div>
-							<input type="button" class="submit_employe btn" value="Confirmer l'action">
-						</div>
+				        	<input type="submit" class="submit_employe btn" value="Confirmer l'action">
+				        	<input type="button" class="cancel_employe btn" value="Retourner au profil" onClick="closeForm()">
+				        </div>
 					</div>
 				</fieldset>
 				<%
@@ -119,9 +133,9 @@
 							<span id="error_mot_de_passe"></span>
 						</div>
 						<div>
-							<input type="button" class="submit_employe btn" value="Confirmer">
-						</div>
-		
+				        	<input type="submit" class="submit_employe btn" value="Confirmer l'action">
+				        	<input type="button" class="cancel_employe btn" value="Retourner au profil" onClick="closeForm()">
+				        </div>
 					</div>
 				</fieldset>
 				<%
@@ -129,6 +143,7 @@
 		
 						default: break;
 					} %>
+			</div>
 		</form>
 	</main>
 	<footer>

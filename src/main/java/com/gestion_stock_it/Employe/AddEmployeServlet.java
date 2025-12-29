@@ -1,67 +1,40 @@
 package com.gestion_stock_it.Employe;
 
-import com.gestion_stock_it.DatabaseConnection;
 import com.gestion_stock_it.ErrorConfirmException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.io.IOException;
-import java.sql.Connection;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @WebServlet("/AddEmployeServlet")
 public class AddEmployeServlet extends HttpServlet {
 
-    private DatabaseConnection db;
-    private Connection c;
+	private EmployeDataController fn;
 
     @Override
     public void init() {
-        db = new DatabaseConnection();
-        db.connect();
-        c = db.getConnection();
+        fn = new EmployeDataController();
     }
-
+	
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-
         String nom = req.getParameter("nom");
         String prenom = req.getParameter("prenom");
         String email = req.getParameter("email");
         String adresse = req.getParameter("adresse");
         String telephone = req.getParameter("telephone");
-
         String dateDeNaissance = req.getParameter("date_de_naissance");
         String motDePasse = req.getParameter("mot_de_passe");
 
         try {
+            Employe e = fn.testInfoPersonnel(nom, prenom, adresse, telephone, dateDeNaissance, null, "add");
+            e = fn.testInfoMotDePasse(motDePasse, e, "add");
+            e = fn.testEmail(email, email, e, "add");
 
-            EmployeDataController.testInfoPersonnel(nom, prenom, adresse, telephone, dateDeNaissance);
-            EmployeDataController.testInfoMotDePasse(motDePasse);
-            EmployeDataController.testEmail(c, email);
-
-            Employe e = new Employe(
-                    null,
-                    nom,
-                    prenom,
-                    email,
-                    BCrypt.hashpw(adresse, BCrypt.gensalt()),
-                    telephone,
-                    adresse,
-                    LocalDate.parse(dateDeNaissance),
-                    3, // rôle par défaut
-                    false,
-                    true,
-                    null,
-                    null
-            );
-            EmployeDataController fn = new EmployeDataController();
-
-            String matricule = fn.nextTag(c);
-
-            e.setMatriculeSpecific(matricule);
+            String matricule = fn.nextTag();
 
             Employe superAdmin = fn.getEmployeList(null, null, 1, null, null, null).getFirst();
 
@@ -84,24 +57,20 @@ public class AddEmployeServlet extends HttpServlet {
                     resp.getWriter().write("⏱️ Aucun retour de l’administrateur (délai expiré).");
                     return;
                 }
-
                 if (response.contains("ACCEPTE")) {
-                    e.setDateCreation(LocalDateTime.now());
-                    fn.addEmploye(c, e);
+                    fn.addEmploye(e);
                     resp.getWriter().write("✅ Compte créé avec succès après validation administrateur !");
                     System.out.println("✅ Compte créé avec succès après validation administrateur !");
                 } else {
                     resp.getWriter().write("❌ L’administrateur a refusé la création du compte.");
                     System.out.println("❌ L’administrateur a refusé la création du compte.");
                 }
-
             } else {
                 resp.getWriter().write("⚠️ Aucun super administrateur trouvé pour valider le compte.");
                 fn.sendEmail(superAdmin, e,"Création d'un nouveau compte employé");
                 System.out.println("❌ L’administrateur a refusé la création du compte.");
             }
-
-            EmployeWebSocket.notifyAllEmployes("refresh_data", "Mise à jour des données");
+            EmployeWebSocket.notifyEmployes("refresh_data", "Mise à jour des données", 1,2);
             resp.setStatus(200);
 
         } catch (ErrorConfirmException errors) {
@@ -118,9 +87,5 @@ public class AddEmployeServlet extends HttpServlet {
             throw new RuntimeException(ex);
         }
     }
-
-    @Override
-    public void destroy() {
-        db.disconnect();
-    }
+    
 }

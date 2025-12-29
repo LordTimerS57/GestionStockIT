@@ -1,5 +1,7 @@
 <%@ page import="com.gestion_stock_it.Flux.Entree" %>
-<%@ page import="java.util.List" %><%--
+<%@ page import="java.util.List" %>
+<%@ page import="java.util.Objects" %>
+<%--
   Created by IntelliJ IDEA.
   User: Ainar
   Date: 29/10/2025
@@ -12,16 +14,15 @@
     List<Entree> entrees = (List<Entree>) request.getAttribute("entrees");
     String role = (String) session.getAttribute("login_role");
     Boolean visibleRapportButton = (Boolean) request.getAttribute("rapport_button");
+    boolean isAdminOrSuperAdmin = Objects.equals(role, "Administrateur") || Objects.equals(role, "Super Administrateur");
 %>
 
 <section class="content-flux-in">
-    <% if(role.equals("Administrateur") || role.equals("Super Administrateur") ) { %>
+    <% if(isAdminOrSuperAdmin) { %>
     <div class="content-flux-create">
         <a href="<%=request.getContextPath()%>/Entrees/Creation"><i class="fa-solid fa-box-archive"></i> Entrer un article au stock</a>
     </div>
     <% } %>
-    
-    
     <div class="search">
 	    <fieldset id="date_param_search_container">
 	        <legend class="collapsible" onclick="toggleFieldset(this,'date')">Recherche par date <i class="fas fa-caret-down"></i></legend>
@@ -72,13 +73,14 @@
 	            </div>
 	        </div>
 	    </fieldset>
-	
+	    <label id="expediteur_search">
+            <input type="search" name="expediteur" id="expediteur" placeholder="Rechercher l'expéditeur par sa raison sociale..." oninput="searchFlux('Entree')"><i class="fas fa-search"></i>
+        </label>
 	    <label id="article_search">
 	        <input type="search" name="nom_article" id="nom_article" placeholder="Rechercher l'article souhaité ..." oninput="searchFlux('Entree')">
 	        <i class="fas fa-search"></i>
 	    </label>
 	</div>
-    
     <div id="result_entree">
         <% if (!entrees.isEmpty()) { %>
         <table>

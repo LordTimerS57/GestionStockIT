@@ -1,5 +1,7 @@
 <%@ page import="java.util.List" %>
-<%@ page import="com.gestion_stock_it.Flux.Sortie" %><%--
+<%@ page import="com.gestion_stock_it.Flux.Sortie" %>
+<%@ page import="java.util.Objects" %>
+<%--
   Created by IntelliJ IDEA.
   User: Ainar
   Date: 29/10/2025
@@ -12,10 +14,11 @@
     List<Sortie> sorties = (List<Sortie>) request.getAttribute("sorties");
     String role = (String) session.getAttribute("login_role");
     Boolean visibleRapportButton = (Boolean) request.getAttribute("rapport_button");
+    boolean isAdminOrSuperAdmin = Objects.equals(role, "Administrateur") || Objects.equals(role, "Super Administrateur");
 %>
 
 <section class="content-flux-out">
-    <% if(role.equals("Administrateur") || role.equals("Super Administrateur") ) { %>
+    <% if(isAdminOrSuperAdmin) { %>
     <div class="content-flux-create">
         <a href="<%=request.getContextPath()%>/Sorties/Creation"> <i class="fa-solid fa-cash-register"></i> Sortir un article</a>
     </div>

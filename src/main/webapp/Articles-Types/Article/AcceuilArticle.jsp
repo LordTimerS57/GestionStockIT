@@ -1,12 +1,14 @@
 <%@ page import="com.gestion_stock_it.ArtType.Article.Article" %>
 <%@ page import="java.util.List" %>
+<%@ page import="java.util.Objects" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
   String role = (String) session.getAttribute("login_role");
   List<Article> articles = (List<Article>) request.getAttribute("articles");
+  boolean isAdminOrSuperAdmin = Objects.equals(role, "Administrateur") || Objects.equals(role, "Super Administrateur");
 %>
 <section class="article-section">
-  <% if(role.equals("Administrateur") || role.equals("Super Administrateur")) { %>
+  <% if(isAdminOrSuperAdmin) { %>
   <div class="content-article-create">
     <a href="<%= request.getContextPath() %>/Articles/Creation"><i class="fas fa-plus"></i> Ajouter un nouvel article</a>
   </div>
@@ -57,9 +59,7 @@
         <th>Type</th>
         <th>Quantité</th>
         <th>Description</th>
-        <% if(role.equals("Administrateur") || role.equals("Super Administrateur")) { %>
-        <th>Actions</th>
-        <% } %>
+        <th></th>
       </tr>
       </thead>
       <tbody>
@@ -78,13 +78,14 @@
         </td>
         <td><%= a.getStock_article() %></td>
         <td><%= a.getDescription_article() %></td>
-          <% if(role.equals("Administrateur") || role.equals("Super Administrateur")) { %>
         <td>
           <div class="table-actions">
+          <% if(isAdminOrSuperAdmin) { %>
             <button class="action-modifier" onclick="setUpdateArticle('<%=a.getTag_article()%>')"><i class="fas fa-pencil-alt"></i></button>
             <% if(a.getNombre_occurence_entrees_article() + a.getNombre_occurence_sorties_article() == 0) { %>
             <button class="action-supprimer" onclick="removeData('<%=a.getTag_article()%>', 'Article', null)"><i class="fas fa-trash"></i></button>
             <% } %>
+          <% } %>
             <button class="action-details" 
             		onclick="setDetails(event, 'Show', 'Article-Info', this)"
             		onmouseover="toggleIcon(this, true)"
@@ -100,7 +101,6 @@
       		</button>
           </div>
         </td>
-          <% } %>
       </tr>
       <% } %>
       </tbody>

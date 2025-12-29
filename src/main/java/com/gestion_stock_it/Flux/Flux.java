@@ -25,7 +25,7 @@ public class Flux {
     public LocalDateTime getDate_deplacement() { return date_deplacement; }
 
     public String getDate_deplacement_formatter() {
-        return date_deplacement.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss.SSSSSSSSS "));
+        return date_deplacement.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"));
     }
 
     public void setTag_flux(String tag_flux) {

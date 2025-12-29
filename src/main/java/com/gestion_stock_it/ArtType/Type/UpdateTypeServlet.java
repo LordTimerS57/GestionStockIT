@@ -1,6 +1,5 @@
 package com.gestion_stock_it.ArtType.Type;
 
-import com.gestion_stock_it.DatabaseConnection;
 import com.gestion_stock_it.Employe.EmployeWebSocket;
 import com.gestion_stock_it.ErrorConfirmException;
 import jakarta.servlet.ServletException;
@@ -8,18 +7,14 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 
 import java.io.IOException;
-import java.sql.Connection;
 
 @WebServlet({"/UpdateTypeServlet", "/Types/Modification"})
 public class UpdateTypeServlet extends HttpServlet {
 
-    private DatabaseConnection db;
-    private Connection c;
+    private TypeArticleDataController fn;
     @Override
     public void init() {
-        db = new DatabaseConnection();
-        db.connect();
-        c = db.getConnection();
+        fn = new TypeArticleDataController();
     }
 
     @Override
@@ -30,19 +25,11 @@ public class UpdateTypeServlet extends HttpServlet {
         String description = req.getParameter("description_type");
 
         try{
-            TypeArticleDataController.testError(nom, description);
+            TypeArticle t = fn.testError(nom, description, "modify");
 
-            TypeArticle t = new TypeArticle
-                    (
-                            tag_type,
-                            nom,
-                            description
-                    );
+            fn.updateTypeArticle(tag_type, t);
 
-            TypeArticleDataController fn = new TypeArticleDataController();
-            fn.updateTypeArticle(c, tag_type, t);
-
-            EmployeWebSocket.notifyAllEmployes("refresh_data", "Mise à jour des données");
+            EmployeWebSocket.notifyEmployes("refresh_data", "Mise à jour des données", 1,2,3);
             resp.setStatus(200);
 
         } catch (ErrorConfirmException errors) {
@@ -65,11 +52,10 @@ public class UpdateTypeServlet extends HttpServlet {
         HttpSession session = req.getSession();
         String tag_type = (String) session.getAttribute("Tag_type");
 
-        TypeArticleDataController fn = new TypeArticleDataController();
         TypeArticle type = null;
 
         try {
-            type = fn.getTypeArticleByTag(c, tag_type);
+            type = fn.getTypeArticleByTag(tag_type);
         }
         catch (ServletException e) {
             e.printStackTrace();
@@ -79,12 +65,6 @@ public class UpdateTypeServlet extends HttpServlet {
 
         req.setAttribute("type", type);
         req.getRequestDispatcher("/Articles-Types/Type/ModifyModalType.jsp").forward(req, resp);
-    }
-
-
-    @Override
-    public void destroy() {
-        db.disconnect();
     }
 
 }

@@ -183,24 +183,27 @@
     max-width: none; 
 }
 
-#destinataire_search, 
-#expediteur_search {
-    display: flex;
-    align-items: center;
-    border: 1px solid var(--color-border);
-    border-radius: 20px; 
-    padding: 5px 15px;
-    background-color: var(--color-background-white); /* Fond BLANC */
-    
+.content-flux-out #destinataire_search, 
+.content-flux-out #expediteur_search {
     flex-grow: 1;
     min-width: 200px; 
     max-width: none; 
 }
 
+#destinataire_search,
+#expediteur_search{
+	display: flex;
+    align-items: center;
+    border: 1px solid var(--color-border);
+    border-radius: 20px; 
+    padding: 5px 15px;
+    background-color: var(--color-background-white); /* Fond BLANC */
+}
+
 /* Assure que l'input article prend toute la largeur verticale */
-#article_search {
+#article_search, .content-flux-in #expediteur_search{
     flex-basis: 100%;
-    max-width: 100%;
+    width: 400px;
 }
 
 
@@ -213,6 +216,10 @@
     width: 100%;
 }
 
+.content-flux-in .fas.fa-search, .content-flux-out .fas.fa-search  {
+  color: #004085;
+  margin-left: 10px;
+}
 
 /* ------------------------------------ */
 /* 3. Style de la Table de Résultats */

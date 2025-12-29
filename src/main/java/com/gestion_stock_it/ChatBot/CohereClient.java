@@ -35,13 +35,16 @@ public class CohereClient {
     }
 
     /**
-     * ÉTAPE 1 : Traduit la question de l'utilisateur en une requête SQL.
+     * ÉTAPE 1.A : Traduit la question de l'utilisateur en une requête SQL.
      */
     public String generateSql(String question, int role) throws Exception {
+        
+        String sujetsAutorises = ".*(stock|fournisseur|entré|sorti|article|type).*";
+
         if (role != 1 && role != 2) {
-            if (!question.toLowerCase().matches(".*(sorti|entré).*")) {
+            if (!question.toLowerCase().matches(sujetsAutorises)) {
                 if (!question.toLowerCase().matches("(?i).*(employ[ée]|employe).*(nom|prénom|adresse|email|téléphone).*|.*(nom|prénom|adresse|email|téléphone).*(employ[ée]|employe).*")) {
-                    throw new ErrorConfirmException("Vous ne pouvez questionner que les informations des noms, prénoms, adresse email et des numéros de télephones des employés. ");
+                    throw new ErrorConfirmException("Vous ne pouvez questionner que les informations des articles, stocks, fournisseurs, entrées, sorties ou les informations limitées des employés (noms, prénoms, emails, téléphones).");
                 }
             }
         } else {
@@ -72,7 +75,7 @@ public class CohereClient {
     }
 
     /**
-     * ÉTAPE 3 : Reformule les résultats bruts (JSON) en une réponse conversationnelle.
+     * ÉTAPE 2 : Reformule les résultats bruts (JSON) en une réponse conversationnelle.
      */
     public String reformulateResponse(String userQuestion, String jsonResults) throws Exception {
 
@@ -97,6 +100,9 @@ public class CohereClient {
         return response.getText().trim();
     }
 
+    /**
+     * ÉTAPE 1.B : Reformule les résultats spéciaux.
+     */
     public void specificQuestion(String question, int role) throws Exception {
         if (question.toLowerCase().matches(".*(chat)?.*")) {
             if (question.toLowerCase().matches(".*stock.*")) {

@@ -21,24 +21,16 @@ import java.util.Map;
  */
 public class DatabaseExecutor {
 
-    private final DatabaseConnection dbConnection;
-    public DatabaseExecutor(DatabaseConnection dbConnection) {
-        this.dbConnection = dbConnection;
-    }
-
-
     public List<Map<String, Object>> executeSelect(String sqlQuery) throws SQLException {
 
         List<Map<String, Object>> results = new ArrayList<>();
 
-        // Récupère la connexion existante (ouverte par l'appelant)
-        Connection connection = dbConnection.getConnection();
+        DatabaseConnection dbConnection = DatabaseConnection.getInstance();
 
-        if (connection == null || connection.isClosed()) {
-            throw new SQLException("La connexion à la base de données n'est pas ouverte ou est fermée.");
-        }
-
-        try (Statement statement = connection.createStatement()) {
+        try (	
+        		Connection connection = dbConnection.getConnection();
+        		Statement statement = connection.createStatement()
+        				) {
             try (ResultSet resultSet = statement.executeQuery(sqlQuery)) {
 
                 ResultSetMetaData metaData = resultSet.getMetaData();

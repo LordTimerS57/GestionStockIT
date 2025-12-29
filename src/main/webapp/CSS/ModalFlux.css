@@ -1,249 +1,293 @@
-/* ------------------------------------ */
-/* 1. STYLES COMMUNS AUX DEUX FORMULAIRES DE FLUX (ENTRÉE & SORTIE) */
-/* ------------------------------------ */
+/* --- Palette de Couleurs --- */
+:root {
+    --color-primary: #004085;       /* Bleu Marine */
+    --color-success: #28A745;       /* Vert Émeraude */
+    --color-danger: #DC3545;        /* Rouge Erreur */
+    --color-bg-light: #F8F9FA;      /* Gris Clair */
+    --color-border: #DEE2E6;        /* Bordure Neutre */
+    --color-text: #212529;          /* Texte Sombre */
+}
 
+/* ------------------------------------ */
+/* 1. STRUCTURE GLOBALE                 */
+/* ------------------------------------ */
 body {
-    font-family: 'Arial', sans-serif;
-    color: #212529; /* Gris foncé pour le texte */
-    background-color: #FFFFFF; /* Fond principal BLANC */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: var(--color-text);
+    background-color: #FFFFFF;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }
 
 header {
-    background-color: #F8F9FA; /* GRIS TRÈS CLAIR (comme fond initial) */
-    color: #212529; /* Texte foncé sur fond clair */
-    padding: 15px 0 15px 15px;
+    background-color: var(--color-bg-light);
+    color: var(--color-text);
+    padding: 15px 25px;
     display: flex;
-    justify-content: flex-start;
+    justify-content: space-between;
     align-items: center;
-    width: 100%;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* Ombre très légère */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 header h1 {
-    margin: auto;
-    font-size: 24px;
-    font-weight: normal;
+    margin: 0 auto;
+    font-size: 22px;
+    font-weight: 500;
 }
 
-header > div {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    margin-right: 34px;
-}
-
-header a {
-    color: #6C757D; /* Gris moyen pour les liens */
-    text-decoration: none;
-    font-weight: bold;
-    padding: 5px 10px;
-    border-radius: 4px;
-}
-
-header img{
-	background-color: #FFFFFF;
+header .logo {
+    background-color: #FFFFFF;
     border-radius: 50%;
     width: 50px;
     height: 50px;
     object-fit: cover;
 }
 
+header a {
+    color: #6C757D;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 0.9em;
+}
+
 main {
     display: flex; 
     flex-grow: 1; 
-    height: 100%;
+    flex-direction: column; 
+    justify-content: center; 
+    align-items: center;     
+    padding: 30px 20px;
 }
 
 footer {
-    background-color: #F8F9FA; /* GRIS TRÈS CLAIR (comme le header) */
-    color: #6C757D; /* Gris moyen */
-    padding: 10px;
+    background-color: var(--color-bg-light);
+    color: #6C757D;
+    padding: 15px;
     text-align: center;
     font-size: 0.8em;
+    border-top: 1px solid #E9ECEF;
     flex-shrink: 0;
-    border-top: 1px solid #E9ECEF; /* Séparation très fine */
 }
 
-/* Styles génériques pour les deux formulaires */
-#addForm_entree, #addForm_sortie {
-    max-width: 700px;
-    margin: 20px auto;
-    padding: 30px;
+/* ------------------------------------ */
+/* 2. FORMULAIRES (ENTRÉE & SORTIE)     */
+/* ------------------------------------ */
+#addForm_entree, 
+#addForm_sortie {
+    width: 100%;
+    max-width: 750px;
+    background-color: #FFFFFF;
+}
+
+#addForm_entree fieldset, 
+#addForm_sortie fieldset {
+    border: 1px solid var(--color-border);
     border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-}
-
-/* Style des Fieldsets */
-.article-info, .expediteur-info, .destinataire-info {
-    border: 1px solid #ccc; /* Bordure neutre */
-    border-radius: 6px;
-    padding: 15px 20px;
-    margin-bottom: 25px;
-    display: block; /* Force l'affichage bloc par défaut pour la verticalité */
-}
-
-/* Style des Légendes de Fieldset */
-#addForm_entree legend, #addForm_sortie legend {
-    font-size: 1.2em;
-    font-weight: bold;
-    padding: 0 10px;
-}
-
-/* Style des Labels */
-#addForm_entree label, #addForm_sortie label {
-    display: block;
-    font-weight: 500;
-    margin-bottom: 5px;
-}
-
-/* Style des champs de saisie (inputs) */
-#addForm_entree input[type="search"], #addForm_sortie input[type="search"],
-#addForm_entree input[type="number"], #addForm_sortie input[type="number"] {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ccc; /* Bordure neutre */
-    border-radius: 4px;
-    box-sizing: border-box;
-    margin-top: 5px;
-}
-
-/* ------------------------------------ */
-/* 2. CORRECTION FLUX VERTICAL (FIELDSET ARTICLE) */
-/* ------------------------------------ */
-
-/* Conteneur de la recherche d'article (doit rester en block) */
-.article-info > .search-article {
-    position: relative; /* Conteneur de référence pour la modale si on le veut absolute (mais on le laisse en relative) */
-    margin-bottom: 5px;
-    display: block;
-}
-
-/* Conteneur du nombre d'articles à déplacer */
-.article-info > .number-article {
-    display: block;
-    margin-top: 20px; /* Sépare bien le champ quantité du tableau de résultats */
-}
-
-/* --- Styles des Résultats de Recherche (Dropdown / Inline Block Corrigé) --- */
-
-#result_article, #result_expediteur, #result_destinataire {
-    /* POSITION RELATIVE est la correction pour éviter la collision */
-    position: relative;
-    z-index: 10;
-    width: 100%;
-    max-height: 200px;
-    overflow-y: auto;
-    border: 1px solid #ccc; /* Bordure neutre */
-    border-top: none;
-    border-radius: 0 0 4px 4px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    margin-top: -5px; /* Rapproche du champ de recherche */
-    margin-bottom: 10px;
-}
-
-#result_article table, #result_expediteur table, #result_destinataire table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-/* Boutons de sélection dans les résultats de recherche (Commun) */
-#result_article button, #result_expediteur button, #result_destinataire button {
-    width: 100%;
-    padding: 8px 10px;
-    text-align: left;
-    border: none;
-    cursor: pointer;
-    transition: background-color 0.1s;
-}
-
-#result_article button:hover, #result_expediteur button:hover, #result_destinataire button:hover {
-    text-decoration: underline;
-}
-
-/* ------------------------------------ */
-/* 3. STYLES SPECIFIQUES EXPÉDITEUR/DESTINATAIRE */
-/* ------------------------------------ */
-
-/* Styles pour le Bloc Expéditeur du formulaire Entrée (Recherche Fournisseur) */
-#addForm_entree .expediteur-info > .search-fournisseur {
-    margin-top: 10px;
-}
-
-/* Styles pour le Bloc Expéditeur du formulaire Sortie (Affichage Admin/Employé) */
-#addForm_sortie .expediteur-info > div {
-    margin-top: 10px;
-}
-
-#addForm_sortie .expediteur-info > div > button {
-    padding: 8px 15px;
-    font-weight: bold;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: opacity 0.2s;
-}
-
-#addForm_sortie .expediteur-info > div > button:hover {
-    opacity: 0.8;
-}
-
-/* Styles pour le Bloc Destinataire du formulaire Sortie (Recherche Employé) */
-#addForm_sortie .destinataire-info > .search-employe {
-    margin-top: 10px;
-}
-
-
-/* ------------------------------------ */
-/* 4. STYLES DES DIALOGUES (MODALES DE DÉTAILS) */
-/* ------------------------------------ */
-
-#dialog_article, #dialog_expediteur, #dialog_destinataire {
-    border: none;
-    border-radius: 8px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
     padding: 25px;
-    width: 90%;
-    max-width: 400px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    margin-bottom: 20px;
 }
 
-#dialog_article fieldset, #dialog_expediteur fieldset, #dialog_destinataire fieldset {
-    border: 1px solid #dee2e6; /* Bordure neutre */
-    border-radius: 6px;
-    padding: 15px;
-    margin-bottom: 15px;
-}
-
-#dialog_article legend, #dialog_expediteur legend, #dialog_destinataire legend {
+#addForm_entree legend, 
+#addForm_sortie legend {
+    font-size: 1.25em;
     font-weight: bold;
+    color: var(--color-primary);
+    padding: 0 12px;
 }
 
-#dialog_article button, #dialog_expediteur button, #dialog_destinataire button {
-    padding: 8px 15px;
-    border-radius: 4px;
-    cursor: pointer;
-    border: none;
-    font-weight: 500;
-    margin-right: 10px;
-}
-
-
-/* ------------------------------------ */
-/* 5. STYLES DES BOUTONS CONFIRMER */
-/* ------------------------------------ */
-
-.submit_entree.btn, .submit_sortie.btn {
+#addForm_entree label, 
+#addForm_sortie label {
     display: block;
+    font-weight: 600;
+    font-size: 0.95em;
+    margin-bottom: 8px;
+}
+
+/* ------------------------------------ */
+/* 3. INPUTS ET CHAMPS DE SAISIE        */
+/* ------------------------------------ */
+input[type="search"],
+input[type="number"],
+textarea {
     width: 100%;
     padding: 12px;
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 1em;
+    font-family: inherit;
+    margin-top: 5px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+input:focus, 
+textarea:focus {
+    border-color: var(--color-primary);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 64, 133, 0.1);
+}
+
+/* ------------------------------------ */
+/* 4. BOUTONS SPÉCIFIQUES AUX FLUX      */
+/* ------------------------------------ */
+
+button[id^="choice_"] {
+    width: 100%;
+    padding: 14px;
+    background-color: #f8fbff;
+    border: 2px dashed #b8d5f8;
+    color: var(--color-primary);
+    cursor: pointer;
+    font-weight: bold;
+    border-radius: 4px;
+    text-align: center;
+    margin: 10px 0;
+    transition: background 0.2s;
+}
+
+button[id^="choice_"]:hover {
+    background-color: #f0f7ff;
+    border-style: solid;
+    border-color: var(--color-primary);
+}
+
+.submit_sortie.btn, 
+.submit_entree.btn {
+    display: block;
+    width: 100%;
+    padding: 14px;
+    background-color: var(--color-success);
+    color: #FFFFFF !important;
     font-size: 1.1em;
     font-weight: bold;
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    margin-top: 30px;
-    transition: opacity 0.2s;
+    transition: opacity 0.2s, transform 0.1s;
 }
 
-.submit_entree.btn:hover, .submit_sortie.btn:hover {
+[id$="_btn"]{
+    display: block;
+    width: auto;
+    color: #FFFFFF;
+    padding: 10px 15px;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+}   
+
+#cancel_selection_btn {
+	background-color: var(--color-danger);
+}
+
+[id^="select_"]{
+	background-color: var(--color-success);	
+}
+
+.btn:hover, button:hover {
     opacity: 0.9;
+}
+
+.btn:active, button:active {
+    transform: scale(0.98);
+}
+
+/* ------------------------------------ */
+/* 5. DIALOGUES ET TABLES               */
+/* ------------------------------------ */
+dialog {
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    padding: 25px;
+    width: 90%;
+    max-width: 550px;
+}
+
+dialog table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 15px 0;
+}
+
+dialog td {
+    padding: 0; 
+}
+
+dialog table button {
+    width: 100%;
+    text-align: left;
+    padding: 12px;
+    background: #FFFFFF;
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+dialog table button:hover {
+    background-color: var(--color-bg-light);
+    border-color: var(--color-primary);
+}
+
+/* --- BOUTONS DE LISTE (Ajoutés) --- */
+.article_info, 
+.expediteur_info, 
+.destinataire_info {
+    width: 100%;
+    text-align: left;
+    padding: 12px 15px;
+    background-color: #FFFFFF;
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    color: var(--color-text);
+    font-size: 0.95em;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.article_info:hover, 
+.expediteur_info:hover, 
+.destinataire_info:hover {
+    background-color: #F1F3F5;
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+    padding-left: 20px;
+}
+
+dialog div:has(button) {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+/* ------------------------------------ */
+/* 6. TAGS ET ERREURS                   */
+/* ------------------------------------ */
+span[id^="selected_"] {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 6px 14px;
+    background-color: #E7F3EF;
+    color: var(--color-success);
+    border: 1px solid #c3e6cb;
+    border-radius: 20px;
+    font-size: 0.85em;
+    font-weight: bold;
+}
+
+span[id^="error_"] {
+    color: var(--color-danger);
+    font-size: 0.85em;
+    font-weight: 500;
+    display: block;
+    margin-top: 4px;
 }

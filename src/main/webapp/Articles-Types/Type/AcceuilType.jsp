@@ -1,13 +1,15 @@
 <%@ page import="com.gestion_stock_it.ArtType.Type.TypeArticle" %>
 <%@ page import="java.util.List" %>
+<%@ page import="java.util.Objects" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
   String role = (String) session.getAttribute("login_role");
   List<TypeArticle> typeArticles = (List<TypeArticle>) request.getAttribute("types");
+  boolean isAdminOrSuperAdmin = Objects.equals(role, "Administrateur") || Objects.equals(role, "Super Administrateur");
 %>
 
 <section class="type-section">
-    <% if(role.equals("Administrateur") || role.equals("Super Administrateur")) { %>
+    <% if(isAdminOrSuperAdmin) { %>
     <div class="content-type-create">
         <a href="<%= request.getContextPath() %>/Types/Creation"><i class="fas fa-plus"></i> Ajouter un nouveau type d'article</a>
     </div>
@@ -37,7 +39,7 @@
           <td><%= t.getTag_type() %></td>
           <td><%= t.getNom_type() %></td>
           <td><%= t.getDescription_type() %></td>
-            <% if(role.equals("Administrateur") || role.equals("Super Administrateur")) { %>
+            <% if(isAdminOrSuperAdmin) { %>
           <td>
             <div class="table-actions">
               <button class="action-modifier" onclick="setUpdateType('<%=t.getTag_type()%>')"><i class="fas fa-pencil-alt"></i></button>

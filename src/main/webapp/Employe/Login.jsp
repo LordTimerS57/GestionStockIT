@@ -23,7 +23,9 @@
     <title>Login</title>
 </head>
 <body>
-
+	<div class="user-icon-container">
+    	<img src="<%= request.getContextPath() %>/IMAGES/logo_spat.png" alt="Logo SPAT" class="user-icon"/>
+    </div>
     <form id="loginForm_employe" onsubmit="setForm(event, null, 'Employe', 'Login')">
         <fieldset>
             <legend><h1>Se connecter</h1></legend>
@@ -46,10 +48,16 @@
 			    </div>
                 <span id="error_mot_de_passe_login"></span>
             </label>
-            <input type="submit" id="submit" class="submit_login" value="Se connecter" <%= !activite ? "disabled" : "" %> >
-            <label for="check_matricule">
+            <button type="submit" id="submit" class="submit_login" <%= !activite ? "disabled" : "" %> ><i class="fa-solid fa-right-to-bracket"></i> Se connecter</button>
+
+            <label for="check_matricule" id="check_matricule_label">
                 <input type="checkbox" id="check" class="checkbox_login" checked>
                 <span>J'ai oublié mon matricule</span>
+            </label>
+            
+           	<label for="links_login" id="links_login">
+               	<a href="<%= request.getContextPath() %>/" class="link_login">Retour à la page d'accueil</a>
+               	<a href="<%= request.getContextPath() %>/CreationCompte" class="link_login">Créer un compte</a>
             </label>
         </fieldset>
     </form>

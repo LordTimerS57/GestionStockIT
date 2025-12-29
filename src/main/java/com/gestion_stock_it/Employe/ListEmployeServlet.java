@@ -12,10 +12,18 @@ import java.util.ArrayList;
 
 @WebServlet("/Employes")
 public class ListEmployeServlet extends HttpServlet {
+	
+	private EmployeDataController dao;
+
+	@Override
+	public void init() {
+		dao = new EmployeDataController();
+	}
+	
+	@Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String nomPrenoms = request.getParameter("nom_prenom");
-
-        EmployeDataController dao = new EmployeDataController();
+        
         List<Employe> employesConnectes, employesNonConnectes;
 
         try {
@@ -37,4 +45,5 @@ public class ListEmployeServlet extends HttpServlet {
 
         request.getRequestDispatcher("/Dashboard.jsp").forward(request, response);
     }
+		
 }

@@ -3,12 +3,20 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html>
-<%
+<%    
     String ctx = request.getContextPath();
     String uri = request.getServletPath();
     String contentPage = (String) request.getAttribute("content");
     String role = (String) session.getAttribute("login_role");
     Employe employe = (Employe) session.getAttribute("login_profil");
+    
+    // 🛑 CORRECTION CRITIQUE: Empêche l'erreur 500
+    if (employe == null) {
+        response.sendRedirect(ctx + "/Login"); 
+        return; 
+    }
+    
+    boolean isAdminOrSuperAdmin = Objects.equals(role, "Administrateur") || Objects.equals(role, "Super Administrateur");
 %>
 <head>
     <meta charset="UTF-8">
@@ -30,14 +38,15 @@
     
     <script src="<%= request.getContextPath() %>/JS/Handle.js?v=<%=System.currentTimeMillis()%>" defer></script>
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const ctx = '<%= ctx %>';
-            const currentMatricule = '<%= employe.getMatricule() %>';
-            const currentRoleInt = '<%= employe.getRoleInt() %>';
-
-            if (currentMatricule && currentRoleInt) {
-                initEmployeWebSocket(ctx, currentMatricule, currentRoleInt);
-            }
+	    document.addEventListener("DOMContentLoaded", function() {
+	        const ctx = '<%= ctx %>';
+            // 🛑 SÉCURITÉ/CORRECTION: Échappement
+	        const currentMatricule = '<%= employe.getMatricule().replace("'", "\\'") %>'; 
+	        const currentRoleInt = <%= employe.getRoleInt() %>;
+	        
+	        if (currentMatricule && currentRoleInt) {
+	            initEmployeWebSocket(ctx, currentMatricule, currentRoleInt);
+	        }
             
             // --- GESTION DE TOUS LES MENUS DÉROULANTS ---
             const dropdownMenus = document.querySelectorAll('.dropdown-menu');
@@ -57,8 +66,10 @@
                 }
             });
         });
+        
+        // 🛑 CORRECTION CRITIQUE: Appel correct pour le nettoyage de la session inattendue
         document.addEventListener("pagehide", function() {
-            closeEmployeWebSocket();
+            closeEmployeWebSocket(true, '<%= ctx %>');
         });
     </script>
 </head>
@@ -79,6 +90,7 @@
 	                onclick="logOut('<%= ctx %>', '<%= employe.getMatricule() %>')"
 	                data-matricule="<%=employe.getMatricule()%>"
 	        >
+	        <i class="fa-solid fa-right-from-bracket"></i>
 	            Se déconnecter
 	        </button>
 	    </div>
@@ -111,22 +123,21 @@
 	            </ul>
 	        </div>
 		    
-			<% if(Objects.equals(role, "Administrateur") || Objects.equals(role, "Super Administrateur")) { %>
-		        <div class="dropdown-menu"> 
-		            <a href="<%= ctx %>/Employes" 
-	                   onclick="navigateTo(this.href); return false;"
-	                   class="<%= "/Employes".equals(uri) ? "active" : "" %>">
-		                <i class="fas fa-users"></i> Employés
-		            </a>
-		        </div>
-		        <div class="dropdown-menu"> 
-		            <a href="<%= ctx %>/Fournisseurs" 
-	                   onclick="navigateTo(this.href); return false;"
-	                   class="<%= "/Fournisseurs".equals(uri) ? "active" : "" %>">
-		                <i class="fas fa-truck"></i> Fournisseurs
-		            </a>
-		        </div>
-	        <% } %>	
+            <div class="dropdown-menu" style="<% if(!isAdminOrSuperAdmin) out.print("display:none;"); %>"> 
+	            <a href="<%= ctx %>/Employes" 
+	               onclick="navigateTo(this.href); return false;"
+	               class="<%= "/Employes".equals(uri) ? "active" : "" %>">
+		            <i class="fas fa-users"></i> Employés
+		        </a>
+		    </div>
+		    
+            <div class="dropdown-menu" style="<% if(!isAdminOrSuperAdmin) out.print("display:none;"); %>"> 
+	            <a href="<%= ctx %>/Fournisseurs" 
+	               onclick="navigateTo(this.href); return false;"
+	               class="<%= "/Fournisseurs".equals(uri) ? "active" : "" %>">
+		            <i class="fas fa-truck"></i> Fournisseurs
+		        </a>
+		    </div>
 	       
 	       	<div class="dropdown-menu">
 		       	<a href="javascript:void(0)" class="dropdown-toggle <%= "/Entrees".equals(uri) || "/Sorties".equals(uri) ? "active-menu" : "" %>">

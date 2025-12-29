@@ -1,4 +1,4 @@
-package com.gestion_stock_it.Employe;
+package com.gestion_stock_it.Employe.Connection;
 
 import jakarta.servlet.http.HttpSession;
 import java.util.concurrent.ConcurrentHashMap;

@@ -19,6 +19,9 @@
     <script src="<%= request.getContextPath() %>/JS/Handle.js?v=<%= System.currentTimeMillis() %>" defer></script>
     <script src="<%= request.getContextPath() %>/JS/HandleError.js?v=<%= System.currentTimeMillis() %>" defer></script>
     <script>
+	    document.addEventListener("DOMContentLoaded", () => {		
+			initEmployeWebSocket('<%= request.getContextPath() %>', null, null);
+		});
 		document.addEventListener("pagehide", function() {
             closeEmployeWebSocket();
         });
@@ -33,25 +36,38 @@
 	<main>
 	    <form id="addForm_fournisseur" onsubmit="setForm(event, 'Ajout', 'Fournisseur', null);">
 	        <fieldset>
-	            <legend>Nouveau Fournisseur</legend>
-	            <label>
-	                NIF: <input type="text" name="tag_fournisseur">
-	                <span id="error_tag_fournisseur"></span>
-	            </label>
-	            <label>
-	                Raison sociale (ou nom et prénoms): <textarea name="raison_sociale"></textarea>
-	                <span id="error_raison_social"></span>
-	            </label>
-	            <label>
-	                Email: <input type="email" name="email_fournisseur">
-	                <span id="error_email_fournisseur"></span>
-	            </label>
-	            <label>
-	                Téléphone: <input type="text" name="telephone_fournisseur">
-	                <span id="error_tel_fournisseur"></span>
-	            </label>
+	            <legend>Informations sur le nouveau Fournisseur</legend>
+	            <div>
+		            <div>
+			            <label>
+			                NIF: <input type="text" name="tag_fournisseur">
+			                <span id="error_tag_fournisseur"></span>
+			            </label>
+		            </div>
+		            <div>
+			            <label>
+			                Raison sociale (ou nom et prénoms): <textarea name="raison_sociale"></textarea>
+			                <span id="error_raison_social"></span>
+			            </label>
+		            </div>
+		            <div>
+			            <label>
+			                Email: <input type="email" name="email_fournisseur">
+			                <span id="error_email_fournisseur"></span>
+			            </label>
+		            </div>
+		            <div>
+			            <label>
+			                Téléphone: <input type="text" name="telephone_fournisseur">
+			                <span id="error_tel_fournisseur"></span>
+			            </label>
+		            </div>
+		            <div>
+			        	<input type="submit" class="submit_fournisseur btn" value="Confirmer l'action">
+			        	<input type="button" class="cancel_fournisseur btn" value="Retourner au tableau de bord" onClick="closeForm()">
+			        </div>
+	        	</div>
 	        </fieldset>
-	        <input type="submit" class="submit_fournisseur btn" value="Confirmer">
 	    </form>
     </main>
 	<footer>

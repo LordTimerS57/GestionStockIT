@@ -88,7 +88,7 @@
     color: var(--color-text-dark);
     font-size: 1em;
     /* NOUVEAU: Assure la cohérence de la police dans le textarea */
-    font-family: Arial, sans-serif; 
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
     transition: border-color 0.3s;
 }
 

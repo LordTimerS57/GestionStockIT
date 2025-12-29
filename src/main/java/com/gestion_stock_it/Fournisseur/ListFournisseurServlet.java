@@ -12,10 +12,18 @@ import java.util.List;
 
 @WebServlet("/Fournisseurs")
 public class ListFournisseurServlet extends HttpServlet {
+	
+	private FournisseurDataController dao;
+
+    @Override
+    public void init() {
+    	dao = new FournisseurDataController();
+    }
+	
+	@Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String nom = request.getParameter("nom_fournisseur");
 
-        FournisseurDataController dao = new FournisseurDataController();
         List<Fournisseur> fournisseurs = new ArrayList<>();
 
         try {

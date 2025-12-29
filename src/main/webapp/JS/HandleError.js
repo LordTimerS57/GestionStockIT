@@ -44,6 +44,7 @@ function putError(messages, style, type, subType) {
             if(subType.trim() === "Ajout" || subType.trim() === "Modification_total")
             {
                 form = document.getElementById(formPrefix + 'Form_employe');
+				
             }
             else if(subType.trim() === "Modification_role")
             {
@@ -57,7 +58,16 @@ function putError(messages, style, type, subType) {
         }
         case 'Fournisseur': form = document.getElementById(formPrefix + 'Form_fournisseur'); break;
         case 'Type':        form = document.getElementById(formPrefix + 'Form_type'); break;
-        case 'Flux':        form = document.getElementById('addForm_' + subType.toLowerCase()); break;
+        case 'Flux':
+		{
+			form = document.getElementById('addForm_' + subType.toLowerCase()); 
+			form.querySelectorAll("span[id^='selected_']").forEach(span => {
+				span.textContent = "";
+				span.style.display = "none";
+			});
+			break;
+		}        
+				
     }
 
     if (!form || !Array.isArray(messages)) return;
@@ -66,6 +76,8 @@ function putError(messages, style, type, subType) {
     form.querySelectorAll("span[id^='error_']").forEach(span => {
         span.textContent = "";
     });
+	
+	form.reset();
 
     // Affiche chaque erreur
     messages.forEach(error => {
@@ -73,7 +85,6 @@ function putError(messages, style, type, subType) {
         const [field, msg] = error.split(":").map(s => s.trim());
         const span = form.querySelector(`#error_${field}`);
         if (span) {
-            console.log(msg);
             span.textContent = msg;
         }
     });

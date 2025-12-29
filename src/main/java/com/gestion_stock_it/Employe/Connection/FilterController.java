@@ -1,4 +1,4 @@
-package com.gestion_stock_it.Employe;
+package com.gestion_stock_it.Employe.Connection;
 
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebFilter;
@@ -6,6 +6,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
+
+import com.gestion_stock_it.Employe.Employe;
+import com.gestion_stock_it.Employe.EmployeDataController;
 
 @WebFilter("/*")
 public class FilterController implements Filter {
@@ -63,6 +66,7 @@ public class FilterController implements Filter {
                         || normalizedPath.equals("/")
                         || normalizedPath.equals("/Connexion")
                         || normalizedPath.equals("/LoginServlet")
+                        || normalizedPath.equals("/AddEmployeServlet")
                         || normalizedPath.equals("/CreationCompte")
                         || normalizedPath.isEmpty();
         return isPublic;

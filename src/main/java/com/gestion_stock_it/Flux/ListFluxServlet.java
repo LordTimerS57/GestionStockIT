@@ -12,19 +12,27 @@ import java.util.List;
 
 @WebServlet({"/Entrees", "/Sorties"})
 public class ListFluxServlet extends HttpServlet {
+	
+	private FluxDataController dao;
+
+	@Override
+	public void init() {
+		dao = new FluxDataController();
+	}
+	
+	@Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String path = request.getServletPath();
         String nomArticle = request.getParameter("article");
         String dateFlux = request.getParameter("date_flux");
         String dateParams = request.getParameter("date_params");
 
-        FluxDataController dao = new FluxDataController();
-
         switch (path){
             case "/Entrees": {
                 List<Entree> entrees = new ArrayList<>();
                 try {
-                    entrees = dao.getEntreeList(null, nomArticle, null, dateFlux, dateParams);
+                	String expediteur = request.getParameter("expediteur");
+                    entrees = dao.getEntreeList(null, nomArticle, expediteur, dateFlux, dateParams);
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
@@ -44,6 +52,7 @@ public class ListFluxServlet extends HttpServlet {
                 try {
                     String expediteur = request.getParameter("expediteur");
                     String destinataire = request.getParameter("destinataire");
+                    
                     
                     sorties = dao.getSortieList(null, nomArticle, expediteur, destinataire, dateFlux, dateParams);
                 } catch (Exception e) {

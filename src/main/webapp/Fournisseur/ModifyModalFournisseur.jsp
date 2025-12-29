@@ -23,6 +23,9 @@
     <script src="<%= request.getContextPath() %>/JS/HandleError.js?v=<%= System.currentTimeMillis() %>" defer></script>
     <title>Title</title>
     <script>
+	    document.addEventListener("DOMContentLoaded", () => {		
+			initEmployeWebSocket('<%= request.getContextPath() %>', null, null);
+		});
 		document.addEventListener("pagehide", function() {
             closeEmployeWebSocket();
         });
@@ -37,25 +40,38 @@
 	<main>
 		<form id="modifyForm_fournisseur" onsubmit="setForm(event, 'Modification', 'Fournisseur', null)">
 		    <fieldset>
-		        <legend>Modifier les informations du fournisseur</legend>
-		        <label>
-		            NIF: <input type="text" name="tag_fournisseur" value="<%=f.getTag_fournisseur()%>"> <input type="hidden" name="old_tag_fournisseur" value="<%=f.getTag_fournisseur()%>">
-		            <span id="error_tag_fournisseur"></span>
-		        </label>
-		        <label>
-		            Raison sociale (ou nom et prénoms): <textarea name="raison_sociale"><%=f.getRaison_sociale()%></textarea>
-		            <span id="error_raison_sociale"></span>
-		        </label>
-		        <label>
-		            Email: <input type="email" name="email_fournisseur" value="<%=f.getEmail_fournisseur()%>">
-		            <span id="error_email_fournisseur"></span>
-		        </label>
-		        <label>
-		            Téléphone: <input type="text" name="telephone_fournisseur" value="<%=f.getTelephone_fournisseur()%>">
-		            <span id="error_tel_fournisseur"></span>
-		        </label>
+		        <legend>Informations sur le fournisseur</legend>
+		        <div>
+		        	<div>
+				        <label>
+				            NIF: <input type="text" name="tag_fournisseur" value="<%=f.getTag_fournisseur()%>"> <input type="hidden" name="old_tag_fournisseur" value="<%=f.getTag_fournisseur()%>">
+				            <span id="error_tag_fournisseur"></span>
+				        </label>
+			     	</div>
+			     	<div>
+				        <label>
+				            Raison sociale (ou nom et prénoms): <textarea name="raison_sociale"><%=f.getRaison_sociale()%></textarea>
+				            <span id="error_raison_sociale"></span>
+				        </label>
+			        </div>
+			        <div>
+			        <label>
+			            Email: <input type="email" name="email_fournisseur" value="<%=f.getEmail_fournisseur()%>">
+			            <span id="error_email_fournisseur"></span>
+			        </label>
+			        </div>
+			        <div>
+				        <label>
+				            Téléphone: <input type="text" name="telephone_fournisseur" value="<%=f.getTelephone_fournisseur()%>">
+				            <span id="error_tel_fournisseur"></span>
+				        </label>
+			        </div>
+			        <div>
+			        	<input type="submit" class="submit_fournisseur btn" value="Confirmer l'action">
+			        	<input type="button" class="cancel_fournisseur btn" value="Retourner au tableau de bord" onClick="closeForm()">
+			        </div>
+		      </div>
 		    </fieldset>
-		    <input type="submit" class="submit_fournisseur btn" value="Confirmer">
 		</form>
 	</main>
 	<footer>

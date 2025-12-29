@@ -11,8 +11,8 @@ public class Chat {
         return type;
     }
     public void setType(String type) {
-        if(type.equals("bot")) {
-            this.type = "bot";
+        if(type.equals("Bot")) {
+            this.type = "Bot";
         }
         else if(!type.trim().isEmpty()) {
             this.type = type;

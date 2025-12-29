@@ -5,20 +5,24 @@
 */
 
 body {
-    font-family: 'Arial', sans-serif; /* Utilisation de la police Arial */
+    display: flex;
+    flex-direction: column; 
+    min-height: 100vh; 
     margin: 0;
-    padding: 0;
-    background-color: #f8f8f8; /* Arrière-plan très clair */
-    color: #333;
-    line-height: 1.6;
+    font-family: 'Arial', sans-serif;
+    color: #212529; /* Gris foncé pour le texte */
+    background-color: #FFFFFF; /* Fond principal BLANC */
 }
 
 header {
-    background-color: #333; /* Noir/Gris très foncé pour l'en-tête */
-    color: white;
-    padding: 25px 40px;
-    text-align: center;
-    box-shadow: 0 4px 5px rgba(0, 0, 0, 0.1);
+    background-color: #F8F9FA; /* GRIS TRÈS CLAIR (comme fond initial) */
+    color: #212529; /* Texte foncé sur fond clair */
+    padding: 15px 0 15px 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* Ombre très légère */
 }
 
 h1 {
@@ -186,11 +190,13 @@ details p {
 */
 
 footer {
-    background-color: #333;
-    color: #ccc;
+    background-color: #F8F9FA; /* GRIS TRÈS CLAIR (comme le header) */
+    color: #6C757D; /* Gris moyen */
     padding: 10px;
     text-align: center;
     font-size: 0.8em;
+    flex-shrink: 0;
+    border-top: 1px solid #E9ECEF; /* Séparation très fine */
 }
 
 /*

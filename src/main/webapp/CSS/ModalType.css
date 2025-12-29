@@ -1,142 +1,201 @@
+/* --- Palette de Couleurs --- */
+:root {
+    --color-primary: #004085;       /* Bleu Marine */
+    --color-success: #28A745;       /* Vert Émeraude */
+    --color-danger: #DC3545;        /* Rouge Erreur */
+    --color-bg-light: #F8F9FA;      /* Gris Clair */
+    --color-border: #DEE2E6;        /* Bordure Neutre */
+    --color-text: #212529;          /* Texte Sombre */
+}
+
 /* ------------------------------------ */
-/* Styles de la Modale/Formulaire de Création/Modification de Type d'Article */
+/* 1. STRUCTURE GLOBALE                 */
 /* ------------------------------------ */
 body {
-    font-family: 'Arial', sans-serif;
-    color: #212529; /* Gris foncé pour le texte */
-    background-color: #FFFFFF; /* Fond principal BLANC */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: var(--color-text);
+    background-color: #FFFFFF;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }
 
 header {
-    background-color: #F8F9FA; /* GRIS TRÈS CLAIR (comme fond initial) */
-    color: #212529; /* Texte foncé sur fond clair */
-    padding: 15px 0 15px 15px;
+    background-color: var(--color-bg-light);
+    color: var(--color-text);
+    padding: 15px 25px;
     display: flex;
-    justify-content: flex-start;
+    justify-content: space-between;
     align-items: center;
-    width: 100%;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* Ombre très légère */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 header h1 {
-    margin: auto;
-    font-size: 24px;
-    font-weight: normal;
+    margin: 0 auto;
+    font-size: 22px;
+    font-weight: 500;
 }
 
-header > div {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    margin-right: 34px;
-}
-
-header a {
-    color: #6C757D; /* Gris moyen pour les liens */
-    text-decoration: none;
-    font-weight: bold;
-    padding: 5px 10px;
-    border-radius: 4px;
-}
-
-header img{
-	background-color: #FFFFFF; 
+header .logo {
+    background-color: #FFFFFF;
     border-radius: 50%;
     width: 50px;
     height: 50px;
     object-fit: cover;
 }
 
+header a {
+    color: #6C757D;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 0.9em;
+}
+
 main {
     display: flex; 
     flex-grow: 1; 
-    height: 100%;
+    flex-direction: column; 
+    justify-content: center; /* Centre le formulaire verticalement */
+    align-items: center;     /* Centre le formulaire horizontalement */
+    padding: 30px 20px;
 }
 
 footer {
-    background-color: #F8F9FA; /* GRIS TRÈS CLAIR (comme le header) */
-    color: #6C757D; /* Gris moyen */
-    padding: 10px;
+    background-color: var(--color-bg-light);
+    color: #6C757D;
+    padding: 15px;
     text-align: center;
     font-size: 0.8em;
+    border-top: 1px solid #E9ECEF;
     flex-shrink: 0;
-    border-top: 1px solid #E9ECEF; /* Séparation très fine */
 }
 
-/* Style du formulaire principal */
-#addForm_type , #modifyForm_type{
-    max-width: 500px;
-    margin: 30px auto;
-    padding: 30px;
+/* ------------------------------------ */
+/* 2. FORMULAIRES (AJOUT & MODIF TYPE)  */
+/* ------------------------------------ */
+#addForm_type, 
+#modifyForm_type {
+    width: 100%;
+    max-width: 500px; /* Légèrement plus étroit comme demandé initialement */
+    background-color: #FFFFFF;
+}
+
+/* Style des Fieldsets */
+#addForm_type fieldset, 
+#modifyForm_type fieldset {
+    border: 1px solid var(--color-border);
     border-radius: 8px;
+    padding: 25px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
-/* Style du Fieldset */
-#addForm_type fieldset , #modifyForm_type fieldset {
-    border: 1px solid #ccc; /* Bordure neutre */
-    border-radius: 6px;
-    padding: 20px;
-    margin-bottom: 30px;
-}
-
-/* Style de la Légende de Fieldset */
-#addForm_type legend , #modifyForm_type legend {
-    font-size: 1.3em;
+/* Style de la Légende */
+#addForm_type legend, 
+#modifyForm_type legend {
+    font-size: 1.25em;
     font-weight: bold;
-    padding: 0 10px;
+    color: var(--color-primary);
+    padding: 0 12px;
 }
 
-/* Conteneur pour les labels (pour l'organisation interne) */
-#addForm_type fieldset > div ,
+/* Conteneur pour l'espacement vertical */
+#addForm_type fieldset > div,
 #modifyForm_type fieldset > div {
     display: flex;
     flex-direction: column;
     gap: 15px;
-    margin-top: 10px;
 }
 
 /* Style des Labels */
-#addForm_type label , #modifyForm_type label{
+#addForm_type label, 
+#modifyForm_type label {
     display: block;
-    font-weight: 500;
+    font-weight: 600;
+    font-size: 0.95em;
+    margin-bottom: 5px;
 }
 
-/* Style des champs de saisie (input et textarea) */
+/* ------------------------------------ */
+/* 3. INPUTS ET TEXTAREAS               */
+/* ------------------------------------ */
 #addForm_type input[type="text"],
-#addForm_type textarea ,
-#modifyForm_type input[type="text"] ,
+#addForm_type textarea,
+#modifyForm_type input[type="text"],
 #modifyForm_type textarea {
     width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc; /* Bordure neutre */
+    padding: 12px;
+    border: 1px solid var(--color-border);
     border-radius: 4px;
     box-sizing: border-box;
-    margin-top: 5px;
     font-size: 1em;
+    font-family: inherit;
+    margin-top: 5px;
+    transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-#addForm_type textarea , #modifyForm_type textarea {
-    width: 100%;
-    resize: vertical; /* Permet uniquement le redimensionnement vertical */
+/* Effet au focus */
+#addForm_type input:focus, 
+#modifyForm_type input:focus, 
+#addForm_type textarea:focus,
+#modifyForm_type textarea:focus {
+    border-color: var(--color-primary);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 64, 133, 0.1);
+}
+
+#addForm_type textarea, 
+#modifyForm_type textarea {
+    resize: vertical;
     min-height: 100px;
-    font-family: 'Arial', sans-serif;
 }
 
-/* Style du Bouton Confirmer */
+/* ------------------------------------ */
+/* 4. BOUTON ET ERREURS                 */
+/* ------------------------------------ */
 .submit_type.btn {
     display: block;
     width: 100%;
-    padding: 12px;
+    padding: 14px;
+    background-color: var(--color-success); /* Vert Émeraude pour confirmer */
+    color: #FFFFFF;
     font-size: 1.1em;
     font-weight: bold;
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    transition: opacity 0.2s;
-    /* Couleur fournie par une feuille de style de base (Dashboard.css) */
+    transition: opacity 0.2s, transform 0.1s;
+    margin-top: 10px;
 }
 
-.submit_type.btn:hover {
+.cancel_type.btn {
+    display: block;
+    width: 100%;
+    padding: 14px;
+    background-color: var(--color-danger);
+    color: #FFFFFF;
+    font-size: 1.1em;
+    font-weight: bold;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.1s;
+    margin-top: 10px;
+}
+
+.submit_type.btn:hover, .cancel_type.btn:hover {
     opacity: 0.9;
+}
+
+.submit_type.btn:active, .cancel_type.btn:active {
+    transform: scale(0.98);
+}
+
+/* Gestion des messages d'erreur */
+span[id^="error_"] {
+    color: var(--color-danger);
+    font-size: 0.85em;
+    font-weight: 500;
+    display: block;
+    margin-top: 4px;
 }

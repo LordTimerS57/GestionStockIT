@@ -1,6 +1,6 @@
 package com.gestion_stock_it.Employe;
 
-import com.gestion_stock_it.DatabaseConnection;
+import com.gestion_stock_it.Employe.Connection.SessionRegistryEmploye;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import jakarta.servlet.http.HttpSession;
@@ -34,34 +34,6 @@ public class EmployeWebSocket {
     public void onClose(Session session, @PathParam("matricule") String matricule) {
         removeFromSessionsRole(session);
         
-    	/*
-    	HttpSession httpSession = getHttpSessionFromMatricule(matricule);
-    	 
-        if (httpSession != null) {
-        	Employe e = (Employe) httpSession.getAttribute("login_profil");
-        	if(e != null && e.getConnection()) {
-    	      DatabaseConnection db = new DatabaseConnection();
-    	      db.connect();
-    	      try {
-                  EmployeDataController fn = new EmployeDataController();
-                  // Mise à jour de la BDD
-                  fn.connect(db.getConnection(),  matricule, null, null, "non");
-                  
-                  System.out.println("Statut BDD mis à jour pour déconnexion inattendue : " + matricule);
-                  
-              } finally {
-                  db.disconnect(); // Garantit la fermeture de la connexion BDD
-              }
-    	      
-    	      httpSession.invalidate(); 
-              SessionRegistryEmploye.remove(matricule);
-              
-              System.out.println("Session HTTP invalidée par fermeture WS pour : " + matricule);
-              
-        	}
-        	 EmployeWebSocket.notifyAllEmployes("refresh_data", "Mise à jour des données");
-        }
-        */
         sessions.remove(matricule);
         System.out.println("WebSocket fermé pour : " + matricule);
     }
@@ -88,6 +60,7 @@ public class EmployeWebSocket {
                 if (httpSession != null) {
                     httpSession.removeAttribute("login_role");
                     httpSession.removeAttribute("login_profil");
+                    httpSession.removeAttribute("chats");
                 }
 
                 SessionRegistryEmploye.remove(matricule);
@@ -127,14 +100,9 @@ public class EmployeWebSocket {
                 
                 Employe e = fn.getEmployeByMatricule(matricule);
             	if(e != null && e.getConnection()) {
-        	      DatabaseConnection db = new DatabaseConnection();
-        	      db.connect();
-        	      try {
-                      fn.connect(db.getConnection(),  matricule, null, null, "non");
-                  } finally {
-                      db.disconnect();
-                  }
+            		fn.connect(matricule, null, null, "non");
             	}
+            	
             	String jsonMessage = gson.toJson(Map.of(
                         "type", "force_logout",
                         "message", "Votre compte a été désactivé."
@@ -143,6 +111,46 @@ public class EmployeWebSocket {
                 session.getBasicRemote().sendText(jsonMessage);
             } catch (Exception ex) {
                 ex.printStackTrace();
+            }
+        }
+    }
+    
+    public static void changeRole(Employe e, int role) throws Exception {
+        if (e != null) { 
+            Session session = sessions.get(e.getMatricule()); 
+            if (session != null && session.isOpen()) {
+                
+                Employe employeUpdated = null;
+                EmployeDataController fn = new EmployeDataController();
+
+                try {
+                	employeUpdated = fn.getEmployeByMatricule(e.getMatricule()); 
+                } catch (Exception ex) {
+                    // Gérer les erreurs de connexion BDD si getEmployeByMatricule les lance
+                    ex.printStackTrace();
+                }
+
+                if (employeUpdated != null && employeUpdated.getRoleInt() == role) {
+                    
+                    // Mise à jour des sessions WebSocket
+                    removeFromSessionsRole(session);
+                    sessionsRole.computeIfAbsent(role, k -> ConcurrentHashMap.newKeySet()).add(session);
+
+                    // Mise à jour de la session HTTP
+                    HttpSession httpSession = getHttpSessionFromMatricule(e.getMatricule());
+                    if (httpSession != null) {
+                    	
+                        httpSession.setAttribute("login_role", employeUpdated.getRole());
+                        httpSession.setAttribute("login_profil", employeUpdated);
+                        
+                        System.out.println("Rôle de " + e.getMatricule() + " mis à jour dans la session HTTP.");
+                    }
+
+                    // Notification
+                    notifyEmploye(e.getMatricule(), role); 
+                } else {
+                    System.err.println("Échec de relecture de l'employé après le changement de rôle : " + e.getMatricule());
+                }
             }
         }
     }
@@ -184,45 +192,44 @@ public class EmployeWebSocket {
         }
     }
 
-    // ✅ Notifier tous les clients (sans objet spécifique)
-    public static void notifyAllEmployes(String type, String message) {
+    public static void notifyEmployes(String type, String message, int... targetRoles) {
         String jsonMessage = gson.toJson(Map.of(
                 "type", type,
                 "message", message
         ));
+        for (int roleId : targetRoles) {
+            
+            Set<Session> sessionsForRole = sessionsRole.get(roleId);
 
-        sessionsRole.values().forEach(set -> {
-            for (Session session : set) {
-                if (session != null && session.isOpen()) {
-                    try {
-                        session.getBasicRemote().sendText(jsonMessage);
-                    } catch (IOException e) {
-                        e.printStackTrace();
+            if (sessionsForRole != null) {
+                for (Session s : sessionsForRole) {
+                    if (s != null && s.isOpen()) {
+                        try {
+                            s.getBasicRemote().sendText(jsonMessage);
+                        } catch (IOException e) {
+                            System.err.println("Erreur envoi au rôle " + roleId + " : " + e.getMessage());
+                        }
                     }
                 }
             }
-        });
+        }
     }
+    
     
     public static void notifyEmploye(String matricule, int role) {
         Session session = sessions.get(matricule);
-        if ( (role == 2) && (session != null && session.isOpen()) ) {
+        if (session != null && session.isOpen()) {
             try {
+                String roleName = (role == 1) ? "Administrateur" : (role == 2) ? "Sous Administrateur" : "Employé";
+                String roleMessage = "Vous "+  (role == 1 || role == 2 ? "avez été attribué de" : "êtes destitué de vos") +" fonctions d'administrateur.";
+                
                 String jsonMessage = gson.toJson(Map.of(
-                        "type", "modify_role_info",
-                        "message", "L'administrateur vous a octroyé un droit de sous admnistrateur"
+                    "type", "role_updated",
+                    "role_int", role,
+                    "role_name", roleName,
+                    "message", roleMessage
                 ));
-                session.getBasicRemote().sendText(jsonMessage);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        if ( (role == 3) && (session != null && session.isOpen()) ) {
-            try {
-                String jsonMessage = gson.toJson(Map.of(
-                        "type", "modify_role_info",
-                        "message", "L'administrateur vous a destituer le droit de sous admnistrateur"
-                ));
+                
                 session.getBasicRemote().sendText(jsonMessage);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -231,12 +238,12 @@ public class EmployeWebSocket {
     }
 
     // 🔧 Récupérer la session HTTP associée à un matricule
-    private HttpSession getHttpSessionFromMatricule(String matricule) {
+    private static HttpSession getHttpSessionFromMatricule(String matricule) {
         return SessionRegistryEmploye.getHttpSession(matricule);
     }
 
     // 🔧 Supprimer une session de tous les rôles
-    private void removeFromSessionsRole(Session session) {
+    private static void removeFromSessionsRole(Session session) {
         if (session != null) {
             sessionsRole.values().forEach(set -> set.remove(session));
         }

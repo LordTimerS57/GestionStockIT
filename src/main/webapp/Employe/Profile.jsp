@@ -14,11 +14,11 @@
     <fieldset id="details-personnels">
         <legend> Informations personnelles </legend>
         <div>
-            <p>Nom: <%= profil.getNom() %></p>
-            <p>Prénoms: <%= profil.getPrenom() %></p>
-            <p>Adresse: <%= profil.getAdresse() %></p>
-            <p>Tel: <%= profil.getTelephone() %></p>
-            <p>Date de naissance: <%= profil.getDate_de_naissance_formatter() %></p>
+            <p><span>Nom:</span> <%= profil.getNom() %></p>
+            <p><span>Prénoms:</span> <%= profil.getPrenom() %></p>
+            <p><span>Adresse:</span> <%= profil.getAdresse() %></p>
+            <p><span>Téléphone:</span> <%= profil.getTelephone() %></p>
+            <p><span>Date de naissance:</span> <%= profil.getDate_de_naissance_formatter() %></p>
             <a href="<%= request.getContextPath() %>/Employe/SessionModifyEmploye.jsp?section=1"> Modifier vos informations personnelles </a>
         </div>
     </fieldset>

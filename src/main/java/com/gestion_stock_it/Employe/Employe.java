@@ -125,8 +125,10 @@ public class Employe {
   public void setMot_de_passe(String mot_de_passe){this.mot_de_passe = mot_de_passe;}
   public void setDate_de_naissance(LocalDate date_naissance) {this.date_de_naissance = date_naissance;}
   public void setTelephone(String telephone) {this.telephone = telephone;}
+  public void setConnection(boolean c) { this.connecte = c;}
+  public void setActivite() { this.actif = true; }
   public void setEmail(String email) {this.email = email;}
-  public void setDateCreation(LocalDateTime now) {this.date_creation = now;}
+  public void setDate_creation(LocalDateTime now) {this.date_creation = now;}
 
   public void setMatriculeSpecific(String matricule) {
       if(matricule == null || matricule.isEmpty()){

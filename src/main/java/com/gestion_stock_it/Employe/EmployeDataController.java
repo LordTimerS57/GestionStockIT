@@ -2,6 +2,7 @@ package com.gestion_stock_it.Employe;
 
 import java.sql.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,15 +17,13 @@ import jakarta.mail.internet.MimeMessage;
 import org.mindrot.jbcrypt.BCrypt;
 
 public class EmployeDataController {
-	private final String EMAIL_SENDER = System.getenv("MAIL_HOST");
-	private final String EMAIL_PASSWORD = System.getenv("MAIL_PASSWORD");
-
+	private static final String EMAIL_SENDER = System.getenv("MAIL_HOST");
+	private static final String EMAIL_PASSWORD = System.getenv("MAIL_PASSWORD");
+	
+	private static final DatabaseConnection DB_CONNECTION = DatabaseConnection.getInstance();
+	
 	public List<Employe> getEmployeList(String Matricule, String Nom_prenom, int Role, String Email, String Connecte, String Actif) throws Exception {
 		List<Employe> listEmploye = new ArrayList<>();
-
-		DatabaseConnection db = new DatabaseConnection();
-		db.connect();
-
 
 		StringBuilder subQuery = new StringBuilder();
 		List<Object> params = new ArrayList<>();
@@ -75,9 +74,8 @@ public class EmployeDataController {
 		String finalQuery = subQuery.toString();
 
 
-		try(Connection conn = db.getConnection();
-			PreparedStatement p_stmt = conn.prepareStatement("SELECT * FROM Employe " + finalQuery);
-		)
+		try(	Connection c = DB_CONNECTION.getConnection();
+				PreparedStatement p_stmt = c.prepareStatement("SELECT * FROM Employe " + finalQuery);)
 		{
 
 			for (int i = 0; i < params.size(); i++) {
@@ -121,9 +119,6 @@ public class EmployeDataController {
 			throw new ErrorConfirmException("mot_de_passe_login: Veuillez saisir le mot de passe !");
 		}
 
-		DatabaseConnection db = new DatabaseConnection();
-		db.connect();
-
 		StringBuilder query = new StringBuilder("SELECT * FROM Employe WHERE ");
 		List<Object> params = new ArrayList<>();
 		List<String> conditions = new ArrayList<>();
@@ -139,8 +134,8 @@ public class EmployeDataController {
 		query.append(String.join(" AND ", conditions));
 
 
-		try (Connection conn = db.getConnection();
-			 PreparedStatement stmt = conn.prepareStatement(query.toString())) {
+		try (	Connection c = DB_CONNECTION.getConnection();
+				PreparedStatement stmt = c.prepareStatement(query.toString())) {
 
 			for (int i = 0; i < params.size(); i++) {
 				stmt.setObject(i + 1, params.get(i));
@@ -183,8 +178,6 @@ public class EmployeDataController {
 
 	public Employe getEmployeByMatricule(String matricule) throws Exception {
 		Employe employe = null;
-		DatabaseConnection db = new DatabaseConnection();
-		db.connect();
 
 		StringBuilder query = new StringBuilder("SELECT * FROM Employe");
 		List<Object> params = new ArrayList<>();
@@ -194,8 +187,8 @@ public class EmployeDataController {
 			params.add(matricule);
 		}
 
-		try (Connection conn = db.getConnection();
-			 PreparedStatement stmt = conn.prepareStatement(query.toString())) {
+		try (	Connection c = DB_CONNECTION.getConnection();
+				PreparedStatement stmt = c.prepareStatement(query.toString())) {
 
 			for (int i = 0; i < params.size(); i++) {
 				stmt.setObject(i + 1, params.get(i));
@@ -232,16 +225,14 @@ public class EmployeDataController {
 	public boolean getEmployeActivite(String matricule) throws Exception {
 
 		if (matricule == null || matricule.trim().isEmpty()) {
-			return false; // Rien à faire si le tag est vide
+			return false; 
 		}
 
-		DatabaseConnection db = new DatabaseConnection();
-		db.connect();
 
 		String query = "SELECT Actif FROM Employe WHERE Matricule = ?";
 
-		try (Connection conn = db.getConnection();
-			 PreparedStatement stmt = conn.prepareStatement(query)) {
+		try (	Connection c = DB_CONNECTION.getConnection();
+				PreparedStatement stmt = c.prepareStatement(query)) {
 
 			stmt.setString(1, matricule);
 
@@ -258,8 +249,8 @@ public class EmployeDataController {
 		return false;
 	}
 
-	public void addEmploye(Connection c, Employe employe) {
-		try(
+	public void addEmploye(Employe employe) {
+		try(	Connection c = DB_CONNECTION.getConnection();
 				PreparedStatement p_stmt = c.prepareStatement("INSERT INTO Employe ( "
 						+ "  Matricule, "
 						+ "  Nom, "
@@ -273,7 +264,7 @@ public class EmployeDataController {
 						+ "  Date_creation, "
 						+ "  Date_modification, "
 						+ "  Telephone "
-						+ " ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+						+ " ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
 		){
 			p_stmt.setString(1, employe.getMatricule()); // set value
 			p_stmt.setString(2, employe.getNom()); // set value
@@ -295,7 +286,7 @@ public class EmployeDataController {
 		}
 	}
 
-	public void updateEmploye(Connection c, String matricule, Employe employe, int section) {
+	public void updateEmploye(String matricule, Employe employe, int section) {
 		StringBuilder query = new StringBuilder("UPDATE Employe SET ");
 		List<Object> params = new ArrayList<>();
 
@@ -331,7 +322,8 @@ public class EmployeDataController {
 		params.add(Timestamp.valueOf(employe.getDate_modification()));
 		params.add(matricule);
 
-		try (PreparedStatement p_stmt = c.prepareStatement(query.toString())) {
+		try (	Connection c = DB_CONNECTION.getConnection();
+				PreparedStatement p_stmt = c.prepareStatement(query.toString())) {
 			for (int i = 0; i < params.size(); i++) {
 				p_stmt.setObject(i + 1, params.get(i));
 			}
@@ -344,12 +336,13 @@ public class EmployeDataController {
 		}
 	}
 
-	public void connect(Connection c, String matricule, String Email, String Mot_de_passe, String connection) {
+	public void connect(String matricule, String Email, String Mot_de_passe, String connection) {
 		boolean connected = connection != null && !connection.trim().isEmpty();
 		System.out.println("Connection value: " + connection + ", connected: " + connected);
 		try {
 			StringBuilder updateQuery = new StringBuilder("UPDATE Employe SET Connecte = ?, Date_modification = NOW() WHERE Matricule = ?");
-			try (PreparedStatement p_stmt = c.prepareStatement(updateQuery.toString())) {
+			try (	Connection c = DB_CONNECTION.getConnection();
+					PreparedStatement p_stmt = c.prepareStatement(updateQuery.toString())) {
 				p_stmt.setBoolean(1, connected && connection.equals("oui"));
 				p_stmt.setString(2, matricule);
 
@@ -367,8 +360,8 @@ public class EmployeDataController {
 	}
 
 
-	public void deleteEmploye(Connection c, boolean activite, String matricule) {
-		try(
+	public void deleteEmploye(boolean activite, String matricule) {
+		try(	Connection c = DB_CONNECTION.getConnection();
 				PreparedStatement p_stmt = c.prepareStatement("UPDATE Employe SET Date_modification = NOW(), Actif = ? WHERE Matricule = ?")
 		){
 			p_stmt.setBoolean(1, activite);
@@ -458,9 +451,7 @@ public class EmployeDataController {
 
 	}
 
-	public String nextTag(Connection c) throws Exception {
-		DatabaseConnection db = new DatabaseConnection();
-		db.connect();
+	public String nextTag() throws Exception {
 
 		String query = """
         SELECT Matricule
@@ -470,7 +461,8 @@ public class EmployeDataController {
 
 		String nextTag = null;
 
-		try (Statement stmt = c.createStatement()) {
+		try (	Connection c = DB_CONNECTION.getConnection();
+				Statement stmt = c.createStatement()) {
 
 			try (ResultSet rs = stmt.executeQuery(query)) {
 				if (rs.next()) {
@@ -483,7 +475,7 @@ public class EmployeDataController {
 		return nextTag;
 	}
 
-	public static void testInfoPersonnel(String nom, String prenom, String adresse, String telephone, String dateNaissance) {
+	public Employe testInfoPersonnel(String nom, String prenom, String adresse, String telephone, String dateNaissance, Employe e, String type) {
 		List<String> errors = new ArrayList<>();
 
 		if (nom == null || nom.trim().isEmpty()) {
@@ -527,13 +519,41 @@ public class EmployeDataController {
 			}
 		}
 
-
+		
 		if (!errors.isEmpty()) {
 			throw new ErrorConfirmException(errors);
 		}
+		else {
+			if(e == null) {
+				e = new Employe();
+			}
+			e.setNom(nom);
+			e.setPrenom(prenom);
+			e.setAdresse(adresse);
+			e.setTelephone(telephone);
+			e.setDate_de_naissance(LocalDate.parse(dateNaissance));
+			e.setActivite();
+			e.setConnection(false);
+			
+			if(type.trim() != null) {
+				if(type == "add") {
+					e.setRoleInt(3);
+					try {
+						e.setMatriculeSpecific(nextTag());
+					} catch (Exception e1) {
+						e1.printStackTrace();
+					}
+				}
+				else {
+					e.setDate_modification(LocalDateTime.now());
+				}
+			}
+			return e;
+		}
 	}
+		
 
-	public static void testRole(String role) {
+	public void testRole(String role, Employe e) {
 		List<String> errors = new ArrayList<>();
 
 		if (role == null || role.trim().isEmpty()) {
@@ -543,9 +563,16 @@ public class EmployeDataController {
 		if (!errors.isEmpty()) {
 			throw new ErrorConfirmException(errors);
 		}
+		else {
+			if(e == null) {
+				e = new Employe();
+			}
+			e.setRoleInt(Integer.parseInt(role));			
+			e.setDate_modification(LocalDateTime.now());
+		}
 	}
 
-	public static void testEmail(Connection c, String email) {
+	public Employe testEmail(String email, String oldEmail, Employe e, String type) {
 		List<String> errors = new ArrayList<>();
 
 		if (email == null || email.trim().isEmpty()) {
@@ -561,7 +588,8 @@ public class EmployeDataController {
 
 			int count = 0;
 
-			try (PreparedStatement stmt = c.prepareStatement(query)) {
+			try (	Connection c = DB_CONNECTION.getConnection();
+					PreparedStatement stmt = c.prepareStatement(query)) {
 				stmt.setString(1, email);
 				ResultSet rs = stmt.executeQuery();
 
@@ -573,7 +601,7 @@ public class EmployeDataController {
 					throw new ErrorConfirmException("email: Veuillez saisir un autre adresse email valide, l'adresse mail "+ email +"n'est plus valide !");
 				}
 
-			} catch (SQLException e) {
+			} catch (SQLException ex) {
 				throw new ErrorConfirmException("Erreur lors du comptage");
 			}
 		}
@@ -581,9 +609,24 @@ public class EmployeDataController {
 		if (!errors.isEmpty()) {
 			throw new ErrorConfirmException(errors);
 		}
+		else {
+			if(e == null) {
+				e = new Employe();
+			}
+			e.setEmail((oldEmail).equals(email) ? oldEmail : email);
+			if(type.trim() != null) {
+				if (type == "add") {
+					e.setDate_creation(LocalDateTime.now());
+				}
+				else {
+					e.setDate_modification(LocalDateTime.now());
+				}
+			}
+			return e;
+		}
 	}
 
-	public static void testInfoMotDePasse(String motDePasse) {
+	public Employe testInfoMotDePasse(String motDePasse, Employe e, String type) {
 		List<String> errors = new ArrayList<>();
 
 		if(motDePasse == null || motDePasse.trim().isEmpty()) {
@@ -593,6 +636,18 @@ public class EmployeDataController {
 
 		if (!errors.isEmpty()) {
 			throw new ErrorConfirmException(errors);
+		}
+		else {
+			if(e == null) {
+				e = new Employe();
+			}
+			e.setMot_de_passe(BCrypt.hashpw(motDePasse, BCrypt.gensalt()));
+			if(type.trim() != null) {
+				if (type == "modify") {
+					e.setDate_modification(LocalDateTime.now());
+				}
+			}
+			return e;
 		}
 	}
 }

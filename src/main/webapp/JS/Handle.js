@@ -1,14 +1,73 @@
 const ctx = "/StockIT";
 let wsInstance = null;
+let currentFormController = null;
 
-function initEmployeWebSocket(contextPath, matricule, role) {
-    if (!matricule && !role) {
-        console.warn("Aucun matricule fourni pour la connexion WebSocket.");
-        return;
+// Fonction de mise à jour du menu en temps réel après un changement de rôle (Étape 2)
+function updateNavigationMenu(newRoleName) {
+    console.log(`Mise à jour du menu par WebSocket pour le rôle : ${newRoleName}`);
+    
+    // Assurez-vous d'utiliser la variable globale ctx
+    const contextPath = ctx; 
+    
+    const isAdmin = newRoleName <= 2;
+    
+    const employeMenuDiv = document.querySelector('a[href*="/Employes"]').parentElement;
+    const fournisseurMenuDiv = document.querySelector('a[href*="/Fournisseurs"]').parentElement;
+	//const entreeMenuDiv = document.querySelector('a[href*="/Entrees/Creation"]').parentElement;
+	//const sortieMenuDiv = document.querySelector('a[href*="/Sorties/Creation"]').parentElement;
+	//const articleCreateMenuDiv = document.querySelector('a[href*="/Articles/Creation"]').parentElement;
+	//const typeCreateMenuDiv = document.querySelector('a[href*="/Types/Creation"]').parentElement;
+
+    if (employeMenuDiv && fournisseurMenuDiv) {
+        employeMenuDiv.style.display = isAdmin ? 'block' : 'none';
+        fournisseurMenuDiv.style.display = isAdmin ? 'block' : 'none';
+		// entreeMenuDiv.style.display = isAdmin ? 'flex' : 'none';
+		// sortieMenuDiv.style.display = isAdmin ? 'flex' : 'none';
+		// articleCreateMenuDiv.style.display = isAdmin ? 'flex' : 'none';
+		// typeCreateMenuDiv.style.display = isAdmin ? 'flex' : 'none';
+		
+        
+        // Sécurité: Rediriger si l'utilisateur perd ses droits sur une page admin
+        if (!isAdmin) {
+			if( window.location.pathname.includes("/Employes") ) { alert("Accès refusé. Vous ne pouvez plus accéder aux Employés. Redirection vers les Articles."); window.location.href = contextPath + "/Acceuil";}
+            if( window.location.pathname.includes("/Fournisseurs") ) { alert("Accès refusé. Vous ne pouvez plus accéder aux Fournisseurs. Redirection vers les Articles."); window.location.href = contextPath + "/Acceuil";}
+			if( window.location.pathname.includes("/Entrees/Creation") ) { alert("Accès refusé. Vous ne pouvez plus créer des Entrées d'articles. Redirection vers les Articles."); window.location.href = contextPath + "/Entrees"; }
+			if( window.location.pathname.includes("/Sorties/Creation") ) { alert("Accès refusé. Vous ne pouvez plus créer des Sorties d'articles. Redirection vers les Articles."); window.location.href = contextPath + "/Sorties"; }
+			if( window.location.pathname.includes("/Articles/Creation") ) { alert("Accès refusé. Vous ne pouvez plus créer des Articles. Redirection vers les Articles."); window.location.href = contextPath + "/Articles"; }
+			if( window.location.pathname.includes("/Types/Creation") ){ alert("Accès refusé. Vous ne pouvez plus créer des Types d'articles. Redirection vers les Articles."); window.location.href = contextPath + "/Types"; }
+			if( window.location.pathname.includes("/Articles/Modification") ) { alert("Accès refusé. Vous ne pouvez plus modifier des Articles. Redirection vers les Articles."); window.location.href = contextPath + "/Articles"; }
+			if( window.location.pathname.includes("/Types/Modification") ) { alert("Accès refusé. Vous ne pouvez plus modifier des Types d'articles. Redirection vers les Articles."); window.location.href = contextPath + "/Types";} 
+        }
+    } else {
+        console.warn("Éléments de menu Employés/Fournisseurs non trouvés pour la mise à jour du DOM.");
     }
-    console.log(role);
-    const protocol = window.location.protocol === "https:" ? "wss://" : "ws://";
-    const wsUrl = protocol + window.location.host + contextPath + "/EmployeLog/" + matricule + "/" + role;
+}
+
+
+function initEmployeWebSocket(contextPath, m, r) {
+
+	   const matricule = m || sessionStorage.getItem("ws_matricule");
+	   const role = r || sessionStorage.getItem("ws_role");
+
+	   if (!matricule || !role) {
+	       console.warn("WebSocket non initialisé : infos manquantes");
+	       return;
+	   }
+
+	   // 🔐 Persistance
+	   sessionStorage.setItem("ws_matricule", matricule);
+	   sessionStorage.setItem("ws_role", role);
+
+	   // 🚫 Anti double connexion
+	   if (wsInstance && wsInstance.readyState === WebSocket.OPEN) {
+	       console.warn("WebSocket déjà actif");
+	       return;
+	   }
+
+   const protocol = location.protocol === "https:" ? "wss://" : "ws://";
+   const wsUrl = protocol + location.host + contextPath +
+       "/EmployeLog/" + matricule + "/" + role;
+
 
     let params;
 
@@ -22,9 +81,25 @@ function initEmployeWebSocket(contextPath, matricule, role) {
         wsInstance.onmessage = (event) => {
             try {
                 const data = JSON.parse(event.data);
+                
+                // 🛑 GESTION DU CHANGEMENT DE RÔLE (Mise à jour en temps réel du menu)
+                if (data.type === "role_updated") {
+                    
+		            const newRoleInt = data.role_int;
+		            const newRoleName = data.role_name;
+
+                    // Mettre à jour la session storage pour la prochaine connexion/reconnexion
+		            sessionStorage.setItem("ws_role", newRoleInt);
+		            
+		            // Mise à jour du menu (Appel de la fonction DOM)
+		            updateNavigationMenu(newRoleInt); 
+		            
+		            alert(data.message || `Votre rôle a été mis à jour à : ${newRoleName}`);
+		        }
+                
+                // ... (votre logique existante pour refresh_data) ...
                 if (data.type === "refresh_data") {
                     console.log("🔄 Rafraîchissement des données demandé :", data.message);
-
                     // Selon la page active, on relance la fonction appropriée :
                     if (window.location.pathname.includes("/Articles")) {
                         searchArticle();
@@ -40,10 +115,17 @@ function initEmployeWebSocket(contextPath, matricule, role) {
                         searchFlux("Sortie");
                     }
                 }
+                
+                // ... (votre logique existante pour force_logout) ...
                 if (data.type === "force_logout") {
                     params = new URLSearchParams({
                         activite : "desactivate"
                     })
+					
+					if (currentFormController) {
+                        currentFormController.abort();
+                        console.log("Flux de formulaire interrompu pour déconnexion.");
+                    }
 
                     alert(data.message || "Votre compte a été désactivé par l'administrateur.");
 
@@ -53,17 +135,17 @@ function initEmployeWebSocket(contextPath, matricule, role) {
                             return res.text();
                         })
                         .then(() => {
-                            // 2️⃣ Une fois la requête HTTP terminée, notifier le serveur WebSocket
                             wsInstance.send(JSON.stringify({
                                 type: "passage_logout",
                                 message: "Ok to log out"
                             }));
                         })
                         .finally(() => {
-                            // 3️⃣ Rediriger ensuite
                             window.location.href = contextPath + "/Connexion";
                         });
                 }
+                
+                // ... (votre logique existante pour notify_decision, notify_info, modify_role_info) ...
                 console.log(data.message + " " + data.type);
                 if (data.type === "notify_decision") {
                     if(confirm(data.message + "\n" + "Accepteririez - vous ce nouveau compte")){
@@ -84,6 +166,7 @@ function initEmployeWebSocket(contextPath, matricule, role) {
                 if (data.type === "notify_info" || data.type === "modify_role_info") {
                     alert(data.message);
                 }
+                
             } catch (err) {
                 console.error("Erreur de parsing du message WebSocket :", err);
             }
@@ -103,31 +186,79 @@ function initEmployeWebSocket(contextPath, matricule, role) {
     initWebSocket();
 }
 
-function closeEmployeWebSocket() {
-    // 1. Fermeture du WebSocket
-    if (wsInstance && wsInstance.readyState === WebSocket.OPEN) {
-        // Code 1000 pour éviter la reconnexion auto
-        wsInstance.close(1000, "Fermeture de l'onglet par l'utilisateur.");
-        console.log("🚀 Tentative de fermeture propre du WebSocket.");
-    }
+function closeEmployeWebSocket(force = false, contextPath = '/StockIT') {
     
-    // 2. Notification de déconnexion par sendBeacon
-    if (navigator.sendBeacon) {
-        // Envoi simple d'une requête POST
-        navigator.sendBeacon(LOGOUT_URL, null); 
-        console.log("📡 SendBeacon envoyé au LogoutServlet.");
+    // 🛑 CORRECTION: Se déclenche si appelé par pagehide (force=true) ou déconnexion explicite
+    if (!force) return; 
+
+    if (wsInstance && wsInstance.readyState === WebSocket.OPEN) {
+        wsInstance.close(1000, "Déconnexion utilisateur.");
+        console.log("🚀 WebSocket fermé volontairement.");
     }
+
+    if (navigator.sendBeacon) {
+		const matricule = sessionStorage.getItem("ws_matricule");
+		const data = new URLSearchParams();
+		data.append("matricule", matricule);
+        
+        const logoutUrl = contextPath + "/LogoutServlet"; 
+        
+        // Utilisation de POST via sendBeacon pour le nettoyage en BDD
+        const beaconSent = navigator.sendBeacon(logoutUrl, data);
+        
+        if (beaconSent) {
+            console.log("📡 SendBeacon mis en file d'attente pour l'URL: " + logoutUrl);
+        } else {
+            console.error("🔴 SendBeacon : Échec de la mise en file d'attente.");
+        }
+    }
+
+    sessionStorage.removeItem("ws_matricule");
+    sessionStorage.removeItem("ws_role");
 }
 
+function closeForm(){
+	const formPath = window.location.pathname;
+	const form = document.querySelector("form");
+	
+	if(currentFormController){
+		currentFormController.abort();		
+	}
+	
+	let nextPath;
+	if(formPath.includes("/Entrees/Creation")) nextPath = ctx + "/Entrees";
+	if(formPath.includes("/Sorties/Creation")) nextPath = ctx + "/Sorties";
+	if(formPath.includes("/Profil/Modification")) nextPath = ctx + "/Profil";
+	if(formPath.includes("/Fournisseurs/Creation") || formPath.includes("/Fournisseurs/Modification")) nextPath = ctx + "/Fournisseurs";
+	if(formPath.includes("/Articles/Creation") || formPath.includes("/Articles/Modification")) nextPath = ctx + "/Articles";
+	if(formPath.includes("/Types/Creation") || formPath.includes("/Types/Modification"))  nextPath = ctx + "/Types";
+	
+	if(nextPath){
+		if(confirm("Êtes-vous sûr de vouloir quitter le formulaire ? Les données non enregistrées seront perdues.")){
+			if(form){
+				form.reset();
+			}
+			window.location.href = nextPath;
+		}
+	}
+}
 
 function logOut(contextPath, matricule) {
-    // Le serveur Java s'occupera d'invalider la session.
+    
+	if(currentFormController) {
+	    currentFormController.abort();
+	}
+		
+	currentFormController = new AbortController();
+	const signal = currentFormController.signal;
+		
     fetch(contextPath + "/LogoutServlet", {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: new URLSearchParams({
             matricule: matricule
-        })
+        }),
+		signal: signal
     })
         .then(res => {
             if (!res.ok) throw new Error("Échec de la déconnexion HTTP.");
@@ -357,11 +488,13 @@ function searchFlux(type) {
         param = "month";
     }
 	
-	if(type.trim() !== "" && type.trim() === "Sortie") {
-		const destinataireInput = document.getElementById("destinataire").value;
-		const expediteurInput = document.getElementById("expediteur").value;
+	if(type.trim() !== "") {
 		
-		if(destinataireInput.trim() !== "") destinataire = destinataireInput; 
+		if(type.trim() === "Sortie"){
+			const destinataireInput = document.getElementById("destinataire").value;
+			if(destinataireInput.trim() !== "") destinataire = destinataireInput;
+		}
+		const expediteurInput = document.getElementById("expediteur").value; 
 		if(expediteurInput.trim() !== "") expediteur = expediteurInput;
 		
 	}
@@ -469,6 +602,8 @@ function searchEntree(data){
     }
 
     const currentBody = document.querySelector((data.trim() === "article") ? "#result_article" : "#result_expediteur");
+	
+	if(currentBody.style.display === "none") currentBody.style.display = "flex";
     currentBody.innerHTML = "<p>Recherche en cours...</p>";
 
     fetch(ctx+"/Entrees/Creation?" + params.toString())
@@ -496,7 +631,9 @@ function searchSortie(data){
         if(destinataire.trim() !== "") params.append("nom_prenom_ou_matricule", destinataire);
     }
 
-    const currentBody = document.querySelector((data.trim() === "article") ? "#result_article" : "#result_destinataire");
+	const currentBody = document.querySelector((data.trim() === "article") ? "#result_article" : "#result_destinataire");
+	
+	if(currentBody.style.display === "none") currentBody.style.display = "flex";
     currentBody.innerHTML = "<p>Recherche en cours...</p>";
 
     fetch(ctx + "/Sorties/Creation?" + params.toString())
@@ -596,6 +733,8 @@ function setDetails(e, action, type, data) {
                 const divPart1 = document.getElementById("employe_details");
                 const divPart2 = document.getElementById("modify_role");
                 const buttonRole = document.getElementById("modify_role_btn");
+				const currentMatricule = sessionStorage.getItem("ws_matricule");
+				const currentRole = sessionStorage.getItem("ws_role");
                 if (action === 'Show' && data) {
                     divPart1.style.display = "block";
                     divPart2.style.display = "none";
@@ -608,7 +747,7 @@ function setDetails(e, action, type, data) {
                     document.getElementById("dialog_employe_role").textContent = data.dataset.role;
                     document.getElementById("dialog_employe_date_creation").textContent = "Date de création du compte: " + data.dataset.date_creation;
                     document.getElementById("dialog_employe_date_modification").textContent = "Date de modification du compte: " + data.dataset.date_modification;
-                    if(data.dataset.role === "Administrateur"){
+                    if( data.dataset.role === "Administrateur" || (currentRole == 2 && data.dataset.role === "Sous Administrateur") || data.dataset.matricule === currentMatricule){
                         buttonRole.style.display = "none";
                     }
                     else{
@@ -703,6 +842,18 @@ function setDetails(e, action, type, data) {
                     ]);
                 }
                 break;
+			
+			case "List-Articles":
+                dialog = document.getElementById("dialog_list_articles");
+                break;
+				
+			case "List-Expediteurs":
+                dialog = document.getElementById("dialog_list_expediteurs");
+                break;
+				
+			case "List-Destinataires":
+                dialog = document.getElementById("dialog_list_destinataires");
+				break;
 
             case "Type":
                 dialog = document.getElementById("dialog_type_article");
@@ -777,9 +928,7 @@ function handleSubmitWithPasswordDialog(event, section) {
             }
             input.value = password;
 
-            dialog.close();
-
-            setForm(null, 'Modification', 'Employe', 'Modification_total');
+            setForm(event, 'Modification', 'Employe', 'Modification_total');
         };
 
         dialog.querySelector("#cancelBtn").onclick = function(e) {
@@ -792,17 +941,21 @@ function handleSubmitWithPasswordDialog(event, section) {
     }
 }
 
-function setTag(e,type,subType,tag){
+function setTag(e,type,subType,tag,name){
     if (e) {
         e.preventDefault();
         if (type.trim() === "Entree") {
             switch (subType) {
                 case "Article": {
                     document.getElementById("tag_article").value = tag;
+					document.getElementById("selected_article_tag").style.display = "inline-block"
+					document.getElementById("selected_article_tag").textContent = "Vous avez sélectionné l'article: " + name +".";
                     break;
                 }
                 case "Fournisseur": {
                     document.getElementById("tag_fournisseur").value = tag;
+					document.getElementById("selected_expediteur_tag").style.display = "inline-block"
+					document.getElementById("selected_expediteur_tag").textContent = "Vous avez sélectionné le fournisseur: " + name +".";
                     break;
                 }
                 default:
@@ -813,6 +966,8 @@ function setTag(e,type,subType,tag){
             switch (subType) {
                 case "Article": {
                     document.getElementById("tag_article").value = tag;
+					document.getElementById("selected_article_tag").style.display = "inline-block"
+					document.getElementById("selected_article_tag").textContent = "Vous avez sélectionné l'article: " + name +".";
                     break;
                 }
                 case "Expediteur": {
@@ -821,6 +976,8 @@ function setTag(e,type,subType,tag){
                 }
                 case "Destinataire": {
                     document.getElementById("destinataire").value = tag;
+					document.getElementById("selected_destinataire_tag").style.display = "inline-block"
+					document.getElementById("selected_destinataire_tag").textContent = "Vous avez sélectionné le destinataire: " + name +".";
                     break;
                 }
                 default:
@@ -867,12 +1024,21 @@ function setExcelTransform(type){
             window.location.href = url;
         }
     }
-
 }
 
 function setForm(e, style, type, subType){
     if(e != null) e.preventDefault();
     let form, submitButton, formData, data, url, nextUrl;
+	
+    if (currentFormController) {
+        currentFormController.abort();
+    }
+
+    // Créer un nouveau contrôleur pour cette requête
+    currentFormController = new AbortController();
+    const signal = currentFormController.signal;
+	
+	let dialog;
 
     let urlPrefix, formPrefix;
     if(style != null){
@@ -884,7 +1050,6 @@ function setForm(e, style, type, subType){
             urlPrefix = "Update";
         }
     }
-
 
     switch (type){
         case "Article":
@@ -898,10 +1063,11 @@ function setForm(e, style, type, subType){
 
         case "Employe":
         {
-            if(subType.trim() === "Ajout" || subType.trim() === "Modification_total")
+            if(subType.trim() === "Modification_total")
             {
                 form = document.getElementById(formPrefix + 'Form_employe');
                 submitButton = form.querySelector('.submit_employe');
+				dialog = document.getElementById("passwordDialog");
                 url = "/"+ urlPrefix + "EmployeServlet";
                 nextUrl = "/Profil";
             }
@@ -912,6 +1078,14 @@ function setForm(e, style, type, subType){
                 url = "/"+ urlPrefix + "Role" + "EmployeServlet";
                 nextUrl = "/Employes";
             }
+			else if(subType.trim() === "Ajout")
+			{
+				form = document.getElementById(formPrefix + 'Form_employe');
+                submitButton = form.querySelector('.submit_employe');
+                url = "/"+ urlPrefix + "EmployeServlet";
+                nextUrl = "/Connexion";
+				console.log("url: " + url + ", nextUrl: " + nextUrl);
+			}
             else
             {
                 form = document.getElementById('loginForm_employe');
@@ -978,7 +1152,8 @@ function setForm(e, style, type, subType){
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
         },
-        body: data.toString()
+        body: data.toString(),
+		signal: signal
     })
         .then(response => {
             console.log(response);
@@ -989,6 +1164,10 @@ function setForm(e, style, type, subType){
                 if(subType !== "Modification_role"){
                     clearError(style,type,subType);
                 }
+				if(subType === "Modification_total")
+				{
+					dialog.close();				
+				}
                 window.location.href = ctx + nextUrl ;
             } else {
                 return response.text().then(text => {
@@ -999,18 +1178,32 @@ function setForm(e, style, type, subType){
             //
         })
         .catch(error => {
-			console.error("Fetch error:", error.message);
-            alert('Erreur autre : ' + error.message);
+            if (error.name === 'AbortError') {
+                console.warn('Requête annulée par une nouvelle soumission de formulaire.');
+			}
+			else{
+				console.error("Fetch error:", error.message);
+	            alert('Erreur autre : ' + error.message);	
+			}
         })
         .finally(() => {
+			currentFormController = null;
             submitButton.disabled = false;
-            submitButton.textContent = "Confirmer";
+            submitButton.textContent = "Confirmer l'action";
         });
 }
 
 function removeData(data, type){
     console.log("🧩 removeData() appelé avec:", data, type)
     let url, nextUrl, tag;
+	
+    if (currentFormController) {
+	    currentFormController.abort();
+	}
+	
+	currentFormController = new AbortController();
+	const signal = currentFormController.signal;
+	
     switch (type){
         case "Article":
         {
@@ -1054,7 +1247,8 @@ function removeData(data, type){
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
         },
-        body: params.toString()
+        body: params.toString(),
+		signal: signal
     })
         .then(response => {
             console.log(response);
@@ -1068,148 +1262,111 @@ function removeData(data, type){
                         for (const err of erreurs) {
                             alert("Erreur : " + err);
                         }
-                        // putError(erreurs, type, subType);
                     });
                 }
         })
         .catch(error => {
+			if(error.name === 'AbortError')
+			{
+				console.warn('Requête annulée par une nouvelle soumission de formulaire.')	
+			}
             alert('Erreur autre : ' + error.message);
         })
 }
 
-function getChatStorageKey() {
-    const CHAT_STORAGE_KEY_PREFIX = 'chat_history_';
-    const matricule = window.currentMatricule;
-    if (!matricule || matricule === "null" || matricule === "undefined") {
-        console.error("Matricule non défini. L'historique ne sera pas isolé par utilisateur.");
-        return CHAT_STORAGE_KEY_PREFIX + 'generic';
-    }
-    return CHAT_STORAGE_KEY_PREFIX + currentMatricule;
-}
-
-function getChatHistoryFromSession() {
-    try {
-        const key = getChatStorageKey();
-        const historyJson = sessionStorage.getItem(key);
-        return JSON.parse(historyJson || '[]');
-    } catch (e) {
-        console.error("Erreur de lecture du sessionStorage", e);
-        return [];
-    }
-}
-
-// -----------------------------------------------------------------
-// FONCTIONS COMMUNES D'AFFICHAGE ET D'UX (MODIFIÉES)
-// -----------------------------------------------------------------
-
 /**
- * Ajoute un message à la boîte de conversation ET au sessionStorage.
- * @param {string} sender - 'user' ou 'bot'.
- * @param {string} text - Le contenu du message.
- */
-function appendMessage(sender, text) {
-    const messageDiv = document.getElementById('message');
-    if (!messageDiv) return;
+   * Ajoute un message à la boîte de conversation (Côté client uniquement).
+   */
+  function appendMessage(sender, text) {
+      const messageDiv = document.getElementById('message');
+      if (!messageDiv) return;
 
-    // 1. Mise à jour du DOM (affichage)
-    const p = document.createElement('p');
-    p.className = sender === 'user' ? 'user-msg' : 'bot-msg';
-    const formattedText = text.replace(/\n/g, '<br>').replace(/\r/g, '');
-    p.innerHTML = "<b>" + (sender === 'user' ? 'Vous' : 'Bot') + ":</b> " + formattedText;
-    messageDiv.appendChild(p);
+      const p = document.createElement('p');
+      // sender est ici en minuscule ('user' ou 'bot') pour JS
+      p.className = sender === 'user' ? 'user-msg' : 'bot-msg'; 
+      const formattedText = text.replace(/\n/g, '<br>').replace(/\r/g, ''); 
+      p.innerHTML = "<b>" + (sender === 'user' ? 'Vous' : 'Bot') + ":</b> " + formattedText;
+      messageDiv.appendChild(p);
 
-    // Scroller vers le bas
-    messageDiv.scrollTop = messageDiv.scrollHeight;
-    let history = getChatHistoryFromSession();
-    history.push({
-        id: Date.now(),
-        type: sender,
-        content: text,
-        time: new Date().toISOString()
-    });
-    sessionStorage.setItem(getChatStorageKey(), JSON.stringify(history));
-}
+      // Scroller vers le bas
+      messageDiv.scrollTop = messageDiv.scrollHeight;
+  }
 
-/**
- * Gère l'envoi de la question au serveur via AJAX (Fetch API).
- * (Aucun changement dans la logique d'envoi, seulement dans appendMessage)
- */
-function submitQuestion(contextPath) {
-    event.preventDefault();
+  /**
+   * Gère l'envoi de la question au serveur via AJAX (Fetch API).
+   * Intègre la correction pour la gestion de l'état du bouton.
+   */
+  function submitQuestion(contextPath) {
+      event.preventDefault();
 
-    const form = document.getElementById("chatService");
-    const formData = new FormData(form);
-    const data = new URLSearchParams();
-    const questionValue = formData.get("question");
+      const form = document.getElementById("chatService");
+      const formData = new FormData(form);
+      const data = new URLSearchParams();
+      const questionValue = formData.get("question");
+      
+      const submitButton = document.querySelector('.submit_chat');
+	  
+	  if(currentFormController)
+		{
+			currentFormController.abort();
+		}
+		
+	  currentFormController = new AbortController();
+	  const signal = currentFormController.signal;
 
-    if (questionValue === null || questionValue.trim() === "") {
-        alert("Veuillez saisir une question.");
-        return;
-    }
-    data.append("question", questionValue);
+      if (questionValue === null || questionValue.trim() === "") {
+          alert("Veuillez saisir une question.");
+          return;
+      }
+      
+      // Désactiver le bouton au début de la soumission
+      if (submitButton) {
+          submitButton.disabled = true;
+      }
 
-    // 1. Afficher le message de l'utilisateur (Sauvegarde via appendMessage)
-    appendMessage('user', questionValue);
+      data.append("question", questionValue);
 
-    form.reset();
-    const submitButton = document.querySelector('.submit_chat');
-    submitButton.disabled = true;
+      // 1. Afficher le message de l'utilisateur immédiatement
+      appendMessage('user', questionValue);
 
-    // 2. Envoyer la requête AJAX
-    fetch(contextPath + "/ChatServlet", {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: data.toString(),
-    })
-        .then(response => {
-            if (!response.ok) {
-                return response.text().then(text => { throw new Error(text) });
-            }
-            return response.json();
-        })
-        .then(data => {
-            if (data.statut === 'OK' && data.reponse) {
-                appendMessage('bot', data.reponse); // Sauvegarde via appendMessage
-            } else if (data.statut === 'ERREUR' && data.reponse) {
-                appendMessage('bot', `Erreur: ${data.reponse}`);
-            } else if (data.statut === 'ERREUR_INVALIDE' && data.reponse) {
-                appendMessage('bot', `${data.reponse}`);
-            } else {
-                appendMessage('bot', `Je n'ai pas pu obtenir de réponse.`);
-            }
-        })
-        .catch(error => {
-            console.error('Erreur lors de l\'envoi de la requête:', error);
-            appendMessage('bot', `Désolé, une erreur de communication est survenue: ${error.message}`);
-        })
-        .finally(() => {
-            submitButton.disabled = false;
-        });
-}
+      form.reset();
 
-/**
- * Charge l'historique du chat depuis sessionStorage et l'affiche.
- * Fonction appelée au chargement de la page Chatbot.jsp.
- */
-function loadChatHistoryFromSession() {
-    const messageDiv = document.getElementById('message');
-    if (!messageDiv) return;
-
-    const history = getChatHistoryFromSession();
-
-    messageDiv.innerHTML = ''; // Vider le contenu actuel
-
-    if (history.length > 0) {
-        history.forEach(chat => {
-            const p = document.createElement('p');
-            p.className = chat.type === 'user' ? 'user-msg' : 'bot-msg';
-            const formattedText = chat.content.replace(/\n/g, '<br>').replace(/\r/g, '');
-            p.innerHTML = "<b>" + (chat.type === 'user' ? 'Vous' : 'Bot') + ":</b> " + formattedText;
-            messageDiv.appendChild(p);
-        });
-    }
-
-    messageDiv.scrollTop = messageDiv.scrollHeight;
-}
+      // 2. Envoyer la requête AJAX
+      fetch(contextPath + "/ChatServlet", {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: data.toString(),
+      })
+          .then(response => {
+              if (!response.ok) {
+                  // Si le serveur retourne un code d'erreur HTTP (4xx, 5xx)
+                  return response.text().then(text => { throw new Error(text) });
+              }
+              return response.json();
+          })
+          .then(data => {
+              if (data.statut === 'OK' && data.reponse) {
+                  appendMessage('bot', data.reponse); // Afficher la réponse du bot
+              } else if (data.statut && data.reponse) {
+                  // Gérer les erreurs de logique métier (ErrorConfirmException)
+                  appendMessage('bot', `[${data.statut}] ${data.reponse}`);
+              } else {
+                  appendMessage('bot', `Je n'ai pas pu obtenir de réponse.`);
+              }
+          })
+          .catch(error => {
+			if(error.name !== 'AbortError'){
+			  console.error('Erreur lors de l\'envoi de la requête:', error);
+              // Afficher l'erreur si la communication a échoué
+              appendMessage('bot', `Désolé, une erreur de communication est survenue: ${error.message}`);	
+			}
+          })
+          .finally(() => {
+              // Réactiver le bouton de soumission, quoi qu'il arrive
+              if (submitButton) {
+                  submitButton.disabled = false;
+              }
+          });
+  }

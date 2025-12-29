@@ -1,8 +1,7 @@
 package com.gestion_stock_it.ArtType.Article;
 
-import com.gestion_stock_it.ArtType.Type.TypeArticleDataController;
 import com.gestion_stock_it.ArtType.Type.TypeArticle;
-import com.gestion_stock_it.DatabaseConnection;
+import com.gestion_stock_it.ArtType.Type.TypeArticleDataController;
 import com.gestion_stock_it.Employe.EmployeWebSocket;
 import com.gestion_stock_it.ErrorConfirmException;
 import jakarta.servlet.ServletException;
@@ -10,19 +9,18 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 
 import java.io.IOException;
-import java.sql.Connection;
 import java.util.List;
 
 @WebServlet({"/AddArticleServlet", "/Articles/Creation"})
 public class AddArticleServlet extends HttpServlet {
 
-    private DatabaseConnection db;
-    private Connection c;
+	private TypeArticleDataController dao;
+	private ArticleDataController fn;
+	
     @Override
     public void init() {
-        db = new DatabaseConnection();
-        db.connect();
-        c = db.getConnection();
+        dao = new TypeArticleDataController();
+        fn = new ArticleDataController();
     }
 
     @Override
@@ -32,25 +30,10 @@ public class AddArticleServlet extends HttpServlet {
         String nom = req.getParameter("nom_article");
         String description = req.getParameter("description_article");
         try{
-            ArticleDataController.testError(tag_type, nom, description);
-            Article a = new Article
-                    (
-                            null,
-                            nom,
-                            description,
-                            new TypeArticle
-                                    (
-                                            tag_type,
-                                            null,
-                                            null
-                                    ),
-                            0
-                    );
-            ArticleDataController fn = new ArticleDataController();
-            a.setTag_article(fn.nextTagArticle(c));
-
-            fn.addArticle(c, a);
-            EmployeWebSocket.notifyAllEmployes("refresh_data", "Mise à jour des données");
+            Article a = fn.testError(tag_type, nom, description, "add");
+            
+            fn.addArticle(a);
+            EmployeWebSocket.notifyEmployes("refresh_data", "Mise à jour des données", 1,2,3);
             resp.setStatus(200);
 
         }
@@ -71,7 +54,6 @@ public class AddArticleServlet extends HttpServlet {
 
     }
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        TypeArticleDataController dao = new TypeArticleDataController();
         List<TypeArticle> types = null;
         try {
             types = dao.getTypeArticleList(null);
@@ -81,11 +63,6 @@ public class AddArticleServlet extends HttpServlet {
         }
         req.setAttribute("types", types);
         req.getRequestDispatcher("/Articles-Types/Article/AddModalArticle.jsp").forward(req, resp);
-    }
-
-    @Override
-    public void destroy() {
-        db.disconnect();
     }
 
 }

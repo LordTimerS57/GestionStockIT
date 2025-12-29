@@ -1,24 +1,25 @@
 package com.gestion_stock_it.Flux;
 
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.gestion_stock_it.ArtType.Article.Article;
 import com.gestion_stock_it.ArtType.Article.ArticleDataController;
 import com.gestion_stock_it.ArtType.Type.TypeArticle;
+import com.gestion_stock_it.ArtType.Type.TypeArticleDataController;
 import com.gestion_stock_it.DatabaseConnection;
 import com.gestion_stock_it.Employe.Employe;
 import com.gestion_stock_it.ErrorConfirmException;
 import com.gestion_stock_it.Fournisseur.Fournisseur;
 
 public class FluxDataController {
-
+	
+	private static final DatabaseConnection DB_CONNECTION = DatabaseConnection.getInstance();
+	
 	public List<Entree> getEntreeList(String Tag_flux, String Nom_article, String Nom_expediteur, String Date_flux, String Date_flux_parameters) throws Exception {
 		List<Entree> listEntree = new ArrayList<>();
-
-		DatabaseConnection db = new DatabaseConnection();
-		db.connect();
 
 		StringBuilder subQuery = new StringBuilder();
 		List<Object> params = new ArrayList<>();
@@ -105,10 +106,8 @@ public class FluxDataController {
 
 		String finalQuery = subQuery.toString();
 
-		try(
-
-				Connection conn = db.getConnection();
-				PreparedStatement p_stmt = conn.prepareStatement(
+		try(	Connection c = DB_CONNECTION.getConnection();
+				PreparedStatement p_stmt = c.prepareStatement(
 
 						"	SELECT "
 
@@ -198,9 +197,6 @@ public class FluxDataController {
 	public List<Sortie> getSortieList(String Tag_flux, String Nom_article, String Nom_expediteur, String Nom_destinataire, String Date_flux, String Date_flux_parameters) throws Exception {
 		List<Sortie> listSortie = new ArrayList<>();
 
-		DatabaseConnection db = new DatabaseConnection();
-		db.connect();
-
 		StringBuilder subQuery = new StringBuilder();
 		List<Object> params = new ArrayList<>();
 
@@ -280,10 +276,8 @@ public class FluxDataController {
 
 		String finalQuery = subQuery.toString();
 
-		try(
-
-				Connection conn = db.getConnection();
-				PreparedStatement p_stmt = conn.prepareStatement(
+		try(	Connection c = DB_CONNECTION.getConnection();
+				PreparedStatement p_stmt = c.prepareStatement(
 
 						"	SELECT "
 
@@ -409,11 +403,11 @@ public class FluxDataController {
 	}
 
 
-	public void addEntree(Connection c, Entree flux) throws SQLException {
-		ArticleDataController fn = new ArticleDataController();
+	public void addEntree(Entree flux) throws SQLException {
+		Connection c = DB_CONNECTION.getConnection();
 		try{
 			c.setAutoCommit(false);
-
+			ArticleDataController fn = new ArticleDataController();
 			/*
 			 * 
 			 * try (PreparedStatement post_stmt1 = c.prepareStatement("SELECT COALESCE(Stock_theorique,0) AS Stock_defaut FROM Stock_theorique_article WHERE Tag_article = ?")) {
@@ -445,7 +439,7 @@ public class FluxDataController {
 			}
 
 			try {
-				fn.updateArticle(c, flux.getArticle().getTag_article(), flux.getArticle(), "Entree", flux.getNombre_article_deplace());
+				fn.updateArticle(flux.getArticle().getTag_article(), flux.getArticle(), "Entree", flux.getNombre_article_deplace());
 			} catch (Exception e) {
 				throw new RuntimeException(e);
 			}
@@ -474,10 +468,11 @@ public class FluxDataController {
 	}
 
 
-	public void addSortie(Connection c, Sortie flux) throws SQLException {
-		ArticleDataController fn = new ArticleDataController();
+	public void addSortie(Sortie flux) throws SQLException {
+		Connection c = DB_CONNECTION.getConnection();
 		try{
 			c.setAutoCommit(false);
+			ArticleDataController fn = new ArticleDataController();
 			try (PreparedStatement post_stmt1 = c.prepareStatement("SELECT COALESCE(Stock_theorique,0) AS Stock_defaut FROM Stock_theorique_article WHERE Tag_article = ?")) {
 				post_stmt1.setString(1, flux.getArticle().getTag_article());
 				ResultSet rs = post_stmt1.executeQuery();
@@ -510,11 +505,10 @@ public class FluxDataController {
 			}
 
 			try {
-				fn.updateArticle(c, flux.getArticle().getTag_article(), flux.getArticle(), "Sortie", flux.getNombre_article_deplace());
+				fn.updateArticle(flux.getArticle().getTag_article(), flux.getArticle(), "Sortie", flux.getNombre_article_deplace());
 			} catch (Exception e) {
 				throw new RuntimeException(e);
 			}
-
 		}
 		catch (Exception e) {
 			try {
@@ -538,9 +532,7 @@ public class FluxDataController {
 		}
 	}
 	
-	public static String nextTagFlux(Connection c, String type) throws Exception {
-		DatabaseConnection db = new DatabaseConnection();
-		db.connect();
+	public String nextTagFlux(String type) throws Exception {
 
 		String query, searchTag;
 		if (type.trim().equals("Entree")){
@@ -561,7 +553,8 @@ public class FluxDataController {
 		}
 		String nextTag = null;
 
-		try (Statement stmt = c.createStatement()) {
+		try (	Connection c = DB_CONNECTION.getConnection();
+				Statement stmt = c.createStatement()) {
 
 			try (ResultSet rs = stmt.executeQuery(query)) {
 				if (rs.next()) {
@@ -574,7 +567,7 @@ public class FluxDataController {
 		return nextTag;
 	}
 
-	public static void testError(String tagArticle, String destinataire, String expediteur, String nombreArticleDeplace, String type) {
+	public Flux testError(String tagArticle, String destinataire, String expediteur, String nombreArticleDeplace, String type) {
 		List<String> errors = new ArrayList<>();
 
 		if (tagArticle == null || tagArticle.trim().isEmpty()) {
@@ -599,7 +592,42 @@ public class FluxDataController {
 
 		if (!errors.isEmpty()) {
 			throw new ErrorConfirmException(errors);
+		} else {
+			Flux f = null; 
+			if(type != null || !type.trim().isEmpty())
+			{
+				if (type.equals("Entree")) {
+					f = new Entree(
+			                null,
+			                new Employe(destinataire,null,null,null,null,null,null, null, -1, true, true, null, null),
+			                new Fournisseur(expediteur, null, null, null),
+			                new Article(tagArticle, null, null, null, 0),
+			                Long.parseLong(nombreArticleDeplace),
+			                LocalDateTime.now()
+			        );
+					try {
+						f.setTag_flux(nextTagFlux("Entree"));
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+				if (type.equals("Sortie")) {
+					f = new Sortie(
+		                    null,
+		                    new Employe(destinataire,null,null,null,null,null,null, null, -1, true, true, null, null),
+		                    new Employe(expediteur,null,null,null,null,null,null, null, -1, true, true, null, null),
+		                    new Article(tagArticle, null, null, null, 0),
+		                    Long.parseLong(nombreArticleDeplace),
+		                    LocalDateTime.now()
+		            );
+		            try {
+						f.setTag_flux(nextTagFlux("Sortie"));
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			}
+			return f;
 		}
 	}
-	
 }

@@ -6,7 +6,7 @@ body {
     flex-direction: column; 
     min-height: 100vh; 
     margin: 0;
-    font-family: 'Arial', sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     color: #212529; /* Gris foncé pour le texte */
     background-color: #FFFFFF; /* Fond principal BLANC */
 }
@@ -230,4 +230,28 @@ footer {
     font-size: 0.8em;
     flex-shrink: 0;
     border-top: 1px solid #E9ECEF; /* Séparation très fine */
+}
+
+/* ------------------------------------ */
+/* 7. Styles Spécifiques à la Bienvenue */
+/* ------------------------------------ */
+
+.welcome-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    min-height: 80vh;
+
+    background-color: #FFFFFF; /* Fond légèrement différent */
+    border: none;
+    padding: 20px;
+}
+
+.welcome-content {
+    font-size: 32px;
+    font-weight: 600;
+    color: #007BFF;
+    text-align: center;
+    margin: 0;
 }

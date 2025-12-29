@@ -9,11 +9,6 @@
 		<script src="<%= request.getContextPath() %>/JS/Handle.js?v=<%= System.currentTimeMillis() %>" defer></script>
 		<script src="<%= request.getContextPath() %>/JS/HandleError.js?v=<%= System.currentTimeMillis() %>" defer></script>
 		<title>Créer un compte</title>
-		<script>
-			document.addEventListener("pagehide", function() {
-	            closeEmployeWebSocket();
-	        });
-		</script>
 	</head>
 	<body>
 		<header>
@@ -47,7 +42,7 @@
 						</div>
 					</div>
 					<div>
-						<input type="button" value="Suivant">
+						
 					</div>
 				</fieldset>
 				<fieldset class="connection-info">
@@ -57,8 +52,7 @@
 						<span id="error_email"></span>
 					</div>
 					<div>
-						<input type="button" value="Précédent">
-						<input type="button" value="Suivant">
+					
 					</div>
 				</fieldset>
 				<fieldset class="password-info">
@@ -79,7 +73,6 @@
 						</div>
 					</div>
 					<div>
-						<input type="button" value="Précédent">
 						<input type="submit" class="submit_employe btn" value="Créer">
 					</div>
 				</fieldset>

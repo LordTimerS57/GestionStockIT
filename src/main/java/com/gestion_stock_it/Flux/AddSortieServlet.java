@@ -18,13 +18,16 @@ import java.util.List;
 
 @WebServlet({"/AddSortieServlet" , "/Sorties/Creation"})
 public class AddSortieServlet extends HttpServlet {
-    private DatabaseConnection db;
-    private Connection c;
+    
+	private FluxDataController fn;
+    private ArticleDataController dao1;
+    EmployeDataController dao2 = new EmployeDataController();
+    
     @Override
     public void init() {
-        db = new DatabaseConnection();
-        db.connect();
-        c = db.getConnection();
+        fn = new FluxDataController();
+        dao1 = new ArticleDataController();
+		dao2 = new EmployeDataController();
     }
 
     @Override
@@ -36,23 +39,10 @@ public class AddSortieServlet extends HttpServlet {
         String articleDeplace = req.getParameter("nombre_article_deplace");
 
         try {
-            FluxDataController.testError(tagArticle, destinataire, expediteur, articleDeplace, "Sortie");
+        	Sortie s = (Sortie) fn.testError(tagArticle, destinataire, expediteur, articleDeplace, "Sortie");
 
-            Sortie s = new Sortie(
-                    null,
-                    new Employe(destinataire,null,null,null,null,null,null, null, -1, true, true, null, null),
-                    new Employe(expediteur,null,null,null,null,null,null, null, -1, true, true, null, null),
-                    new Article(tagArticle, null, null, null, 0),
-                    Long.parseLong(articleDeplace),
-                    LocalDateTime.now()
-            );
-
-            s.setTag_flux(FluxDataController.nextTagFlux(c, "Sortie"));
-
-            FluxDataController fn =  new FluxDataController();
-
-            fn.addSortie(c, s);
-            EmployeWebSocket.notifyAllEmployes("refresh_data", "Mise à jour des données");
+            fn.addSortie(s);
+            EmployeWebSocket.notifyEmployes("refresh_data", "Mise à jour des données", 1,2,3);
             resp.setStatus(200);
         }
         catch (ErrorConfirmException errors) {
@@ -75,9 +65,6 @@ public class AddSortieServlet extends HttpServlet {
         String nomArticle = req.getParameter("nom_article");
         String nomPrenomOuMatricule = req.getParameter("nom_prenom_ou_matricule");
 
-        ArticleDataController dao1 = new ArticleDataController();
-        EmployeDataController dao2 = new EmployeDataController();
-
         List<Article> articles = null;
         List<Employe> destinataires = null;
 
@@ -90,10 +77,5 @@ public class AddSortieServlet extends HttpServlet {
         req.setAttribute("articles_recherches", articles);
         req.setAttribute("destinataires_recherches", destinataires);
         req.getRequestDispatcher("/Flux/AddModalOut.jsp").forward(req, resp);
-    }
-
-    @Override
-    public void destroy() {
-        db.disconnect();
     }
 }

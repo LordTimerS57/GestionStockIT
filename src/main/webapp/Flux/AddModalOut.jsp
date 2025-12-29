@@ -19,6 +19,10 @@
 	<script src="<%= request.getContextPath() %>/JS/Handle.js?v=<%= System.currentTimeMillis() %>" defer></script>
 	<script src="<%= request.getContextPath() %>/JS/HandleError.js?v=<%= System.currentTimeMillis() %>" defer></script>
 	<script>
+		document.addEventListener("DOMContentLoaded", () => {
+		
+			initEmployeWebSocket('<%= request.getContextPath() %>', null, null);
+		});
 		document.addEventListener("pagehide", function() {
             closeEmployeWebSocket();
         });
@@ -41,40 +45,56 @@
 					</div>
 					<div id="result_article">
 						<% if (!articles.isEmpty()) { %>
-						<table>
-							<tbody>
-							<%	for (Article article : articles) {%>
-							<tr>
-								<td>
-									<button
-											onclick="setDetails(event, 'Show', 'Article', this)"
-											data-nom_article="<%=article.getNom_article()%>"
-											data-type_article="<%=article.getType_article().getNom_type()%>"
-											data-stock_article="<%=article.getStock_article()%>"
-											data-tag_article="<%=article.getTag_article()%>">
-										Voir les détails : <%=article.getNom_article()%>
-									</button>
-								</td>
-							</tr>
-							<% } %>
-							</tbody>
-						</table>
+						<button id="choice_article" onclick="setDetails(event, 'Show', 'List-Articles', null)">Veuillez choisir un article parmi <%=  (articles.size() <= 1 ? "le résultat trouvé" : "les "+ articles.size() + " résultats trouvés" ) %> </button>
+						<dialog id="dialog_list_articles">
+							<fieldset>
+								<legend>Veuillez choisir l'article en question</legend>
+								<table>
+									<tbody>
+									<%	for (Article article : articles) {%>
+									<tr>
+										<td>
+											<button
+													class="article_info"
+													onclick="setDetails(event, 'Show', 'Article', this);"
+													data-nom_article="<%=article.getNom_article()%>"
+													data-type_article="<%=article.getType_article().getNom_type()%>"
+													data-stock_article="<%=article.getStock_article()%>"
+													data-tag_article="<%=article.getTag_article()%>">
+												Voir les détails : <%=article.getNom_article()%>
+											</button>
+										</td>
+									</tr>
+									<% } %>
+									</tbody>
+								</table>
+								<div>
+									<button id="cancel_selection_btn" onclick="setDetails(event, 'Close', 'List-Articles', null)">Annuler</button>
+								</div>
+							</fieldset>
+						</dialog>
 						<dialog id="dialog_article">
 							<fieldset>
 								<legend>Details sur l'article <span id="dialog_nom_article"></span></legend>
 								<p id="dialog_type_article"></p>
 								<p id="dialog_nombre_article"></p>
 								<input type="hidden" id="dialog_tag_article">
-								<div style="margin-top:10px;">
-									<button onclick="setDetails(event, 'Close', 'Article', null)">Fermer</button>
-									<button
-											onclick="setTag(event, 'Entree', 'Article', document.getElementById('dialog_tag_article').value);
-																			 setDetails(event, 'Close', 'Article', null);">
+								<div>
+									<button	id="select_article_btn"
+											onclick="setTag(event, 'Entree', 'Article', document.getElementById('dialog_tag_article').value, document.getElementById('dialog_nom_article').textContent); 
+													 setDetails(event, 'Close', 'Article', null); 
+													 setDetails(event, 'Close', 'List-Articles', null);">
 										Choisir
+									</button>
+									<button id="cancel_selection_btn" 
+											onclick="setDetails(event, 'Close', 'Article', null); 
+													 setDetails(event, 'Close', 'List-Articles', null)">
+										Fermer
 									</button>
 								</div>
 							</fieldset>
 						</dialog>
+						<span id="selected_article_tag" style="display: none"></span>
 						<% } else { %>
 						<p>Aucun article trouvé</p>
 						<% } %>
@@ -102,15 +122,15 @@
 				<div>
 					<input type="hidden" id="expediteur" name="expediteur" value="<%=profil.getMatricule()%>">
 		
-					<button onclick="setDetails(event, 'Show', 'Expediteur-Administrateur', null)"><%=profil.getNomPrenom()%></button>
+					<button id="choice_expediteur employe" onclick="setDetails(event, 'Show', 'Expediteur-Administrateur', null)">Voir les informations générales de votre profil</button>
 		
 					<dialog id="dialog_expediteur">
 						<fieldset>
 							<legend> Détails de l'employé <span id="dialog_expediteur_nom_complet"><%=profil.getNomPrenom()%></span></legend>
 							<p id="dialog_expediteur_id">Matricule: <%=profil.getMatricule()%></p>
 							<p id="dialog_expediteur_role">Role: <%=profil.getRole()%></p>
-							<div style="margin-top:10px;">
-								<button onclick="setDetails(event, 'Close', 'Expediteur-Administrateur', null)">Fermer</button>
+							<div>
+								<button id="cancel_selection_btn" onclick="setDetails(event, 'Close', 'Expediteur-Administrateur', null)">Fermer</button>
 							</div>
 						</fieldset>
 					</dialog>
@@ -126,17 +146,34 @@
 					</div>
 					<div id="result_destinataire">
 						<% if (!destinataires.isEmpty()) { %>
-						<% for (Employe destinataire : destinataires) { %>
-						<button
-								onclick="setDetails(event, 'Show', 'Destinataire-Employe', this)"
-								data-nom="<%=destinataire.getNom()%>"
-								data-prenom="<%=destinataire.getPrenom()%>"
-								data-matricule="<%=destinataire.getMatricule()%>"
-								data-role="<%=destinataire.getRole()%>">
-							<%=destinataire.getNomPrenom()%>
-						</button>
-						<% } %>
-		
+						<button id="choice_destinataire" onclick="setDetails(event, 'Show', 'List-Destinataires', null)">Veuillez choisir la destinataire de l'article parmi <%=  (destinataires.size() <= 1 ? "le résultat trouvé" : "les "+ destinataires.size() + " résultats trouvés" ) %> </button>
+						<dialog id="dialog_list_destinataires">
+							<fieldset>
+								<legend>Veuillez choisir la destinataire en question</legend>
+								<table>
+									<tbody>
+									<% for (Employe destinataire : destinataires) { %>
+									<tr>
+										<td>
+											<button
+													class="destinataire_info"
+													onclick="setDetails(event, 'Show', 'Destinataire-Employe', this)"
+													data-nom="<%=destinataire.getNom()%>"
+													data-prenom="<%=destinataire.getPrenom()%>"
+													data-matricule="<%=destinataire.getMatricule()%>"
+													data-role="<%=destinataire.getRole()%>">
+												<%=destinataire.getNomPrenom()%>
+											</button>
+										</td>
+									</tr>
+									<% } %>
+									</tbody>
+								</table>
+							</fieldset>
+							<div>
+								<button id="cancel_selection_btn" onclick="setDetails(event, 'Close', 'List-Destinataires', null)">Annuler</button>
+							</div>
+						</dialog>
 						<!-- Dialogue unique partagé pour tous les destinataires/fournisseurs -->
 						<dialog id="dialog_destinataire">
 							<fieldset>
@@ -144,23 +181,30 @@
 								<p id="dialog_destinataire_id"></p>
 								<p id="dialog_destinataire_role"></p>
 								<input type="hidden" id="dialog_destinataire_matricule">
-								<div style="margin-top:10px;">
-									<button onclick="setDetails(event, 'Close', 'Destinataire-Employe', null)">Fermer</button>
-									<button onclick="setTag(event, 'Sortie', 'Destinataire', document.getElementById('dialog_destinataire_matricule').value);
-															 setDetails(event, 'Close', 'Destinataire-Employe', null);">
-										Choisir
-									</button>
-								</div>
 							</fieldset>
+							<div>
+								<button id="select_destinataire_btn" 
+										onclick="setTag(event, 'Sortie', 'Destinataire', document.getElementById('dialog_destinataire_matricule').value, document.getElementById('dialog_destinataire_nom_complet').textContent);
+												 setDetails(event, 'Close', 'Destinataire-Employe', null);
+												 setDetails(event, 'Close', 'List-Destinataires', null);
+								 ">
+									Choisir
+								</button>
+								<button id="cancel_selection_btn" onclick="setDetails(event, 'Close', 'Destinataire-Employe', null)">Fermer</button>
+							</div>
 						</dialog>
-		
+						<span id="selected_destinataire_tag" style="display: none"></span>
 						<% } else { %>
 						<p>Aucun destinataire trouvé</p>
 						<% } %>
 						<span id="error_destinataire"></span>
 					</div>
 			</fieldset>
-			<input type="submit" class="submit_sortie btn" value="Confirmer">
+			<div>
+			<% if( !destinataires.isEmpty() && !articles.isEmpty()) { %>
+				<input type="submit" class="submit_sortie btn" value="Confirmer">
+			<% } %>
+			</div>
 		</form>
     </main>
     <footer>

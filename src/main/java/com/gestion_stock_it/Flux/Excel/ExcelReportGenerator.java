@@ -1,7 +1,10 @@
-package com.gestion_stock_it.Flux;
+package com.gestion_stock_it.Flux.Excel;
 
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+import com.gestion_stock_it.Flux.Entree;
+import com.gestion_stock_it.Flux.Sortie;
 
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -9,9 +12,9 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 public class ExcelReportGenerator {
-    public static void generateReport(List<?> list, HttpServletResponse response, String typeFlux, String dateParams, String dateFlux, String nomArticle) throws IOException {
+    public static void generateReport(List<?> list, HttpServletResponse response, String typeFlux, String dateParams, String dateFlux, String nomArticle, String expediteur, String destinataire ) throws IOException {
         try (Workbook workbook = new XSSFWorkbook()) {
-            Sheet sheet = workbook.createSheet("Rapport " + typeFlux);
+            Sheet sheet = workbook.createSheet(createTitle(typeFlux, dateParams, dateFlux, nomArticle, expediteur, destinataire));
             workbook.getCreationHelper();
 
             // Style d’en-tête
@@ -22,41 +25,9 @@ public class ExcelReportGenerator {
 
             StringBuilder subText = new StringBuilder();
 
-            subText.append("Rapport_").append(typeFlux.equals("Entree") ? "entree_" : "sortie_");
-
-            boolean hasNomArticle = nomArticle != null && !nomArticle.trim().isEmpty();
-            boolean hasDateFlux = dateFlux != null && !dateFlux.trim().isEmpty();
-            boolean hasDateFluxParam = dateParams != null && !dateParams.trim().isEmpty();
-
-            if (hasDateFlux && hasDateFluxParam) {
-                String formattedDateFlux = dateFlux;
-                if (dateFlux.matches("\\d{4}-\\d{2}-\\d{2}")) { // vérifie le format
-                    String[] parts = dateFlux.split("-");
-                    formattedDateFlux = parts[2] + "-" + parts[1] + "-" + parts[0];
-                }
-
-                switch (dateParams) {
-                    case "equals":
-                        subText.append("du_");
-                        break;
-                    case "before":
-                        subText.append("avant_");
-                        break;
-                    case "after":
-                        subText.append("apres_");
-                        break;
-                    case "month":
-                        subText.append("mois_");
-                        break;
-                }
-
-                subText.append(formattedDateFlux);
-            }
-
-            if (hasNomArticle) {
-                subText.append("article_").append(nomArticle);
-            }
-
+            subText.append(createTitleXLSX(typeFlux, dateParams, dateFlux, nomArticle, expediteur, destinataire).replace(" ", "_"));
+            
+            
             subText.append(".xlsx");
             int rowNum = 0;
             Row headerRow = sheet.createRow(rowNum++);
@@ -83,6 +54,116 @@ public class ExcelReportGenerator {
             workbook.write(response.getOutputStream());
         }
     }
+    
+    public static String createTitle(String typeFlux, String dateParams, String dateFlux, String nomArticle, String expediteur, String destinataire) {
+		
+    	boolean hasNomArticle = nomArticle != null && !nomArticle.trim().isEmpty();
+		boolean hasDateFlux = dateFlux != null && !dateFlux.trim().isEmpty();
+		boolean hasDateFluxParam = dateParams != null && !dateParams.trim().isEmpty();
+		boolean hasExpediteur = expediteur != null && !expediteur.trim().isEmpty();
+		boolean hasDestinataire = destinataire != null && !destinataire.trim().isEmpty();
+    	
+    	StringBuilder title = new StringBuilder(typeFlux.equals("Entree") ? "Entrées" : "Sorties");
+
+		if (hasDateFlux && hasDateFluxParam) {
+			String formattedDateFlux = dateFlux;
+			if (dateFlux.matches("\\d{4}-\\d{2}-\\d{2}")) { // vérifie le format
+				String[] parts = dateFlux.split("-");
+				formattedDateFlux = parts[2] + "-" + parts[1] + "-" + parts[0];
+			}
+
+			switch (dateParams) {
+				case "equals":
+					title.append(" du ");
+					break;
+				case "before":
+					title.append(" avant ");
+					break;
+				case "after":
+					title.append(" après ");
+					break;
+				case "month":
+					title.append(" Mois ");
+					break;
+			}
+
+			title.append(formattedDateFlux);
+		}
+		
+		if (hasExpediteur) {
+			title.append(expediteur);
+		}
+		if(hasExpediteur && hasDestinataire) {
+			title.append(" ");
+		}
+		if (hasDestinataire) {
+			title.append(destinataire);
+		}
+
+		if (hasNomArticle) {
+			title.append(" Article ").append(nomArticle);
+		}
+		
+		return title.toString();
+	}
+    
+    public static String createTitleXLSX(String typeFlux, String dateParams, String dateFlux, String nomArticle, String expediteur, String destinataire) {
+		
+    	boolean hasNomArticle = nomArticle != null && !nomArticle.trim().isEmpty();
+		boolean hasDateFlux = dateFlux != null && !dateFlux.trim().isEmpty();
+		boolean hasDateFluxParam = dateParams != null && !dateParams.trim().isEmpty();
+		boolean hasExpediteur = expediteur != null && !expediteur.trim().isEmpty();
+		boolean hasDestinataire = destinataire != null && !destinataire.trim().isEmpty();
+    	
+    	StringBuilder title = new StringBuilder("Rapport ");
+		
+		if (!hasNomArticle || !(hasDateFlux && hasDateFluxParam)) {
+			title.append("Géneral ");
+		}
+		
+		title.append(typeFlux.equals("Entree") ? "d'Entrées" : "de Sorties");
+		
+		if (hasDateFlux && hasDateFluxParam) {
+			String formattedDateFlux = dateFlux;
+			if (dateFlux.matches("\\d{4}-\\d{2}-\\d{2}")) { // vérifie le format
+				String[] parts = dateFlux.split("-");
+				formattedDateFlux = parts[2] + "-" + parts[1] + "-" + parts[0];
+			}
+
+			switch (dateParams) {
+				case "equals":
+					title.append(" du ");
+					break;
+				case "before":
+					title.append(" avant le ");
+					break;
+				case "after":
+					title.append(" après le ");
+					break;
+				case "month":
+					title.append(" du mois de ");
+					break;
+			}
+
+			title.append(formattedDateFlux);
+		}
+		
+		if (hasExpediteur) {
+			title.append(" par ").append(expediteur);
+		}
+		if(hasExpediteur && hasDestinataire) {
+			title.append(" et ");
+		}
+		if (hasDestinataire) {
+			title.append(" destiné à ").append(destinataire);
+		}
+
+		if (hasNomArticle) {
+			title.append(" pour l'article ").append(nomArticle);
+		}
+		
+		return title.toString();
+	}
 
     /** Crée la ligne d’en-tête */
     private static void createHeader(Row row, String[] headers, CellStyle style) {

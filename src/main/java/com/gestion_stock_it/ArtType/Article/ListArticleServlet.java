@@ -9,6 +9,14 @@ import java.util.List;
 
 @WebServlet("/Articles")
 public class ListArticleServlet extends HttpServlet {
+	
+	private ArticleDataController dao;
+	
+    @Override
+    public void init() {
+        dao = new ArticleDataController();
+    }
+	
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -17,12 +25,9 @@ public class ListArticleServlet extends HttpServlet {
         String nomType = request.getParameter("nom_type");
 
         System.out.println("Nom article: " + nomArticle + " Nom type: " + nomType);
-
-        ArticleDataController dao = new ArticleDataController();
         List<Article> articles = new ArrayList<>();
 
         try {
-            // Si aucun filtre, récupère tous les articles
             articles = dao.getArticleList(nomArticle, nomType);
         } catch (Exception e) {
             throw new ServletException(e);
@@ -33,4 +38,5 @@ public class ListArticleServlet extends HttpServlet {
 
         request.getRequestDispatcher("/Dashboard.jsp").forward(request, response);
     }
+    
 }

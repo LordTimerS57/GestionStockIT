@@ -84,16 +84,16 @@
 							data-adresse="<%= c.getAdresse() %>"
 							data-date_naissance="<%= c.getDate_de_naissance_formatter() %>"
 							data-matricule="<%= c.getMatricule() %>"
-							data-role="<%= Objects.equals(c.getRole(), "Super Administrateur") ? "Administrateur" : (Objects.equals(c.getRole(), "Administrateur") ? "Sous Admnistrateur" : c.getRole()) %>"
+							data-role="<%= Objects.equals(c.getRole(), "Super Administrateur") ? "Administrateur" : (Objects.equals(c.getRole(), "Administrateur") ? "Sous Administrateur" : c.getRole()) %>"
 							data-activite="<%= c.getActivite() %>"
 							data-date_creation="<%= c.getDate_creation_formatter() %>"
 							data-date_modification="<%= c.getDate_modification_formatter() %>">
 						<%= c.getNomPrenom() %>
 					</button>
 				</td>
-				<% if(!Objects.equals(c.getRole(), "Super Administrateur") || ( !Objects.equals(self.getMatricule(), c.getMatricule()) ) ) { %>
+				<% if(!Objects.equals(c.getRole(), "Super Administrateur") &&  !Objects.equals(self.getMatricule(), c.getMatricule()) && !Objects.equals(self.getRole(), c.getRole()) )  { %>
 				<td>
-					<button class="activation-employe" onclick="removeData('<%=c.getMatricule()%>', 'Employe')"><%= c.getActivite() ? "Désactiver" : "Activer" %> le compte</button>
+					<button class="<%= c.getActivite() ? "desactivation" : "activation" %>-employe"  onclick="removeData('<%=c.getMatricule()%>', 'Employe')"><%= c.getActivite() ? "Désactiver" : "Activer" %> le compte</button>
 				</td>
 				<% } else { %>
 				<td>—</td> <% } %>
@@ -127,14 +127,14 @@
 							data-adresse="<%= nc.getAdresse() %>"
 							data-date_naissance="<%= nc.getDate_de_naissance_formatter() %>"
 							data-matricule="<%= nc.getMatricule() %>"
-							data-role="<%= Objects.equals(nc.getRole(), "Super Administrateur") ? "Administrateur" : (Objects.equals(nc.getRole(), "Administrateur") ? "Sous Admnistrateur" : nc.getRole()) %>"
+							data-role="<%= Objects.equals(nc.getRole(), "Super Administrateur") ? "Administrateur" : (Objects.equals(nc.getRole(), "Administrateur") ? "Sous Administrateur" : nc.getRole()) %>"
 							data-activite="<%= nc.getActivite() %>"
 							data-date_creation="<%= nc.getDate_creation_formatter() %>"
 							data-date_modification="<%= nc.getDate_modification_formatter() %>">
 						<%= nc.getNomPrenom() %>
 					</button>
 				</td>
-				<% if(!Objects.equals(nc.getRole(), "Super Administrateur")) { %>
+				<% if(!Objects.equals(nc.getRole(), "Super Administrateur") && !Objects.equals(self.getRole(), nc.getRole())) { %>
 				<td>
 					<button class="<%= nc.getActivite() ? "desactivation" : "activation" %>-employe" onclick="removeData('<%=nc.getMatricule()%>', 'Employe')"><%= nc.getActivite() ? "Désactiver" : "Activer" %> le compte</button>
 				</td>

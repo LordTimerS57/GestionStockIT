@@ -12,10 +12,20 @@ import java.util.ArrayList;
 
 @WebServlet("/Types")
 public class ListTypeServlet extends HttpServlet {
+	
+	private TypeArticleDataController dao;
+    
+	@Override
+	public void init() {
+		dao = new TypeArticleDataController();
+
+	}
+	
+    
+	@Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String nomType = request.getParameter("nom_type");
 
-        TypeArticleDataController dao = new TypeArticleDataController();
         List<TypeArticle> types = new ArrayList<>();
 
         try {
@@ -31,4 +41,5 @@ public class ListTypeServlet extends HttpServlet {
 
         request.getRequestDispatcher("/Dashboard.jsp").forward(request, response);
     }
+	
 }

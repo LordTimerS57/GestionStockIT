@@ -17,6 +17,9 @@
 		<script src="<%= request.getContextPath() %>/JS/HandleError.js?v=<%= System.currentTimeMillis() %>" defer></script>
 		<title>Création d'un nouvel article</title>
 		<script type="text/javascript">
+			document.addEventListener("DOMContentLoaded", () => {		
+				initEmployeWebSocket('<%= request.getContextPath() %>', null, null);
+			});
 			document.addEventListener("pagehide", function() {
 	            closeEmployeWebSocket();
 	        });
@@ -69,7 +72,10 @@
 					<span id="error_type_article"></span>
 				</div>
 			</fieldset>
-			<input type="submit" class="submit_article btn" value="Confirmer">
+			<div>
+            	<input type="submit" class="submit_article btn" value="Confirmer l'action">
+            	<input type="button" class="cancel_article btn" value="Retourner au tableau de bord" onClick="closeForm()">
+            </div>
 		   </form>
 	   	</main>
    		<footer>

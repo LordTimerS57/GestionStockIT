@@ -4,6 +4,7 @@ import com.gestion_stock_it.ArtType.Article.Article;
 import com.gestion_stock_it.ArtType.Article.ArticleDataController;
 import com.gestion_stock_it.DatabaseConnection;
 import com.gestion_stock_it.Employe.Employe;
+import com.gestion_stock_it.Employe.EmployeDataController;
 import com.gestion_stock_it.Employe.EmployeWebSocket;
 import com.gestion_stock_it.ErrorConfirmException;
 import com.gestion_stock_it.Fournisseur.FournisseurDataController;
@@ -20,41 +21,32 @@ import java.util.List;
 @WebServlet({"/AddEntreeServlet", "/Entrees/Creation"})
 public class AddEntreeServlet extends HttpServlet {
 
-    private DatabaseConnection db;
-    private Connection c;
+    private FluxDataController fn;
+    private ArticleDataController dao1;
+    private FournisseurDataController dao2;
+    
+    
     @Override
     public void init() {
-        db = new DatabaseConnection();
-        db.connect();
-        c = db.getConnection();
+        fn = new FluxDataController();
+        dao1 = new ArticleDataController();
+        dao2 = new FournisseurDataController();
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-
         String destinataire = req.getParameter("destinataire");
         String expediteur = req.getParameter("expediteur");
         String tagArticle = req.getParameter("tag_article");
         String articleDeplace = req.getParameter("nombre_article_deplace");
         try {
-        FluxDataController.testError(tagArticle, destinataire, expediteur, articleDeplace, "Entree");
-
-        Entree e = new Entree(
-                null,
-                new Employe(destinataire,null,null,null,null,null,null, null, -1, true, true, null, null),
-                new Fournisseur(expediteur, null, null, null),
-                new Article(tagArticle, null, null, null, 0),
-                Long.parseLong(articleDeplace),
-                LocalDateTime.now()
-        );
-
-        e.setTag_flux(FluxDataController.nextTagFlux(c, "Entree"));
+        Entree e = (Entree) fn.testError(tagArticle, destinataire, expediteur, articleDeplace, "Entree");
 
         FluxDataController fn =  new FluxDataController();
 
-            fn.addEntree(c, e);
+            fn.addEntree(e);
 
-            EmployeWebSocket.notifyAllEmployes("refresh_data", "Mise à jour des données");
+            EmployeWebSocket.notifyEmployes("refresh_data", "Mise à jour des données", 1,2,3);
             resp.setStatus(200);
         }
         catch (ErrorConfirmException errors) {
@@ -76,9 +68,6 @@ public class AddEntreeServlet extends HttpServlet {
         String nomArticle = request.getParameter("nom_article");
         String raisonSociale = request.getParameter("raison_sociale");
 
-        ArticleDataController dao1 = new ArticleDataController();
-        FournisseurDataController dao2 = new FournisseurDataController();
-
         List<Article> articles = null;
         List<Fournisseur> fournisseurs = null;
 
@@ -92,11 +81,6 @@ public class AddEntreeServlet extends HttpServlet {
         request.setAttribute("fournisseurs_recherches", fournisseurs);
         request.getRequestDispatcher("/Flux/AddModalIn.jsp").forward(request, response);
 
-    }
-
-    @Override
-    public void destroy() {
-        db.disconnect();
     }
 
 }
