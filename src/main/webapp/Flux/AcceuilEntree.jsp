@@ -28,13 +28,15 @@
 	        <legend class="collapsible" onclick="toggleFieldset(this,'date')">Recherche par date <i class="fas fa-caret-down"></i></legend>
 	        
 	        <div class="fieldset-content" style="display: none;">
-	            <label id="date_type_select_label">
-	                Chercher la date de déplacement suivant
-	                <select name="date" onchange="updateSearchFlux('Date_flux')">
-	                    <option value="date">la date</option>
-	                    <option value="mois">le mois et l'année seulement</option>
-	                </select>
-	            </label>
+	            <div>
+		            <label id="date_type_select_label">
+		                Chercher la date de déplacement suivant
+		                <select name="date" onchange="updateSearchFlux('Date_flux')">
+		                    <option value="date">la date</option>
+		                    <option value="mois">le mois et l'année seulement</option>
+		                </select>
+		            </label>
+	            </div>
 	
 	            <div id="date_input_fields">
 	
@@ -84,6 +86,7 @@
     <div id="result_entree">
         <% if (!entrees.isEmpty()) { %>
         <table>
+        	<caption>Tous (<%= entrees.size() %>)</caption>
             <thead>
             <tr>
                 <th>ID</th>
@@ -115,7 +118,7 @@
         </table>
         <% if(visibleRapportButton) { %>
         <div id="excel">
-            <button onclick="setExcelTransform('Entree')"><i class="fa-solid fa-download"></i> Faire un rapport excel</button>
+            <button onclick="setExcelTransform('Entree', this)"><i class="fa-solid fa-download"></i> Faire un rapport excel</button>
         </div>
         <% } %>
         <% } else { %>

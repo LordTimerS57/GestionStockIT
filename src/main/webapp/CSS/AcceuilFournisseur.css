@@ -65,6 +65,7 @@
     width: 100%;
     border-collapse: collapse;
     margin-top: 5px;
+    overflow-y: scroll;
 }
 
 /* Style des titres de tableau (CAPTION) */
@@ -74,7 +75,6 @@
     font-size: 1.3em;
     font-weight: bold;
     color: #212529; /* Gris Anthracite */
-    border-bottom: 2px solid #004085; /* Bordure BLEU MARINE (Accent principal) */
     padding: 15px 0 5px 0;
     margin-bottom: 5px; 
 }
@@ -161,32 +161,30 @@
 /* ------------------------------------ */
 
 #dialog_fournisseur {
-    /* Centrage */
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    
-    border: 1px solid #DEE2E6; /* Bordure GRIS CLAIR */
+	justify-content: center;
+    border: 1px solid #DEE2E6; /* Gris Bordure */
     border-radius: 8px;
     padding: 30px;
     max-width: 500px;
     width: 90%;
     background-color: #FFFFFF; /* Fond BLANC */
     
+    /* Le positionnement de la modale doit être ajouté dans un bloc séparé ou géré par JS */
+    /* Ces styles sont maintenus pour la cohérence visuelle */
+    
     &::backdrop {
         background-color: rgba(0, 0, 0, 0.4); 
     }
 }
 
-#dialog_fournisseur fieldset {
+#fournisseur_details fieldset {
     border: 1px solid #DEE2E6; /* Bordure GRIS CLAIR */
     border-radius: 6px;
     padding: 15px;
     margin-bottom: 20px;
 }
 
-#dialog_fournisseur legend {
+#fournisseur_details legend {
     font-size: 1.4em;
     font-weight: bold;
     color: #004085; /* BLEU MARINE (Accent principal) */
@@ -202,6 +200,15 @@
     font-weight: 500;
     transition: opacity 0.2s;
 }
+
+#fournisseur_action_button {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+}
+
 #dialog_fournisseur button:hover {
     opacity: 0.8;
 }
+

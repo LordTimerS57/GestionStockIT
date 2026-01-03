@@ -1,10 +1,13 @@
 package com.gestion_stock_it.ChatBot;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.gestion_stock_it.DatabaseConnection;
 import com.gestion_stock_it.ErrorConfirmException;
 
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
 
@@ -22,6 +25,9 @@ public class ChatBotService {
         }
         this.cohereClient = new CohereClient(COHERE_API_KEY, FULL_SCHEMA);
         this.objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+    	objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+    	objectMapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
     }
 
     /**
@@ -46,7 +52,10 @@ public class ChatBotService {
             if (results.isEmpty()) {
                 finalBotResponse = "Je n'ai trouvé aucune donnée correspondant à votre requête.";
             } else {
+            	
                 String jsonResults = objectMapper.writeValueAsString(results);
+                
+                System.out.println( "Résultats Reformulés: "+ jsonResults);
 
                 // --- ÉTAPE 3 : Reformulation (CohereClient) ---
                 finalBotResponse = cohereClient.reformulateResponse(question, jsonResults);

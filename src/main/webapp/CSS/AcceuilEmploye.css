@@ -7,7 +7,7 @@
     --color-border-light: #E9ECEF;        /* Bordure très légère */
     --color-border: #DEE2E6;              /* Bordure moyenne */
     --color-accent: #004085;              /* Primaire: BLEU MARINE */
-    --color-secondary-action: #17A2B8;    /* Action secondaire: CYN/INFO */
+    --color-secondary-action: #007BFF;    /* Action secondaire: CYN/INFO */
     --color-success: #28A745;             /* Succès: VERT ÉMERAUDE */
     --color-table-header-bg: #F8F9FA;     /* Fond de l'en-tête (Gris très clair) */
     --color-table-header-text: #212529;   /* Texte de l'en-tête (Anthracite) */
@@ -54,10 +54,9 @@
     text-align: left;
     font-size: 1.3em;
     font-weight: bold;
-    color: var(--color-text-dark); /* Texte Anthracite */
-
+    color: #212529; /* Gris Anthracite */
     padding: 15px 0 5px 0;
-    margin-bottom: 5px;
+    margin-bottom: 5px; 
 }
 
 
@@ -76,6 +75,7 @@
     width: 100%;
     border-collapse: collapse;
     margin-top: 5px;
+    overflow-y: scroll;
 }
 
 .employe-section table th {
@@ -141,6 +141,8 @@
 }
 
 
+
+
 /* ------------------------------------ */
 /* 3. Style de la Modale (Détails Employé) */
 /* ------------------------------------ */
@@ -175,6 +177,13 @@
 #employe_details legend, #modify_role legend {
     font-weight: bold;
     color: var(--color-text-dark); /* Texte Anthracite */
+}
+
+#modify_role legend {
+    font-size: 1.25em;
+    font-weight: bold;
+    color: var(--color-accent); /* Bleu Marine */
+    padding: 0 12px;
 }
 
 /* Conteneur pour l'alignement des boutons de la modale */
@@ -215,11 +224,12 @@
 }
 
 /* Formulaire de modification de rôle */
-#modify_role label {
-	display: block;
-	margin-bottom: 15px;
-	font-weight: 500;
-	padding: 15px 25px 25px 25px;
+#modify_role label{
+	border: none !important;
+    display: block;
+    font-weight: 600;
+    margin-bottom: 5px;
+    font-size: 0.95em;
 }
 
 #modify_role select {

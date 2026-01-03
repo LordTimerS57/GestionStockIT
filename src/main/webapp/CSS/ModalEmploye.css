@@ -46,10 +46,30 @@ header img.logo {
 }
 
 header a {
-    color: #6C757D;
+    display: flex;
+    align-items: center;
+    color: #495057;
     text-decoration: none;
-    font-weight: bold;
-    font-size: 0.9em;
+    font-weight: 600;
+    font-size: 0.95em;
+    padding: 8px 12px;
+    border-radius: 20px; /* Effet pillule */
+    transition: all 0.3s ease;
+    background-color: transparent;
+    border: 1px solid transparent;
+}
+
+header a:hover {
+    background-color: #E9ECEF;
+    color: #007BFF;
+}
+
+header a::before {
+    content: "\f007";
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    margin-right: 8px;
+    font-size: 14px;
 }
 
 main {
@@ -130,7 +150,6 @@ footer {
 #modifyForm_employe input[type="email"],
 #modifyForm_employe input[type="number"],
 #modifyForm_employe input[type="date"],
-#modifyForm_employe input[type="password"],
 #modifyForm_employe textarea {
     width: 100%;
     padding: 12px;
@@ -200,22 +219,76 @@ dialog#passwordDialog {
     border: none;
     border-radius: 8px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-    padding: 25px;
+    padding: 40px 25px 25px 25px;
     width: 100%;
     max-width: 400px;
 }
 
-dialog p {
-    font-weight: bold;
-    text-align: center;
+
+#modifyForm_employe input[type="password"]{
+	width: 100%;
+    padding: 12px;
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 1em;
+    font-family: inherit;
+    transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-dialog button {
-    padding: 10px 15px;
-    border-radius: 4px;
+.password-wrapper {
+    display: flex;
+    align-items: center;
+    position: relative; /* Pour positionner le bouton à l'intérieur si besoin */
+}
+
+.password-wrapper input {
+    margin-right: 0;
+    flex: 1;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus {
+    /* On utilise l'ombre interne pour forcer le blanc en arrière-plan */
+    -webkit-box-shadow: 0 0 0 30px #ffffff inset !important;
+    
+    /* On réaffirme la bordure */
+    border: 1px solid #007BFF !important;
+    
+    /* On force la police */
+    font-family: inherit !important;
+}
+
+/* 3. Pour Firefox (qui gère mieux l'autofill standard) */
+input:autofill {
+    background-color: #ffffff !important;
+}
+
+#btn_toggle_password,
+#btn_toggle_password1,
+#btn_toggle_password2,
+#btn_toggle_new_password,
+#btn_toggle_new_password2 {
+    background: none;
     border: none;
+    color: #666;
+    padding: 0 10px;
     cursor: pointer;
-    font-weight: bold;
+    font-size: 16px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    transition: color 0.2s;
+}
+
+#btn_toggle_password:hover,
+#btn_toggle_password1:hover,
+#btn_toggle_password2:hover,
+#btn_toggle_new_password:hover,
+#btn_toggle_new_password2:hover {
+    color: #007bff;
+    opacity: 1;
 }
 
 /* Ciblage spécifique du menu dans le dialogue */
@@ -231,11 +304,21 @@ dialog#passwordDialog menu {
 #confirmBtn {
     background-color: var(--color-success);
     color: white;
+    padding: 10px 15px;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
 }
 
 #cancelBtn {
     background-color: var(--color-danger);
     color: white;
+    padding: 10px 15px;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
 }
 
 /* Erreurs */

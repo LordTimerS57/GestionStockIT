@@ -81,9 +81,11 @@ function putError(messages, style, type, subType) {
 
     // Affiche chaque erreur
     messages.forEach(error => {
-        // Structure attendue : "tag_fournisseur: Ce champ est obligatoire"
         const [field, msg] = error.split(":").map(s => s.trim());
-        const span = form.querySelector(`#error_${field}`);
+		
+		if(field.includes("creation_invalid") || field.includes("creation_success")) { alert(msg); }
+        
+		const span = form.querySelector(`#error_${field}`);
         if (span) {
             span.textContent = msg;
         }

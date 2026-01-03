@@ -10,6 +10,11 @@
 <head>
 	<meta charset="UTF-8">
     <link rel="icon" type="image/png" href="<%= request.getContextPath() %>/IMAGES/logo_spat.png"/>
+    <link rel="stylesheet" 
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" 
+    integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" 
+    crossorigin="anonymous" 
+    referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="<%= request.getContextPath() %>/CSS/ModalEmploye.css?v=<%=System.currentTimeMillis()%>" type="text/css"/>
 	<script src="<%= request.getContextPath() %>/JS/Handle.js?v=<%= System.currentTimeMillis() %>" defer></script>
 	<script src="<%= request.getContextPath() %>/JS/HandleError.js?v=<%= System.currentTimeMillis() %>" defer></script>
@@ -23,7 +28,35 @@
 			const submitButtons = form.querySelectorAll(".submit_employe");
 			
 			initEmployeWebSocket('<%= request.getContextPath() %>', null, null);
+			
+	        const toggleButton = document.getElementById('btn_toggle_password');
 
+	        const toggleButton1 = document.getElementById('btn_toggle_new_password');
+	        
+	        const toggleButton2 = document.getElementById('btn_toggle_new_password2');
+			
+			function togglePasswordVisibility(e, input) {
+	            e.preventDefault();
+	            e.stopPropagation();
+	            const iconElement = e.currentTarget.querySelector('i');
+	            
+	            if (input.type === "password") {
+	                input.type = "text";
+	                iconElement.classList.remove('fa-eye-slash');
+	                iconElement.classList.add('fa-eye');
+	            } else {
+	                input.type = "password";
+	                iconElement.classList.remove('fa-eye');
+	                iconElement.classList.add('fa-eye-slash');
+	            }
+	        }
+			
+			if(toggleButton) { toggleButton.addEventListener('click', () => { togglePasswordVisibility(event, document.getElementById('motDePasseDialog')) }); }
+			
+			if(toggleButton1) { toggleButton1.addEventListener('click', () => { togglePasswordVisibility(event, document.getElementById('nouveau_mot_de_passe')) }); }
+
+			if(toggleButton2) { toggleButton2.addEventListener('click', () => { togglePasswordVisibility(event, document.getElementById('nouveau_mot_de_passe confirm')) }); }
+			
 			submitButtons.forEach(btn => {
 				btn.addEventListener("click", (e) => handleSubmitWithPasswordDialog(e, section));
 			});
@@ -54,9 +87,14 @@
 				<% if ("1".equals(section) || "2".equals(section)) { %>
 				<dialog id="passwordDialog">
 					<form method="dialog">
-						<p>Veuillez confirmer votre mot de passe actuel :</p>
-						<label>
-							<input type="password" name="mot_de_passe" id="motDePasseDialog" required>
+						<label id="dialog_label">
+							<span>Veuillez confirmer votre mot de passe actuel :</span>
+							<div class="password-wrapper"> 
+								<input type="password" name="mot_de_passe" id="motDePasseDialog" required>
+								<button type="button" id="btn_toggle_password">
+						            <i class="fa-solid fa-eye-slash" id="togglePassword"></i>
+						        </button>
+					        </div>
 							<span id="error_mot_de_passe_login"></span>
 						</label>
 						<menu>
@@ -124,10 +162,26 @@
 					<legend>Veuillez saisir votre nouveau mot de passe</legend>
 					<div>
 						<div>
-							<label>Votre nouveau mot de passe <input type="password" id="nouveau_mot_de_passe" oninput="testMessage('mot_de_passe','Employe','Modification')"></label>
+							<label>	
+								<span>Votre nouveau mot de passe:</span> 
+								<div class="password-wrapper"> 	
+									<input type="password" id="nouveau_mot_de_passe" oninput="testMessage('mot_de_passe','Employe','Modification')">
+									<button type="button" id="btn_toggle_new_password">
+							            <i class="fa-solid fa-eye-slash" id="togglePassword"></i>
+							        </button>
+					        	</div>
+					        </label>
 						</div>
 						<div>
-							<label>Confirmer votre mot de passe <input type="password" name="nouveau_mot_de_passe" id="nouveau_mot_de_passe confirm" oninput="testMessage('mot_de_passe','Employe','Modification')"></label>
+							<label>
+								<span>Confirmer votre mot de passe:</span> 
+								<div class="password-wrapper"> 	
+									<input type="password" name="nouveau_mot_de_passe" id="nouveau_mot_de_passe confirm" oninput="testMessage('mot_de_passe','Employe','Modification')">
+									<button type="button" id="btn_toggle_new_password2">
+							            <i class="fa-solid fa-eye-slash" id="togglePassword"></i>
+							        </button>	
+								</div>
+							</label>
 						</div>
 						<div>
 							<span id="error_mot_de_passe"></span>

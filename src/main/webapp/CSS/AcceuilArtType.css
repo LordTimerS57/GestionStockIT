@@ -2,25 +2,7 @@
 /* Suppression des variables génériques pour utiliser les codes HEX directement */
 
 /* ------------------------------------ */
-/* SECTION A: PAGE D'ACCUEIL ARTICLES-TYPES (.article-type-section) */
-/* ------------------------------------ */
-
-.article-type-section {
-    display: flex;
-    justify-content: space-between; 
-}
-
-/* Optional: Adding styles for better visibility */
-.article-type-section a {
-    text-decoration: none;
-    padding: 8px 12px;
-    border: 1px solid #DEE2E6; /* Gris Bordure */
-    background-color: #F8F9FA; /* Gris Clair */
-    color: #004085; /* Bleu Marine */
-}
-
-/* ------------------------------------ */
-/* SECTION B: PAGE DE CONSULTATION DES ARTICLES (.article-section) */
+/* SECTION A: PAGE DE CONSULTATION DES ARTICLES (.article-section) */
 /* ------------------------------------ */
 
 .article-section {
@@ -92,7 +74,18 @@
     border-collapse: collapse;
     min-width: 900px;
     border-radius: 4px;
+    overflow-y: scroll;
     margin-top: 5px;
+}
+
+#result_article table caption {
+    caption-side: top;
+    text-align: left;
+    font-size: 1.3em;
+    font-weight: bold;
+    color: #212529; /* Gris Anthracite */
+    padding: 15px 0 5px 0;
+    margin-bottom: 5px; 
 }
 
 /* En-tête de tableau */
@@ -177,7 +170,7 @@
     color: #FFFFFF; /* Texte BLANC */
 }
 /* ------------------------------------ */
-/* SECTION C: PAGE DE CONSULTATION DES TYPES D'ARTICLES (.type-section) */
+/* SECTION B: PAGE DE CONSULTATION DES TYPES D'ARTICLES (.type-section) */
 /* ------------------------------------ */
 
 .type-section {
@@ -243,7 +236,18 @@
     width: 100%;
     border-collapse: collapse;
     min-width: 600px;
+    overflow-y: scroll;
     margin-top: 5px;
+}
+
+#result_type table caption {
+    caption-side: top;
+    text-align: left;
+    font-size: 1.3em;
+    font-weight: bold;
+    color: #212529; 
+    padding: 15px 0 5px 0;
+    margin-bottom: 5px; 
 }
 
 /* En-tête de tableau */
@@ -307,7 +311,7 @@
 }
 
 /* ------------------------------------ */
-/* SECTION D: MODALE (Détails du Type d'Article) */
+/* SECTION C: MODALES 					*/
 /* ------------------------------------ */
 
 #dialog_type_article, #dialog_info_article {  
@@ -326,14 +330,14 @@
     }
 }
 
-#dialog_type_article fieldset, #dialog_info_article fieldset {
+#type_article_details fieldset, #article_details fieldset {
     border: 1px solid #DEE2E6; /* Gris Bordure */
     border-radius: 6px;
     padding: 15px;
     margin-bottom: 20px;
 }
 
-#dialog_type_article legend, #dialog_info_article legend {
+#type_article_details legend, #article_details legend {
     font-size: 1.4em;
     font-weight: bold;
     color: #004085; /* BLEU MARINE (Accent principal) */
@@ -349,6 +353,16 @@
     font-weight: 500;
     transition: opacity 0.2s;
 }
+
+
+#article_action_button, #type_article_action_button{
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+}
+
 #dialog_type_article button:hover, #dialog_info_article button:hover {
     opacity: 0.8;
 }
+

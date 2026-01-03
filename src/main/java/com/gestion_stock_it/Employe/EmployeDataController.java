@@ -553,7 +553,7 @@ public class EmployeDataController {
 	}
 		
 
-	public void testRole(String role, Employe e) {
+	public Employe testRole(String role, Employe e) {
 		List<String> errors = new ArrayList<>();
 
 		if (role == null || role.trim().isEmpty()) {
@@ -567,8 +567,9 @@ public class EmployeDataController {
 			if(e == null) {
 				e = new Employe();
 			}
-			e.setRoleInt(Integer.parseInt(role));			
+			e.setRoleInt(Integer.parseInt(role));
 			e.setDate_modification(LocalDateTime.now());
+			return e;
 		}
 	}
 
@@ -580,29 +581,31 @@ public class EmployeDataController {
 		}
 		else
 		{
-			String query = """
-				SELECT Matricule
-				FROM Employe
-				WHERE Email = ?;
-			""";
+			if(oldEmail == null || !(oldEmail).equals(email) ) {
+				String query = """
+						SELECT Matricule
+						FROM Employe
+						WHERE Email = ?;
+					""";
 
-			int count = 0;
+				int count = 0;
 
-			try (	Connection c = DB_CONNECTION.getConnection();
-					PreparedStatement stmt = c.prepareStatement(query)) {
-				stmt.setString(1, email);
-				ResultSet rs = stmt.executeQuery();
+				try (	Connection c = DB_CONNECTION.getConnection();
+						PreparedStatement stmt = c.prepareStatement(query)) {
+					stmt.setString(1, email);
+					ResultSet rs = stmt.executeQuery();
 
-				while (rs.next()) {
-					count++;
-				}
+					while (rs.next()) {
+						count++;
+					}
 
-				if (count != 0) {
-					throw new ErrorConfirmException("email: Veuillez saisir un autre adresse email valide, l'adresse mail "+ email +"n'est plus valide !");
-				}
+					if (count != 0) {
+						throw new ErrorConfirmException("email: Veuillez saisir un autre adresse email valide, l'adresse mail "+ email +" n'est plus valide !");
+					}
 
-			} catch (SQLException ex) {
-				throw new ErrorConfirmException("Erreur lors du comptage");
+				} catch (SQLException ex) {
+					throw new ErrorConfirmException("Erreur lors du comptage");
+				}	
 			}
 		}
 
@@ -613,7 +616,12 @@ public class EmployeDataController {
 			if(e == null) {
 				e = new Employe();
 			}
-			e.setEmail((oldEmail).equals(email) ? oldEmail : email);
+			if(oldEmail == null) {
+				e.setEmail(email);
+			}
+			else{
+				e.setEmail((oldEmail).equals(email) ? oldEmail : email);	
+			}
 			if(type.trim() != null) {
 				if (type == "add") {
 					e.setDate_creation(LocalDateTime.now());
@@ -632,7 +640,9 @@ public class EmployeDataController {
 		if(motDePasse == null || motDePasse.trim().isEmpty()) {
 			errors.add("mot_de_passe: Veuillez saisir un mot de passe valide !");
 		}
-
+		else if(motDePasse.length() < 6){
+			errors.add("mot_de_passe: Le mot de passe saisie doit contenir 6 caractères ou plus !");
+		}
 
 		if (!errors.isEmpty()) {
 			throw new ErrorConfirmException(errors);

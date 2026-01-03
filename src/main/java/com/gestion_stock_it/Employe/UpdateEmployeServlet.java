@@ -92,7 +92,7 @@ public class UpdateEmployeServlet extends HttpServlet {
                 email = req.getParameter("email");
                 role = req.getParameter("role");
 
-                fn.testRole(role, e);
+                e = fn.testRole(role, e);
                 Employe superAdmin = null;
 
                 superAdmin = fn.getEmployeList(null, null, 1, null, null, null).getFirst();

@@ -16,13 +16,14 @@
     <% } %>
     
     <label class="search-label">
-      <input type="search" name="nom_type" placeholder="Veuillez chercher le type d'article en question" oninput="searchType()">
+      <input type="search" name="nom_type" placeholder="Rechercher par le nom du type d'article" oninput="searchType()">
       <i class="fas fa-search"></i>
     </label>
     
     <% if(!typeArticles.isEmpty()) { %>
     <div id="result_type">
       <table>
+      	<caption>Tous (<%= typeArticles.size() %>)</caption>
         <thead>
         <tr>
           <th>ID</th>
@@ -44,7 +45,7 @@
             <div class="table-actions">
               <button class="action-modifier" onclick="setUpdateType('<%=t.getTag_type()%>')"><i class="fas fa-pencil-alt"></i></button>
               <% if(t.getNombre_occurence_article() == 0) { %>
-              <button class="action-supprimer" onclick="removeData('<%=t.getTag_type()%>', 'Type')"><i class="fas fa-trash"></i></button>
+              <button class="action-supprimer" onclick="removeData('<%=t.getTag_type()%>', 'Type', this)"><i class="fas fa-trash"></i></button>
               <% } %>
             </div>
           </td>

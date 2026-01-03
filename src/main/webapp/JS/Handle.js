@@ -1,6 +1,13 @@
 const ctx = "/StockIT";
 let wsInstance = null;
 let currentFormController = null;
+let searchTimer;
+
+window.addEventListener('beforeunload', () => {
+    if (!window.location.pathname.includes("/CreationCompte")) {
+        sessionStorage.setItem('provenance', window.location.pathname);
+    }
+});
 
 // Fonction de mise à jour du menu en temps réel après un changement de rôle (Étape 2)
 function updateNavigationMenu(newRoleName) {
@@ -10,37 +17,26 @@ function updateNavigationMenu(newRoleName) {
     const contextPath = ctx; 
     
     const isAdmin = newRoleName <= 2;
-    
-    const employeMenuDiv = document.querySelector('a[href*="/Employes"]').parentElement;
-    const fournisseurMenuDiv = document.querySelector('a[href*="/Fournisseurs"]').parentElement;
-	//const entreeMenuDiv = document.querySelector('a[href*="/Entrees/Creation"]').parentElement;
-	//const sortieMenuDiv = document.querySelector('a[href*="/Sorties/Creation"]').parentElement;
-	//const articleCreateMenuDiv = document.querySelector('a[href*="/Articles/Creation"]').parentElement;
-	//const typeCreateMenuDiv = document.querySelector('a[href*="/Types/Creation"]').parentElement;
 
-    if (employeMenuDiv && fournisseurMenuDiv) {
-        employeMenuDiv.style.display = isAdmin ? 'block' : 'none';
-        fournisseurMenuDiv.style.display = isAdmin ? 'block' : 'none';
-		// entreeMenuDiv.style.display = isAdmin ? 'flex' : 'none';
-		// sortieMenuDiv.style.display = isAdmin ? 'flex' : 'none';
-		// articleCreateMenuDiv.style.display = isAdmin ? 'flex' : 'none';
-		// typeCreateMenuDiv.style.display = isAdmin ? 'flex' : 'none';
+    if (!isAdmin) {
+		if( window.location.pathname.endsWith("/Employes") ) { alert("Accès refusé. Vous ne pouvez plus accéder aux employés. Redirection vers l'acceuil'."); window.location.href = contextPath + "/Acceuil"; return;}
+        if( window.location.pathname.endsWith("/Fournisseurs") ) { alert("Accès refusé. Vous ne pouvez plus accéder aux fournisseurs. Redirection vers l'acceuil."); window.location.href = contextPath + "/Acceuil"; return;}
+	
+        if( window.location.pathname.includes("/Fournisseurs/Creation") ) { alert("Accès refusé. Vous ne pouvez plus ajouter de nouveaux fournisseurs. Redirection vers l'acceuil."); window.location.href = contextPath + "/Acceuil";}
+		if( window.location.pathname.includes("/Fournisseurs/Modification") ) { alert("Accès refusé. Vous ne pouvez plus modifier les informations des fournisseurs. Redirection vers l'acceuil."); window.location.href = contextPath + "/Acceuil";}
 		
-        
-        // Sécurité: Rediriger si l'utilisateur perd ses droits sur une page admin
-        if (!isAdmin) {
-			if( window.location.pathname.includes("/Employes") ) { alert("Accès refusé. Vous ne pouvez plus accéder aux Employés. Redirection vers les Articles."); window.location.href = contextPath + "/Acceuil";}
-            if( window.location.pathname.includes("/Fournisseurs") ) { alert("Accès refusé. Vous ne pouvez plus accéder aux Fournisseurs. Redirection vers les Articles."); window.location.href = contextPath + "/Acceuil";}
-			if( window.location.pathname.includes("/Entrees/Creation") ) { alert("Accès refusé. Vous ne pouvez plus créer des Entrées d'articles. Redirection vers les Articles."); window.location.href = contextPath + "/Entrees"; }
-			if( window.location.pathname.includes("/Sorties/Creation") ) { alert("Accès refusé. Vous ne pouvez plus créer des Sorties d'articles. Redirection vers les Articles."); window.location.href = contextPath + "/Sorties"; }
-			if( window.location.pathname.includes("/Articles/Creation") ) { alert("Accès refusé. Vous ne pouvez plus créer des Articles. Redirection vers les Articles."); window.location.href = contextPath + "/Articles"; }
-			if( window.location.pathname.includes("/Types/Creation") ){ alert("Accès refusé. Vous ne pouvez plus créer des Types d'articles. Redirection vers les Articles."); window.location.href = contextPath + "/Types"; }
-			if( window.location.pathname.includes("/Articles/Modification") ) { alert("Accès refusé. Vous ne pouvez plus modifier des Articles. Redirection vers les Articles."); window.location.href = contextPath + "/Articles"; }
-			if( window.location.pathname.includes("/Types/Modification") ) { alert("Accès refusé. Vous ne pouvez plus modifier des Types d'articles. Redirection vers les Articles."); window.location.href = contextPath + "/Types";} 
-        }
-    } else {
-        console.warn("Éléments de menu Employés/Fournisseurs non trouvés pour la mise à jour du DOM.");
-    }
+		if( window.location.pathname.includes("/Entrees/Creation") ) { alert("Accès refusé. Vous ne pouvez plus entrer des articles au stock. Redirection vers les Entrées d'articles."); window.location.href = contextPath + "/Entrees"; }
+		if( window.location.pathname.includes("/Sorties/Creation") ) { alert("Accès refusé. Vous ne pouvez plus sortir des articles du stock. Redirection vers les Sorties d'articles."); window.location.href = contextPath + "/Sorties"; }
+		
+		if( window.location.pathname.includes("/Articles/Creation") ) { alert("Accès refusé. Vous ne pouvez plus ajouter des nouveaux articles. Redirection vers les Articles."); window.location.href = contextPath + "/Articles"; }
+		if( window.location.pathname.includes("/Articles/Modification") ) { alert("Accès refusé. Vous ne pouvez plus modifier les informations des articles. Redirection vers les Articles."); window.location.href = contextPath + "/Articles"; } 	
+		
+		if( window.location.pathname.includes("/Types/Creation") ){ alert("Accès refusé. Vous ne pouvez plus ajouter de nouveaux types d'articles. Redirection vers les Types d'articles."); window.location.href = contextPath + "/Types"; }
+		if( window.location.pathname.includes("/Types/Modification") ){ alert("Accès refusé. Vous ne pouvez plus modifier les informations des types d'articles. Redirection vers les Types d'articles."); window.location.href = contextPath + "/Types"; }
+	}
+	
+	if(!window.location.pathname.includes("/Creation") && !window.location.pathname.includes("/Modification")) window.location.reload(true); 
+	
 }
 
 
@@ -82,22 +78,22 @@ function initEmployeWebSocket(contextPath, m, r) {
             try {
                 const data = JSON.parse(event.data);
                 
-                // 🛑 GESTION DU CHANGEMENT DE RÔLE (Mise à jour en temps réel du menu)
                 if (data.type === "role_updated") {
                     
 		            const newRoleInt = data.role_int;
 		            const newRoleName = data.role_name;
 
-                    // Mettre à jour la session storage pour la prochaine connexion/reconnexion
 		            sessionStorage.setItem("ws_role", newRoleInt);
-		            
-		            // Mise à jour du menu (Appel de la fonction DOM)
-		            updateNavigationMenu(newRoleInt); 
-		            
-		            alert(data.message || `Votre rôle a été mis à jour à : ${newRoleName}`);
+					
+					if (currentFormController) {
+                        currentFormController.abort();
+                        console.log("Flux de formulaire interrompu pour déconnexion.");
+                    }
+					    
+					alert(data.message || `Votre rôle a été mis à jour à : ${newRoleName}`);
+		            updateNavigationMenu(newRoleInt);
 		        }
                 
-                // ... (votre logique existante pour refresh_data) ...
                 if (data.type === "refresh_data") {
                     console.log("🔄 Rafraîchissement des données demandé :", data.message);
                     // Selon la page active, on relance la fonction appropriée :
@@ -116,7 +112,6 @@ function initEmployeWebSocket(contextPath, m, r) {
                     }
                 }
                 
-                // ... (votre logique existante pour force_logout) ...
                 if (data.type === "force_logout") {
                     params = new URLSearchParams({
                         activite : "desactivate"
@@ -226,6 +221,10 @@ function closeForm(){
 	}
 	
 	let nextPath;
+	if(formPath.includes("/CreationCompte")) {
+        const prov = sessionStorage.getItem('provenance');
+        nextPath = prov ? prov : (ctx + "/"); 
+    }
 	if(formPath.includes("/Entrees/Creation")) nextPath = ctx + "/Entrees";
 	if(formPath.includes("/Sorties/Creation")) nextPath = ctx + "/Sorties";
 	if(formPath.includes("/Profil/Modification")) nextPath = ctx + "/Profil";
@@ -361,174 +360,237 @@ function toggleIcon(buttonElement, isHovering) {
 }								
 
 function searchArticle() {
-    const article = document.querySelector('input[name="nom_article"]').value;
-    const type = document.querySelector('input[name="nom_type"]').value;
-
-    const params = new URLSearchParams();
-    if(article.trim() !== "") params.append("nom_article", article);
-    if(type.trim() !== "") params.append("nom_type", type);
-
-    const currentBody = document.querySelector("#result_article");
-    currentBody.innerHTML = "<p>Recherche en cours...</p>";
-
-    fetch(ctx+"/Articles?" + params.toString())
-        .then(res => res.text())
-        .then(html => {
-            const tempDiv = document.createElement("div");
-            tempDiv.innerHTML = html;
-            const newContent = tempDiv.querySelector("#result_article");
-            currentBody.innerHTML = newContent ? newContent.innerHTML : "<p>Aucun résultat trouvé.</p>";
-        })
-        .catch(err => {
-            console.error(err);
-            currentBody.innerHTML = "<p>Erreur de chargement.</p>";
-        });
+	clearTimeout(searchTimer);
+		
+	searchTimer= setTimeout(() => {
+	    const article = document.querySelector('input[name="nom_article"]').value;
+	    const type = document.querySelector('input[name="nom_type"]').value;
+	
+	    const params = new URLSearchParams();
+	    if(article.trim() !== "") params.append("nom_article", article);
+	    if(type.trim() !== "") params.append("nom_type", type);
+	
+	    const currentBody = document.querySelector("#result_article");
+	    currentBody.innerHTML = "<p>Recherche en cours...</p>";
+	
+	    fetch(ctx+"/Articles?" + params.toString())
+	        .then(res => res.text())
+	        .then(html => {
+	            const tempDiv = document.createElement("div");
+	            tempDiv.innerHTML = html;
+	            const newContent = tempDiv.querySelector("#result_article");
+				if (newContent) {
+                    currentBody.innerHTML = newContent.innerHTML;
+                    const caption = currentBody.querySelector("caption");
+                    if (caption) {
+                        const countMatch = caption.innerText.match(/\(([^)]+)\)/);
+                        const count = countMatch ? countMatch[0] : "(0)";
+                        const label = (article.trim() === "" && type.trim() === "") ? "Tous " : ( count.trim() !== "(1)" ? "Résultats trouvés " : "Résultat trouvé ");
+                        caption.innerHTML = label + count;
+                    }
+                } else {
+                    currentBody.innerHTML = "<p>Aucun résultat trouvé.</p>";
+                }
+	        })
+	        .catch(err => {
+	            console.error(err);
+	            currentBody.innerHTML = "<p>Erreur de chargement.</p>";
+	        });
+	}, 150);
 }
 
 function searchEmploye() {
-    const nomPrenoms = document.querySelector('input[name="nom_prenom"]').value;
-
-    const params = new URLSearchParams();
-    if(nomPrenoms.trim() !== "") params.append("nom_prenom", nomPrenoms);
-
-    const currentBody = document.querySelector("#result_employe_connected");
-    const currentBody1 = document.querySelector("#result_employe_not_connected");
-
-    currentBody.innerHTML = "<p>Recherche en cours...</p>";
-    currentBody1.innerHTML = "<p>Recherche en cours...</p>";
-
-    fetch(ctx+"/Employes?" + params.toString())
-        .then(res => res.text())
-        .then(html => {
-            const tempDiv = document.createElement("div");
-            tempDiv.innerHTML = html;
-
-            const newContent = tempDiv.querySelector("#result_employe_connected");
-            const newContent1 = tempDiv.querySelector("#result_employe_not_connected");
-
-            currentBody.innerHTML = newContent ? newContent.innerHTML : "<p>Aucun employé en ligne trouvé.</p>";
-            currentBody1.innerHTML = newContent1 ? newContent1.innerHTML : "<p>Aucun employé hors ligne trouvé.</p>";
-        })
-        .catch(err => {
-            console.error(err);
-            currentBody.innerHTML = "<p>Erreur de chargement.</p>";
-        });
+	clearTimeout(searchTimer);
+	
+	searchTimer= setTimeout(() => {
+	    const nomPrenoms = document.querySelector('input[name="nom_prenom"]').value;
+	
+	    const params = new URLSearchParams();
+	    if(nomPrenoms.trim() !== "") params.append("nom_prenom", nomPrenoms);
+	
+	    const currentBody = document.querySelector("#result_employe_connected");
+	    const currentBody1 = document.querySelector("#result_employe_not_connected");
+	
+	    currentBody.innerHTML = '<p><i class="fa-solid fa-spinner fa-spin"></i> Recherche en cours...</p>';
+	    currentBody1.innerHTML = '<p><i class="fa-solid fa-spinner fa-spin"></i> Recherche en cours...</p>';
+	
+	    fetch(ctx+"/Employes?" + params.toString())
+	        .then(res => res.text())
+	        .then(html => {
+	            const tempDiv = document.createElement("div");
+	            tempDiv.innerHTML = html;
+	
+	            const newContent = tempDiv.querySelector("#result_employe_connected");
+	            const newContent1 = tempDiv.querySelector("#result_employe_not_connected");
+	
+	            currentBody.innerHTML = newContent ? newContent.innerHTML : "<p>Aucun employé en ligne trouvé.</p>";
+	            currentBody1.innerHTML = newContent1 ? newContent1.innerHTML : "<p>Aucun employé hors ligne trouvé.</p>";
+	        })
+	        .catch(err => {
+	            console.error(err);
+	            currentBody.innerHTML = "<p>Erreur de chargement.</p>";
+	        });
+		}, 150);
 }
 
 function searchFournisseur() {
-    const fournisseur = document.querySelector('input[name="nom_fournisseur"]').value;
+	clearTimeout(searchTimer);
 
-    const params = new URLSearchParams();
-    if(fournisseur.trim() !== "") params.append("nom_fournisseur", fournisseur);
+    searchTimer = setTimeout(() => {
+        const fournisseur = document.querySelector('input[name="nom_fournisseur"]').value;
+        const params = new URLSearchParams();
+        
+        if(fournisseur.trim() !== "") params.append("nom_fournisseur", fournisseur);
 
-    const currentBody = document.querySelector("#result_fournisseur");
-    currentBody.innerHTML = "<p>Recherche en cours...</p>";
+        const currentBody = document.querySelector("#result_fournisseur");
+        currentBody.innerHTML = '<p><i class="fa-solid fa-spinner fa-spin"></i> Recherche en cours...</p>';
 
-    fetch(ctx+"/Fournisseurs?" + params.toString())
-        .then(res => res.text())
-        .then(html => {
-            const tempDiv = document.createElement("div");
-            tempDiv.innerHTML = html;
-            const newContent = tempDiv.querySelector("#result_fournisseur");
-            currentBody.innerHTML = newContent ? newContent.innerHTML : "<p>Aucun résultat trouvé.</p>";
-        })
-        .catch(err => {
-            console.error(err);
-            currentBody.innerHTML = "<p>Erreur de chargement.</p>";
-        });
-}
-
-function searchType() {
-    const type = document.querySelector('input[name="nom_type"]').value;
-
-    const params = new URLSearchParams();
-    if(type.trim() !== "") params.append("nom_type", type);
-
-    const currentBody = document.querySelector("#result_type");
-    currentBody.innerHTML = "<p>Recherche en cours...</p>";
-
-    fetch(ctx+"/Types?" + params.toString())
-        .then(res => res.text())
-        .then(html => {
-            const tempDiv = document.createElement("div");
-            tempDiv.innerHTML = html;
-            const newContent = tempDiv.querySelector("#result_type");
-            currentBody.innerHTML = newContent ? newContent.innerHTML : "<p>Aucun résultat trouvé.</p>";
-        })
-        .catch(err => {
-            console.error(err);
-            currentBody.innerHTML = "<p>Erreur de chargement.</p>";
-        });
-}
-
-function searchFlux(type) {
-	
-    let dateFlux = "", param = "", nomArticle = "", destinataire = "", expediteur = "";
-
-    const nom = document.getElementById("nom_article").value;
-    if (nom.trim() !== "") nomArticle = nom;
-
-    const selectDate = document.querySelector('select[name="date"]').value;
-
-    if (selectDate === "date") {
-        const dateFlux1 = document.getElementById("date_flux").value;
-        const precision = document.getElementById("precision_date").value;
-        if (dateFlux1 && precision) {
-            dateFlux = dateFlux1;
-            param = precision;
-        }
-    } else if (selectDate === "mois") {
-
-        const monthFlux = document.getElementById("month_flux").value;
-        const yearFlux = document.getElementById("year_flux").value;
-
-        if (monthFlux && yearFlux) {
-            dateFlux = monthFlux + "/" + yearFlux;
-        }
-        param = "month";
-    }
-	
-	if(type.trim() !== "") {
-		
-		if(type.trim() === "Sortie"){
-			const destinataireInput = document.getElementById("destinataire").value;
-			if(destinataireInput.trim() !== "") destinataire = destinataireInput;
-		}
-		const expediteurInput = document.getElementById("expediteur").value; 
-		if(expediteurInput.trim() !== "") expediteur = expediteurInput;
-		
-	}
-
-    const data = new URLSearchParams({
-        article: nomArticle,
-        date_flux: dateFlux,
-        date_params: param,
-		destinataire: destinataire,
-		expediteur: expediteur
-    });
-
-    console.log(data);
-
-    if (type.trim() !== "") {
-
-        const selector = type.trim() === "Entree" ? "#result_entree" : "#result_sortie"
-
-        const currentBody = document.querySelector(selector);
-        currentBody.innerHTML = "<p>Recherche en cours...</p>";
-
-        fetch(ctx + (type.trim() === "Entree" ? "/Entrees" : "/Sorties") + "?" + data.toString())
+        fetch(ctx + "/Fournisseurs?" + params.toString())
             .then(res => res.text())
             .then(html => {
                 const tempDiv = document.createElement("div");
                 tempDiv.innerHTML = html;
-                const newContent = tempDiv.querySelector(selector);
-                currentBody.innerHTML = newContent ? newContent.innerHTML : "<p>Aucun résultat trouvé.</p>";
+                const newContent = tempDiv.querySelector("#result_fournisseur");
+				if (newContent) {
+                    currentBody.innerHTML = newContent.innerHTML;
+                    const caption = currentBody.querySelector("caption");
+                    if (caption) {
+                        const countMatch = caption.innerText.match(/\(([^)]+)\)/);
+                        const count = countMatch ? countMatch[0] : "(0)";
+                        const label = fournisseur.trim() === "" ? "Tous " : ( count.trim() !== "(1)" ? "Résultats trouvés " : "Résultat trouvé ");
+                        caption.innerHTML = label + count;
+                    }
+                } else {
+                    currentBody.innerHTML = "<p>Aucun résultat trouvé.</p>";
+                }
             })
             .catch(err => {
                 console.error(err);
                 currentBody.innerHTML = "<p>Erreur de chargement.</p>";
             });
-    }
+    }, 200);
+}
+
+function searchType() {
+	clearTimeout(searchTimer);
+	
+	searchTimer = setTimeout(() => {
+	    const type = document.querySelector('input[name="nom_type"]').value;
+	
+	    const params = new URLSearchParams();
+	    if(type.trim() !== "") params.append("nom_type", type);
+	
+	    const currentBody = document.querySelector("#result_type");
+	    currentBody.innerHTML = '<p><i class="fa-solid fa-spinner fa-spin"></i> Recherche en cours...</p>';
+	
+	    fetch(ctx+"/Types?" + params.toString())
+	        .then(res => res.text())
+	        .then(html => {
+	            const tempDiv = document.createElement("div");
+	            tempDiv.innerHTML = html;
+				const newContent = tempDiv.querySelector("#result_type");
+                if (newContent) {
+                    currentBody.innerHTML = newContent.innerHTML;
+                    const caption = currentBody.querySelector("caption");
+                    if (caption) {
+                        const countMatch = caption.innerText.match(/\(([^)]+)\)/);
+                        const count = countMatch ? countMatch[0] : "(0)";
+                        const label = type.trim() === "" ? "Tous " : ( count.trim() !== "(1)" ? "Résultats trouvés " : "Résultat trouvé ");
+                        caption.innerHTML = label + count;
+                    }
+                } else {
+                    currentBody.innerHTML = "<p>Aucun résultat trouvé.</p>";
+                }
+	        })
+	        .catch(err => {
+	            console.error(err);
+	            currentBody.innerHTML = "<p>Erreur de chargement.</p>";
+	        });
+	}, 200);
+}
+
+function searchFlux(type) {
+	clearTimeout(searchTimer);
+		
+	searchTimer = setTimeout(() => {
+	    let dateFlux = "", param = "", nomArticle = "", destinataire = "", expediteur = "";
+	
+	    const nom = document.getElementById("nom_article").value;
+	    if (nom.trim() !== "") nomArticle = nom;
+	
+	    const selectDate = document.querySelector('select[name="date"]').value;
+	
+	    if (selectDate === "date") {
+	        const dateFlux1 = document.getElementById("date_flux").value;
+	        const precision = document.getElementById("precision_date").value;
+	        if (dateFlux1 && precision) {
+	            dateFlux = dateFlux1;
+	            param = precision;
+	        }
+	    } else if (selectDate === "mois") {
+	
+	        const monthFlux = document.getElementById("month_flux").value;
+	        const yearFlux = document.getElementById("year_flux").value;
+	
+	        if (monthFlux && yearFlux) {
+	            dateFlux = monthFlux + "/" + yearFlux;
+	        }
+	        param = "month";
+	    }
+		
+		if(type.trim() !== "") {
+			
+			if(type.trim() === "Sortie"){
+				const destinataireInput = document.getElementById("destinataire").value;
+				if(destinataireInput.trim() !== "") destinataire = destinataireInput;
+			}
+			const expediteurInput = document.getElementById("expediteur").value; 
+			if(expediteurInput.trim() !== "") expediteur = expediteurInput;
+			
+		}
+	
+	    const data = new URLSearchParams({
+	        article: nomArticle,
+	        date_flux: dateFlux,
+	        date_params: param,
+			destinataire: destinataire,
+			expediteur: expediteur
+	    });
+	
+	    console.log(data);
+	
+	    if (type.trim() !== "") {
+	
+	        const selector = type.trim() === "Entree" ? "#result_entree" : "#result_sortie"
+	
+	        const currentBody = document.querySelector(selector);
+	        currentBody.innerHTML = '<p><i class="fa-solid fa-spinner fa-spin"></i> Recherche en cours...</p>';
+	
+	        fetch(ctx + (type.trim() === "Entree" ? "/Entrees" : "/Sorties") + "?" + data.toString())
+	            .then(res => res.text())
+	            .then(html => {
+	                const tempDiv = document.createElement("div");
+	                tempDiv.innerHTML = html;
+	                const newContent = tempDiv.querySelector(selector);
+					if (newContent) {
+	                    currentBody.innerHTML = newContent.innerHTML;
+	                    const caption = currentBody.querySelector("caption");
+	                    if (caption) {
+	                        const countMatch = caption.innerText.match(/\(([^)]+)\)/);
+	                        const count = countMatch ? countMatch[0] : "(0)";
+	                        const label = ((dateFlux.trim() === "" && param.trim() === "" && nomArticle.trim() === "") && (destinataire.trim() === "" || expediteur.trim() === "")) ? "Tous " : ( count.trim() !== "(1)" ? "Résultats trouvés " : "Résultat trouvé ");
+	                        caption.innerHTML = label + count;
+	                    }
+	                } else {
+	                    currentBody.innerHTML = "<p>Aucun résultat trouvé.</p>";
+	                }
+	            })
+	            .catch(err => {
+	                console.error(err);
+	                currentBody.innerHTML = "<p>Erreur de chargement.</p>";
+	            });
+	    } 
+	}, 200);
 }
 
 function updateSearchFlux(style) {
@@ -591,63 +653,71 @@ function setUpdateType(tag) {
 }
 
 function searchEntree(data){
-    const params = new URLSearchParams();
-    if (data.trim() === "article"){
-        const article = document.getElementById("nom_article").value;
-        if(article.trim() !== "") params.append("nom_article", article);
-    }
-    else{
-        const fournisseur = document.getElementById("raison_sociale").value;
-        if(fournisseur.trim() !== "") params.append("raison_sociale", fournisseur);
-    }
-
-    const currentBody = document.querySelector((data.trim() === "article") ? "#result_article" : "#result_expediteur");
+	clearTimeout(searchTimer);
+			
+	searchTimer = setTimeout(() => {
+	    const params = new URLSearchParams();
+	    if (data.trim() === "article"){
+	        const article = document.getElementById("nom_article").value;
+	        if(article.trim() !== "") params.append("nom_article", article);
+	    }
+	    else{
+	        const fournisseur = document.getElementById("raison_sociale").value;
+	        if(fournisseur.trim() !== "") params.append("raison_sociale", fournisseur);
+	    }
 	
-	if(currentBody.style.display === "none") currentBody.style.display = "flex";
-    currentBody.innerHTML = "<p>Recherche en cours...</p>";
-
-    fetch(ctx+"/Entrees/Creation?" + params.toString())
-        .then(res => res.text())
-        .then(html => {
-            const tempDiv = document.createElement("div");
-            tempDiv.innerHTML = html;
-            const newContent = tempDiv.querySelector((data.trim() === "article") ? "#result_article" : "#result_expediteur");
-            currentBody.innerHTML = newContent ? newContent.innerHTML : "<p>Aucun résultat trouvé.</p>";
-        })
-        .catch(err => {
-            console.error(err);
-            currentBody.innerHTML = "<p>Erreur de chargement.</p>";
-        });
+	    const currentBody = document.querySelector((data.trim() === "article") ? "#result_article" : "#result_expediteur");
+		
+		if(currentBody.style.display === "none") currentBody.style.display = "flex";
+	    currentBody.innerHTML = '<p><i class="fa-solid fa-spinner fa-spin"></i> Recherche en cours...</p>';
+	
+	    fetch(ctx+"/Entrees/Creation?" + params.toString())
+	        .then(res => res.text())
+	        .then(html => {
+	            const tempDiv = document.createElement("div");
+	            tempDiv.innerHTML = html;
+	            const newContent = tempDiv.querySelector((data.trim() === "article") ? "#result_article" : "#result_expediteur");
+	            currentBody.innerHTML = newContent ? newContent.innerHTML : "<p>Aucun résultat trouvé.</p>";
+	        })
+	        .catch(err => {
+	            console.error(err);
+	            currentBody.innerHTML = "<p>Erreur de chargement.</p>";
+	        });
+	}, 200);
 }
 
 function searchSortie(data){
-    const params = new URLSearchParams();
-    if (data.trim() === "article"){
-        const article = document.getElementById("nom_article").value;
-        if(article.trim() !== "") params.append("nom_article", article);
-    }
-    else{
-        const destinataire = document.getElementById("destinataire_search").value;
-        if(destinataire.trim() !== "") params.append("nom_prenom_ou_matricule", destinataire);
-    }
-
-	const currentBody = document.querySelector((data.trim() === "article") ? "#result_article" : "#result_destinataire");
+	clearTimeout(searchTimer);
+			
+	searchTimer = setTimeout(() => {
+	    const params = new URLSearchParams();
+	    if (data.trim() === "article"){
+	        const article = document.getElementById("nom_article").value;
+	        if(article.trim() !== "") params.append("nom_article", article);
+	    }
+	    else{
+	        const destinataire = document.getElementById("destinataire_search").value;
+	        if(destinataire.trim() !== "") params.append("nom_prenom_ou_matricule", destinataire);
+	    }
 	
-	if(currentBody.style.display === "none") currentBody.style.display = "flex";
-    currentBody.innerHTML = "<p>Recherche en cours...</p>";
-
-    fetch(ctx + "/Sorties/Creation?" + params.toString())
-        .then(res => res.text())
-        .then(html => {
-            const tempDiv = document.createElement("div");
-            tempDiv.innerHTML = html;
-            const newContent = tempDiv.querySelector((data.trim() === "article") ? "#result_article" : "#result_destinataire");
-            currentBody.innerHTML = newContent ? newContent.innerHTML : "<p>Aucun résultat trouvé.</p>";
-        })
-        .catch(err => {
-            console.error(err);
-            currentBody.innerHTML = "<p>Erreur de chargement.</p>";
-        });
+		const currentBody = document.querySelector((data.trim() === "article") ? "#result_article" : "#result_destinataire");
+		
+		if(currentBody.style.display === "none") currentBody.style.display = "flex";
+	    currentBody.innerHTML = '<p><i class="fa-solid fa-spinner fa-spin"></i> Recherche en cours...</p>';
+	
+	    fetch(ctx + "/Sorties/Creation?" + params.toString())
+	        .then(res => res.text())
+	        .then(html => {
+	            const tempDiv = document.createElement("div");
+	            tempDiv.innerHTML = html;
+	            const newContent = tempDiv.querySelector((data.trim() === "article") ? "#result_article" : "#result_destinataire");
+	            currentBody.innerHTML = newContent ? newContent.innerHTML : "<p>Aucun résultat trouvé.</p>";
+	        })
+	        .catch(err => {
+	            console.error(err);
+	            currentBody.innerHTML = "<p>Erreur de chargement.</p>";
+	        });
+	}, 200);
 }
 
 function setDetails(e, action, type, data) {
@@ -668,6 +738,9 @@ function setDetails(e, action, type, data) {
                 }
             });
         }
+		
+		const currentMatricule = sessionStorage.getItem("ws_matricule");
+		const currentRole = sessionStorage.getItem("ws_role");
 
         switch (type) {
             case "Article":
@@ -689,14 +762,18 @@ function setDetails(e, action, type, data) {
 			case "Article-Info":
                 dialog = document.getElementById("dialog_info_article");
                 if (action === 'Show' && data) {
+					const occ_entrees = parseInt(data.dataset.occurrence_entree_article);
+					const occ_sorties = parseInt(data.dataset.occurrence_sortie_article); 
                     document.getElementById("dialog_nom_article_info").textContent = data.dataset.nom_article;
 					document.getElementById("dialog_stock_actuel_article").textContent = "Stock actuel: " + data.dataset.stock_article;
 					document.getElementById("dialog_consommation_moyen_article").textContent = "Consommation moyen journalière: " + data.dataset.cmd_article;
 					document.getElementById("dialog_delai_reapprovisionnement_article").textContent = "Delai inter-réception moyen: " + data.dataset.dirm_article;
 					document.getElementById("dialog_seuil_critique_article").textContent = "Quantité à seuil critique: " + data.dataset.seuil_stock_article;
 					document.getElementById("dialog_situation_article").textContent = "Situation du stock: " + data.dataset.situation_article;
-					document.getElementById("dialog_entree_article").textContent = data.dataset.derniere_entree_article;
-					document.getElementById("dialog_sortie_article").textContent = data.dataset.derniere_sortie_article;
+					document.getElementById("dialog_entree_article").textContent =  (occ_entrees > 1 ? "Réceptions enregistrées: " : "Réception enregistrée: ") + occ_entrees ;
+					document.getElementById("dialog_sortie_article").textContent = (occ_sorties > 1 ? "Sorties enregistrées: " : "Sortie enregistrée: ") + occ_sorties ;
+					document.getElementById("dialog_date_entree_article").textContent = "Dernière entrée en stock de l'article: " + data.dataset.derniere_entree_article;
+					document.getElementById("dialog_date_sortie_article").textContent = "Dernière sortie du stock de l'article: " + data.dataset.derniere_sortie_article;
 				} else if (action === 'Close') {
                     resetFields([
 						"dialog_nom_article_info",
@@ -706,7 +783,9 @@ function setDetails(e, action, type, data) {
 						"dialog_seuil_critique_article",
 						"dialog_situation_article",
 						"dialog_entree_article",
-						"dialog_sortie_article" 
+						"dialog_sortie_article",
+						"dialog_date_entree_article",
+						"dialog_date_sortie_article" 
 					]);
                 }
                 break;
@@ -733,8 +812,6 @@ function setDetails(e, action, type, data) {
                 const divPart1 = document.getElementById("employe_details");
                 const divPart2 = document.getElementById("modify_role");
                 const buttonRole = document.getElementById("modify_role_btn");
-				const currentMatricule = sessionStorage.getItem("ws_matricule");
-				const currentRole = sessionStorage.getItem("ws_role");
                 if (action === 'Show' && data) {
                     divPart1.style.display = "block";
                     divPart2.style.display = "none";
@@ -771,29 +848,51 @@ function setDetails(e, action, type, data) {
                 break;
 
             case "Expediteur-Destinataire":
+				const divPart = document.querySelector("#employe_details fieldset:nth-of-type(2)");
                 dialog = document.getElementById("dialog_employe");
                 if (action === 'Show' && data) {
                     document.getElementById("dialog_employe_nom_complet").textContent = data.dataset.nom_prenom;
-                    document.getElementById("dialog_employe_adresse").textContent = "Adresse: " + data.dataset.adresse;
-                    document.getElementById("dialog_employe_email").textContent = data.dataset.email;
-                    document.getElementById("dialog_employe_telephone").textContent = "Téléphone: " + data.dataset.telephone;
-                    document.getElementById("dialog_employe_date_naissance").textContent = "Date de naissance: " + data.dataset.date_naissance;
-                    document.getElementById("dialog_employe_matricule").textContent = data.dataset.matricule;
-                    document.getElementById("dialog_employe_role").textContent = data.dataset.role;
-                    document.getElementById("dialog_employe_date_creation").textContent = "Date de création du compte: " + data.dataset.date_creation;
-                    document.getElementById("dialog_employe_date_modification").textContent = "Date de modification du compte: " + data.dataset.date_modification;
+                    document.getElementById("dialog_employe_email").textContent = "Email: "+ data.dataset.email;
+					document.getElementById("dialog_employe_telephone").textContent = "Téléphone: " + data.dataset.telephone;
+					if(currentRole == 3){
+						document.getElementById("dialog_employe_adresse").style.display = "none";
+						document.getElementById("dialog_employe_date_naissance").style.display = "none";
+						divPart.style.display = "none";
+					}
+					else
+					{
+						document.getElementById("dialog_employe_adresse").style.display = "block";
+						document.getElementById("dialog_employe_date_naissance").style.display = "block";	
+						divPart.style.display = "block";
+						document.getElementById("dialog_employe_adresse").textContent = "Adresse: " + data.dataset.adresse;
+	                    document.getElementById("dialog_employe_date_naissance").textContent = "Date de naissance: " + data.dataset.date_naissance;
+	                    document.getElementById("dialog_employe_matricule").textContent = "Matricule: "+ data.dataset.matricule;
+	                    document.getElementById("dialog_employe_role").textContent = "Role: "+ data.dataset.role;
+	                    document.getElementById("dialog_employe_date_creation").textContent = "Date de création du compte: " + data.dataset.date_creation;
+	                    document.getElementById("dialog_employe_date_modification").textContent = "Date de modification du compte: " + data.dataset.date_modification;	
+					}
+					
                 } else if (action === 'Close') {
-                    resetFields([
-                        "dialog_employe_nom_complet",
-                        "dialog_employe_adresse",
-                        "dialog_employe_email",
-                        "dialog_employe_telephone",
-                        "dialog_employe_date_naissance",
-                        "dialog_employe_matricule",
-                        "dialog_employe_role",
-                        "dialog_employe_date_creation",
-                        "dialog_employe_date_modification"
-                    ]);
+					if(currentRole == 3){
+						resetFields([
+		                    "dialog_employe_nom_complet",
+		                    "dialog_employe_email",
+		                    "dialog_employe_telephone"
+		                ]);
+					}
+					else{
+						resetFields([
+		                    "dialog_employe_nom_complet",
+		                    "dialog_employe_adresse",
+		                    "dialog_employe_email",
+		                    "dialog_employe_telephone",
+		                    "dialog_employe_date_naissance",
+		                    "dialog_employe_matricule",
+		                    "dialog_employe_role",
+		                    "dialog_employe_date_creation",
+		                    "dialog_employe_date_modification"
+		                ]);
+					}
                 }
                 break;
 
@@ -898,7 +997,7 @@ function passModification(){
 
     if (role === "Employe Simple") {
         roleSelect.value = "3";
-    } else if (role === "Administrateur") {
+    } else if (role.includes("Administrateur")) {
         roleSelect.value = "2";
     } else {
         roleSelect.value = ""; // aucun rôle sélectionné
@@ -987,7 +1086,7 @@ function setTag(e,type,subType,tag,name){
     }
 }
 
-function setExcelTransform(type){
+function setExcelTransform(type, button){
     let dateFlux = "", param = "", nomArticle = "", url = "";
 
     const nom = document.getElementById("nom_article").value;
@@ -1011,7 +1110,11 @@ function setExcelTransform(type){
         }
         param = "month";
     }
-
+	
+	const submitButtonContent = button.innerHTML;
+	button.disabled = true;
+	button.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Traitement en cours...';
+	
     if(nomArticle || (dateFlux && param)){
         const data = new URLSearchParams({
             article: nomArticle,
@@ -1022,13 +1125,17 @@ function setExcelTransform(type){
         if(type.trim() !== ""){
             url = ctx + "/RapportExcel" + (type.trim() === "Entree" ? "/Entrees" : "/Sorties") + "?" + data.toString();
             window.location.href = url;
-        }
+			setTimeout(() => {
+                button.innerHTML = submitButtonContent;
+                button.disabled = false;
+            }, 2000);
+		}
     }
 }
 
 function setForm(e, style, type, subType){
     if(e != null) e.preventDefault();
-    let form, submitButton, formData, data, url, nextUrl;
+    let form, submitButton, submitButtonContent, formData, data, url, nextUrl;
 	
     if (currentFormController) {
         currentFormController.abort();
@@ -1075,6 +1182,7 @@ function setForm(e, style, type, subType){
             {
                 form = document.getElementById("modify_role");
                 submitButton = form.querySelector('.submit_employe');
+				dialog = document.getElementById("dialog_employe");
                 url = "/"+ urlPrefix + "Role" + "EmployeServlet";
                 nextUrl = "/Employes";
             }
@@ -1134,8 +1242,9 @@ function setForm(e, style, type, subType){
     }
 
     // 🔒 Désactivation du bouton cliqué
+	submitButtonContent = submitButton.innerHTML;
     submitButton.disabled = true;
-    submitButton.value = "Traitement en cours...";
+    submitButton.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Traitement en cours...';
 
     formData = new FormData(form);
     data = new URLSearchParams();
@@ -1161,18 +1270,24 @@ function setForm(e, style, type, subType){
 
             if (response.ok) {
                 form.reset();
-                if(subType !== "Modification_role"){
-                    clearError(style,type,subType);
-                }
-				if(subType === "Modification_total")
-				{
-					dialog.close();				
+				
+				if(subType === "Modification_total" || subType === "Modification_role")
+				{ 
+					if(dialog) dialog.close();				
+				}
+				
+				if(type === "Employe" && style === "Ajout"){
+					alert("Compte créé avec succès après validation administrateur")
+				}
+				
+				if(subType === "Login" && type === "Employe"){
+					alert("Authentification réussie.")
 				}
                 window.location.href = ctx + nextUrl ;
             } else {
                 return response.text().then(text => {
                     const erreurs = text.split('\n').filter(line => line.trim() !== '');
-                    putError(erreurs, style, type, subType);
+					putError(erreurs, style, type, subType);
                 });
             }
             //
@@ -1188,12 +1303,12 @@ function setForm(e, style, type, subType){
         })
         .finally(() => {
 			currentFormController = null;
-            submitButton.disabled = false;
-            submitButton.textContent = "Confirmer l'action";
+	        submitButton.innerHTML = submitButtonContent;
+	        submitButton.disabled = false;
         });
 }
 
-function removeData(data, type){
+function removeData(data, type, button){
     console.log("🧩 removeData() appelé avec:", data, type)
     let url, nextUrl, tag;
 	
@@ -1238,6 +1353,10 @@ function removeData(data, type){
         }
         default: break;
     }
+	
+	const submitButtonContent = button.innerHTML;
+    button.disabled = true;
+    button.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>' + (type === "Employe" ? ' Traitement en cours ...' : '');
 
     let params = new URLSearchParams();
     params.append(tag, data);
@@ -1271,7 +1390,12 @@ function removeData(data, type){
 				console.warn('Requête annulée par une nouvelle soumission de formulaire.')	
 			}
             alert('Erreur autre : ' + error.message);
-        })
+        })			
+		.finally(() => {
+			currentFormController = null;
+           	button.disabled = false;
+           	button.innerHTML = submitButtonContent;
+        });
 }
 
 /**
@@ -1305,6 +1429,7 @@ function removeData(data, type){
       const questionValue = formData.get("question");
       
       const submitButton = document.querySelector('.submit_chat');
+	  const submitButtonContent = submitButton.innerHTML;
 	  
 	  if(currentFormController)
 		{
@@ -1322,13 +1447,13 @@ function removeData(data, type){
       // Désactiver le bouton au début de la soumission
       if (submitButton) {
           submitButton.disabled = true;
+		  submitButton.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Traitement en cours...';
       }
 
       data.append("question", questionValue);
 
       // 1. Afficher le message de l'utilisateur immédiatement
       appendMessage('user', questionValue);
-
       form.reset();
 
       // 2. Envoyer la requête AJAX
@@ -1348,10 +1473,9 @@ function removeData(data, type){
           })
           .then(data => {
               if (data.statut === 'OK' && data.reponse) {
-                  appendMessage('bot', data.reponse); // Afficher la réponse du bot
+                  appendMessage('bot', data.reponse);
               } else if (data.statut && data.reponse) {
-                  // Gérer les erreurs de logique métier (ErrorConfirmException)
-                  appendMessage('bot', `[${data.statut}] ${data.reponse}`);
+                  appendMessage('bot', `${data.reponse}`);
               } else {
                   appendMessage('bot', `Je n'ai pas pu obtenir de réponse.`);
               }
@@ -1366,7 +1490,9 @@ function removeData(data, type){
           .finally(() => {
               // Réactiver le bouton de soumission, quoi qu'il arrive
               if (submitButton) {
+				  currentFormController = null;
                   submitButton.disabled = false;
+				  submitButton.innerHTML = submitButtonContent;
               }
           });
   }

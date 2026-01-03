@@ -3,11 +3,10 @@ package com.gestion_stock_it.Employe;
 import com.gestion_stock_it.ErrorConfirmException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
-import org.mindrot.jbcrypt.BCrypt;
 
 import java.io.IOException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @WebServlet("/AddEmployeServlet")
 public class AddEmployeServlet extends HttpServlet {
@@ -30,9 +29,21 @@ public class AddEmployeServlet extends HttpServlet {
         String motDePasse = req.getParameter("mot_de_passe");
 
         try {
-            Employe e = fn.testInfoPersonnel(nom, prenom, adresse, telephone, dateDeNaissance, null, "add");
-            e = fn.testInfoMotDePasse(motDePasse, e, "add");
-            e = fn.testEmail(email, email, e, "add");
+            Employe e = null; 
+            List<String> allErrors = new ArrayList<>();
+
+            try { e = fn.testInfoPersonnel(nom, prenom, adresse, telephone, dateDeNaissance, null, "add"); } 
+            catch (ErrorConfirmException ex) { allErrors.addAll(ex.getMessages()); }
+
+            try { e = fn.testInfoMotDePasse(motDePasse, e, "add"); } 
+            catch (ErrorConfirmException ex) { allErrors.addAll(ex.getMessages()); }
+
+            try { e = fn.testEmail(email, null, e, "add"); } 
+            catch (ErrorConfirmException ex) { allErrors.addAll(ex.getMessages()); }
+
+            if (!allErrors.isEmpty()) {
+                throw new ErrorConfirmException(allErrors);
+            }
 
             String matricule = fn.nextTag();
 
@@ -54,24 +65,27 @@ public class AddEmployeServlet extends HttpServlet {
                 String response = AdminRequestStore.waitForResponse(matricule, 60);
 
                 if (response == null || response.equals("TIMEOUT")) {
-                    resp.getWriter().write("⏱️ Aucun retour de l’administrateur (délai expiré).");
+                	resp.setStatus(500);
+                    System.out.println("⏱️ Aucun retour de l’administrateur (délai expiré).");
+                	resp.getWriter().write("creation_invalid: L’administrateur n'a pas eu le temps de valider la création du compte.");
                     return;
                 }
                 if (response.contains("ACCEPTE")) {
                     fn.addEmploye(e);
-                    resp.getWriter().write("✅ Compte créé avec succès après validation administrateur !");
                     System.out.println("✅ Compte créé avec succès après validation administrateur !");
+                    resp.setStatus(200);
                 } else {
-                    resp.getWriter().write("❌ L’administrateur a refusé la création du compte.");
+                	resp.setStatus(500);
+                    resp.getWriter().write("creation_invalid: L’administrateur a refusé la création du compte.");
                     System.out.println("❌ L’administrateur a refusé la création du compte.");
                 }
             } else {
-                resp.getWriter().write("⚠️ Aucun super administrateur trouvé pour valider le compte.");
+            	resp.setStatus(500);
+                resp.getWriter().write("creation_invalid: L’administrateur s'est déconnecté et n'est pas en état de confirmer la création du compte.");
                 fn.sendEmail(superAdmin, e,"Création d'un nouveau compte employé");
-                System.out.println("❌ L’administrateur a refusé la création du compte.");
+                System.out.println("❌ L’administrateur s'est déconnecté et n'est pas en état de confirmer la création du compte.");
             }
             EmployeWebSocket.notifyEmployes("refresh_data", "Mise à jour des données", 1,2);
-            resp.setStatus(200);
 
         } catch (ErrorConfirmException errors) {
             resp.setStatus(500);
@@ -87,5 +101,4 @@ public class AddEmployeServlet extends HttpServlet {
             throw new RuntimeException(ex);
         }
     }
-    
 }

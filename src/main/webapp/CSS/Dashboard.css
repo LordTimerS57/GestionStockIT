@@ -39,12 +39,44 @@ header > div {
     margin-right: 34px;
 }
 
-header a {
-    color: #6C757D; /* Gris moyen pour les liens */
+/* ------------------------------------ */
+/* 2.1 STYLE DU LIEN PROFIL (HEADER)    */
+/* ------------------------------------ */
+
+header div a {
+    display: flex;
+    align-items: center;
+    color: #495057; /* Couleur grise cohérente avec la nav */
     text-decoration: none;
-    font-weight: bold;
-    padding: 5px 10px;
-    border-radius: 4px;
+    font-weight: 600;
+    font-size: 0.95em;
+    padding: 8px 12px;
+    border-radius: 20px; /* Effet pillule */
+    transition: all 0.3s ease;
+    background-color: transparent;
+    border: 1px solid transparent;
+}
+
+/* Effet au survol */
+header div a:hover {
+    background-color: #E9ECEF;
+    color: #007BFF; /* Bleu primaire au survol */
+}
+
+/* État ACTIF (quand on est sur la page /Profil) */
+header div a.profil_active {
+    background-color: #C6E4FF !important; /* Bleu très pâle */
+    color: #004085 !important;           /* Bleu Marine */
+    border: 1px solid #B0D4FF !important;
+}
+
+/* Optionnel : ajout d'une icône utilisateur avant le nom si non présente en HTML */
+header div a::before {
+    content: "\f007"; /* Code FontAwesome pour user */
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    margin-right: 8px;
+    font-size: 14px;
 }
 
 header img{
@@ -87,13 +119,12 @@ main {
 
 nav {
     width: 230px;
-    background-color: #FFFFFF; /* BLANC (Très clair) */
-    border-right: 1px solid #E9ECEF; /* Séparation très fine */
-    padding: 20px 0;
+    background-color: #FFFFFF;
+    border-right: 1px solid #E9ECEF;
+    padding: 20px 0 0 0;
     flex-shrink: 0; 
     display: flex;
     flex-direction: column;  
-    height: 100%; 
 }
 
 /* Conteneur de chaque élément de navigation */
@@ -243,7 +274,7 @@ footer {
     
     min-height: 80vh;
 
-    background-color: #FFFFFF; /* Fond légèrement différent */
+    background-color: transparent; /* Fond légèrement différent */
     border: none;
     padding: 20px;
 }
@@ -251,7 +282,27 @@ footer {
 .welcome-content {
     font-size: 32px;
     font-weight: 600;
+    background-color: transparent;
     color: #007BFF;
     text-align: center;
     margin: 0;
+}
+
+.welcome-section .logo-background {
+    position: fixed;
+    margin: 0 0 0 20px;
+    top: 50%;
+    left: 52.5%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 600px;
+    opacity: 0.5;
+    pointer-events: none;
+    animation: rotation3D 15s linear infinite;
+}
+
+@keyframes rotation3D {
+    from { transform: translate(-50%, -50%) perspective(1000px) rotateY(0deg); }
+    to { transform: translate(-50%, -50%) perspective(1000px) rotateY(360deg); }
 }

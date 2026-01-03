@@ -56,7 +56,7 @@ public class Article{
   public long getNombre_occurence_entrees_article() {return nombre_occurence_entrees_article;}
   public long getNombre_occurence_sorties_article() {return nombre_occurence_sorties_article;}
   
-  public String getCMD() { return (cmd > 0 || delai_reappro_estime > 0 ) ? String.format("%.3f", cmd) : "N/A";}
+  public String getCMD() { return ((cmd > 0 || delai_reappro_estime > 0 ) ? String.format("%.3f", cmd) + " unité" + (Math.floor(cmd) > 1 ? "s" : "") : "N/A" );}
   public String getDelai_reappro_estime() {return (delai_reappro_estime > 0 ? String.format("%.2f", delai_reappro_estime) + " jour" + (Math.floor(delai_reappro_estime) > 1 ? "s" : "") : "N/A" );}
   public long getSeuil_critique_arrondi() {return seuil_critique_arrondi;}
   

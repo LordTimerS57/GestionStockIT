@@ -1,46 +1,74 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-		 pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
-	<meta charset="UTF-8">
-	<title>Page d'accueil</title>
+    <meta charset="UTF-8">
+    <title>Page d'accueil - Gestion Stock IT SPAT</title>
     <link rel="icon" type="image/png" href="<%= request.getContextPath() %>/IMAGES/logo_spat.png"/>
-	<link rel="stylesheet" href="<%= request.getContextPath() %>/CSS/WelcomePage.css?v=<%= System.currentTimeMillis() %>"  type="text/css"/>
-	<script src="JS/Handle.js?v=<%=System.currentTimeMillis()%>" defer></script>
+    <link rel="stylesheet" href="<%= request.getContextPath() %>/CSS/WelcomePage.css?v=<%= System.currentTimeMillis() %>" type="text/css"/>
+    <script src="JS/Handle.js?v=<%=System.currentTimeMillis()%>" defer></script>
 </head>
 <body>
 
+<img src="<%= request.getContextPath() %>/IMAGES/logo_spat.png" alt="" class="logo-background">
+
 <header>
-	<h1>Bienvenue sur la page d'accueil de l'application sur la gestion du stock IT du SPAT</h1>
+    <h1>Bienvenue sur la gestion du stock informatique du SPAT</h1>
 </header>
+
 <main>
-	<section>
-		<h2>Présentation et Fonctionnalités Clés</h2>
-		<p>
-			Cette plateforme est dédiée à la **gestion centralisée du stock informatique** du SPAT.
-			Elle vous permet de suivre l'état, l'affectation et le cycle de vie complet de tous les équipements IT.
-			Voici un aperçu des fonctionnalités principales que vous pourrez gérer :
-		</p>
-		<ul>
-			<li>**Les Employés** : Suivi des comptes employés et des employés acteurs aux mouvements des stocks.</li>
-			<li>**Les Articles** : Catalogue détaillé de tous les équipements en stock.</li>
-			<li>**Les Types d'Articles** : Classification et catégorisation précises des articles (ex. : ordinateurs portables, moniteurs, serveurs).</li>
-			<li>**Les Entrées / Sorties (Stock)** : Enregistrement, recherche, historique, rapports sur Excel.</li>
-			<li>**Les Fournisseurs** : Suivi </li>
-			<li>**Chatbot** : Assistant virtuel pour des requêtes rapides et de l'aide contextuelle.</li>
-		</ul>
-	</section>
-	<section>
-		<h2>Pour continuer vous pouvez choisir entre</h2>
-		<div class="actions">
-			<a href="<%= request.getContextPath() %>/Connexion">Se connecter</a>
-			<a href="<%= request.getContextPath() %>/CreationCompte">Créer un compte</a>
-		</div>
-	</section>
+    <section class="presentation">
+        <h2>Présentation et Fonctionnalités Clés</h2>
+        <p>
+            Cette plateforme est dédiée à la <span>gestion centralisée du stock informatique</span> du SPAT. 
+            Cliquez sur les rubriques ci-dessous pour découvrir les détails :
+        </p>
+
+        <div class="feature-accordion">
+            <details>
+                <summary><span>Les Employés</span></summary>
+                <p>Suivi complet des comptes utilisateurs.</p>
+            </details>
+
+            <details>
+                <summary><span>Les Articles</span></summary>
+                <p>Catalogue détaillé de l'inventaire physique.</p>
+            </details>
+
+            <details>
+                <summary><span>Les Types d'Articles</span></summary>
+                <p>Classification intelligente par catégories : ordinateurs, moniteurs, serveurs et consommables.</p>
+            </details>
+
+            <details>
+                <summary><span>Les Entrées / Sorties</span></summary>
+                <p>Enregistrement des flux, historique des mouvements et rapports automatisés vers Excel.</p>
+            </details>
+
+            <details>
+                <summary><span>Les Fournisseurs</span></summary>
+                <p>Répertoire des partenaires commerciaux.</p>
+            </details>
+
+            <details>
+                <summary><span>Chatbot Assistant</span></summary>
+                <p>Assistant virtuel intelligent pour répondre à vos questions sur les stocks en temps réel.</p>
+            </details>
+        </div>
+    </section>
+
+    <section class="auth-box">
+        <h2>Accès au portail</h2>
+        <p>Veuillez vous identifier pour accéder à l'interface de gestion.</p>
+        <div class="actions">
+            <a href="<%= request.getContextPath() %>/Connexion" class="btn-login">Se connecter</a>
+            <a href="<%= request.getContextPath() %>/CreationCompte" class="btn-register">Créer un compte</a>
+        </div>
+    </section>
 </main>
+
 <footer>
-	<p>&copy; <%= java.time.Year.now() %> Gestion de Stock IT. Tous droits réservés.</p>
+    <p>&copy; <%= java.time.Year.now() %> SPAT - Gestion de Stock IT. Tous droits réservés.</p>
 </footer>
 
 </body>

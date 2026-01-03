@@ -60,11 +60,11 @@ fieldset {
 }
 
 legend h1 {
-    color: #1a1a1a;
+    color: #007bff;
     margin-top: 10px;
     margin-bottom: 25px; 
     text-align: center;
-    font-size: 22px;
+    font-size: 20px;
     font-weight: 600;
 }
 
@@ -88,6 +88,7 @@ label {
 input[type="email"],
 input[type="password"],
 input[type="text"] {
+	font-family: inherit;
     width: 100%;
     margin-top: 8px;
     padding: 12px 15px;
@@ -99,15 +100,22 @@ input[type="text"] {
     background-color: #fafafa;
 }
 
-input:focus {
-    border-color: #007bff;
-    background-color: #fff;
-    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
-    outline: none;
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0 30px #ffffff inset !important;
+    border: 1px solid #007BFF !important;
+    font-family: inherit !important;
+}
+
+/* Version pour Firefox */
+input:autofill {
+    background-color: #ffffff !important;
 }
 
 /* Messages d'erreur sous les inputs */
 span[id^="error_"] {
+	font-family: inherit;
     color: #dc3545;
     font-size: 12px;
     font-weight: 400;
@@ -130,7 +138,9 @@ span[id^="error_"] {
     flex: 1;
 }
 
-#btn_toggle_password {
+#btn_toggle_password,
+#btn_toggle_new_password,
+#btn_toggle_new_password2 {
     background: none;
     border: none;
     color: #666;
@@ -143,7 +153,9 @@ span[id^="error_"] {
     transition: color 0.2s;
 }
 
-#btn_toggle_password:hover {
+#btn_toggle_password:hover,
+#btn_toggle_new_password:hover,
+#btn_toggle_new_password2:hover {
     color: #007bff;
     opacity: 1;
 }
@@ -153,6 +165,7 @@ span[id^="error_"] {
 /* ------------------------------------ */
 
 .submit_login {
+	font-family: inherit;
     width: 100%;
     padding: 14px;
     background-color: #007bff;

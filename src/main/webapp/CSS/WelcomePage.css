@@ -1,235 +1,212 @@
-/*
-  ==============================================
-  1. STYLES DE BASE & TYPOGRAPHIE
-  ==============================================
-*/
+/* ------------------------------------ */
+/* 1. VARIABLES ET BASE                 */
+/* ------------------------------------ */
+:root {
+    --primary-blue: #007BFF;
+    --dark-blue: #004085;
+    --light-bg: #F8F9FA;
+    --border-color: #E9ECEF;
+    --text-main: #212529;
+    --white: #FFFFFF;
+}
 
 body {
     display: flex;
     flex-direction: column; 
     min-height: 100vh; 
     margin: 0;
-    font-family: 'Arial', sans-serif;
-    color: #212529; /* Gris foncé pour le texte */
-    background-color: #FFFFFF; /* Fond principal BLANC */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: var(--text-main);
+    background-color: var(--white);
+    line-height: 1.6;
+    overflow-x: hidden;
 }
 
+/* ------------------------------------ */
+/* 2. ROTATION 3D ARRIÈRE-PLAN          */
+/* ------------------------------------ */
+.logo-background {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 600px;
+    opacity: 0.5;
+    z-index: -1;
+    pointer-events: none;
+    animation: rotation3D 15s linear infinite;
+}
+
+@keyframes rotation3D {
+    from { transform: translate(-50%, -50%) perspective(1000px) rotateY(0deg); }
+    to { transform: translate(-50%, -50%) perspective(1000px) rotateY(360deg); }
+}
+
+/* ------------------------------------ */
+/* 3. EN-TÊTE                           */
+/* ------------------------------------ */
 header {
-    background-color: #F8F9FA; /* GRIS TRÈS CLAIR (comme fond initial) */
-    color: #212529; /* Texte foncé sur fond clair */
-    padding: 15px 0 15px 15px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* Ombre très légère */
+    background-color: var(--light-bg);
+    padding: 30px;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    border-bottom: 1px solid var(--border-color);
 }
 
-h1 {
-    font-size: 1.8em;
-    margin-bottom: 5px;
+header h1 {
+    margin: 0;
+    font-size: 1.6rem;
+    color: var(--dark-blue);
+}
+
+/* ------------------------------------ */
+/* 4. LAYOUT (ALIGNEMENT DES BOXES)     */
+/* ------------------------------------ */
+main {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 20px;
+    display: flex;
+    gap: 30px;
+    flex: 1;
+    /* Aligne les deux colonnes sur la même hauteur */
+    align-items: stretch; 
+}
+
+/* Style commun aux deux colonnes pour l'aspect "Box" */
+.presentation, .auth-box {
+    background-color: transparent;
+    padding: 35px;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.presentation {
+    flex: 2; /* Ratio 2/3 */
+}
+
+.auth-box {
+    flex: 1; /* Ratio 1/3 */
+    display: flex;
+    flex-direction: column;
+    /* Centre le contenu de la box d'authentification verticalement */
+    justify-content: center; 
+    background-color: var(--light-bg); /* Différenciation légère */
 }
 
 h2 {
-    color: #444; /* Gris foncé pour les titres de section */
-    border-bottom: 1px solid #ddd;
+    color: var(--dark-blue);
+    border-bottom: 2px solid var(--primary-blue);
     padding-bottom: 10px;
     margin-top: 0;
 }
 
-/*
-  ==============================================
-  2. MISE EN PAGE PRINCIPALE (DEUX COLONNES - RATIO 2:1)
-  ==============================================
-*/
-
-main {
-    max-width: 1200px; /* Largeur maximale pour le contenu */
-    margin: 40px auto;
-    padding: 0 20px;
-
-    /* Activer Flexbox pour la mise en page en deux colonnes */
-    display: flex;
-    gap: 30px; /* Espace entre les deux sections */
-    align-items: flex-start; /* Aligner les éléments en haut */
+span {
+    font-weight: 700;
+    color: var(--dark-blue);
 }
 
-/* Règle spécifique pour la section des Fonctionnalités (première section) */
-main section:first-child {
-    flex: 2; /* Facteur de croissance de 2 (prend deux tiers de l'espace) */
-
-    background-color: white;
-    padding: 30px;
-    border-radius: 6px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    margin-bottom: 0;
-}
-
-/* Règle spécifique pour la section des Actions (deuxième section) */
-main section:last-child {
-    flex: 1; /* Facteur de croissance de 1 (prend un tiers de l'espace) */
-
-    background-color: white;
-    padding: 30px;
-    border-radius: 6px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    margin-bottom: 0;
-}
-
-/*
-  ==============================================
-  3. LISTE DES FONCTIONNALITÉS (UL/LI)
-  ==============================================
-*/
-
-section:first-child ul {
-    list-style: none;
-    padding: 0;
-    display: grid;
-    /* Une seule colonne pour les éléments de la liste dans la section 2:1 */
-    grid-template-columns: 1fr;
-    gap: 15px;
+/* ------------------------------------ */
+/* 5. ACCORDÉONS (DETAILS/SUMMARY)      */
+/* ------------------------------------ */
+.feature-accordion {
     margin-top: 25px;
 }
 
-section ul li {
-    background-color: #f0f0f0; /* Gris clair pour chaque fonctionnalité */
-    padding: 15px;
-    border-left: 4px solid #777; /* Bordure d'accentuation grise */
-    border-radius: 4px;
-    font-size: 1.05em;
-    transition: background-color 0.2s;
+details {
+    background-color: transparent;
+    margin-bottom: 10px;
+    border: 1px solid var(--border-color);
+    border-left: 5px solid var(--primary-blue);
+    border-radius: 6px;
+    transition: all 0.3s;
 }
-
-section ul li:hover {
-    background-color: #e0e0e0; /* Assombrissement léger au survol */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-/*
-  ==============================================
-  4. STYLES DES DÉTAILS (ACCORDÉON)
-  ==============================================
-*/
 
 summary {
-    font-weight: bold;
+    padding: 12px 15px;
     cursor: pointer;
-    color: #333;
-    padding: 5px 0;
+    font-weight: bold;
     list-style: none;
 }
 
 summary::before {
     content: "▶";
-    display: inline-block;
-    width: 1em;
-    margin-right: 0.5em;
-    color: #555; /* Couleur de la flèche */
-    transition: transform 0.2s;
+    font-size: 0.7rem;
+    margin-right: 12px;
+    color: var(--primary-blue);
 }
 
 details[open] summary::before {
-    content: "▼";
+    transform: rotate(90deg);
+    display: inline-block;
 }
 
 details p {
-    margin-left: 20px;
-    padding: 5px 0;
-    font-size: 0.95em;
-    border-left: 2px dashed #ccc;
-    padding-left: 10px;
+    margin: 0;
+    padding: 0 15px 15px 40px;
+    font-size: 0.9rem;
 }
 
-/*
-  ==============================================
-  5. STYLES DES ACTIONS (BOUTONS)
-  ==============================================
-*/
-
+/* ------------------------------------ */
+/* 6. BOUTONS D'ACTION                  */
+/* ------------------------------------ */
 .actions {
-    text-align: center;
-    margin-top: 40px;
     display: flex;
-    flex-direction: column; /* Aligner les boutons verticalement */
+    flex-direction: column;
     gap: 15px;
     margin-top: 20px;
 }
 
 .actions a {
-    display: block; /* S'assurer que les liens prennent toute la largeur disponible */
     text-decoration: none;
-    padding: 12px 25px;
-    margin: 0;
-    border-radius: 4px;
-    font-weight: bold;
-    transition: background-color 0.3s, opacity 0.3s;
-}
-
-.actions a:first-child { /* Se connecter (Action principale) */
-    background-color: #555; /* Gris foncé */
-    color: white;
-    border: 1px solid #555;
-}
-
-.actions a:last-child { /* Créer un compte */
-    background-color: white;
-    color: #555;
-    border: 1px solid #555;
-}
-
-.actions a:hover {
-    background-color: #444;
-    color: white;
-}
-
-/*
-  ==============================================
-  6. PIED DE PAGE (FOOTER)
-  ==============================================
-*/
-
-footer {
-    background-color: #F8F9FA; /* GRIS TRÈS CLAIR (comme le header) */
-    color: #6C757D; /* Gris moyen */
-    padding: 10px;
+    padding: 14px;
     text-align: center;
-    font-size: 0.8em;
-    flex-shrink: 0;
-    border-top: 1px solid #E9ECEF; /* Séparation très fine */
+    border-radius: 8px;
+    font-weight: bold;
+    transition: 0.3s;
 }
 
-/*
-  ==============================================
-  7. MEDIA QUERIES (ADAPTATION MOBILE)
-  ==============================================
-*/
+.btn-login {
+    background-color: var(--primary-blue);
+    color: white;
+}
 
+.btn-login:hover {
+    background-color: var(--dark-blue);
+}
+
+.btn-register {
+    background-color: white;
+    color: var(--primary-blue);
+    border: 1px solid var(--primary-blue);
+}
+
+.btn-register:hover {
+    background-color: var(--primary-blue);
+    color: white;
+}
+
+/* ------------------------------------ */
+/* 7. FOOTER                            */
+/* ------------------------------------ */
+footer {
+    background-color: var(--light-bg);
+    padding: 20px;
+    text-align: center;
+    border-top: 1px solid var(--border-color);
+}
+
+/* ------------------------------------ */
+/* 8. RESPONSIVE                        */
+/* ------------------------------------ */
 @media (max-width: 900px) {
     main {
-        /* Revenir à une seule colonne (empilement) sur mobile/tablette */
         flex-direction: column;
     }
-
-    main section {
-        /* Ajouter de la marge en bas pour séparer les sections empilées */
-        margin-bottom: 20px;
-    }
-
-    /* Supprimer les règles spécifiques de flex pour éviter les problèmes */
-    main section:first-child,
-    main section:last-child {
-        flex: auto;
-    }
-
     .actions {
-        flex-direction: row; /* Repasser les boutons en ligne sur les petits écrans */
-        justify-content: space-around;
-        gap: 10px;
+        flex-direction: row;
     }
-
     .actions a {
-        display: inline-block;
-        flex: 1; /* Distribuer l'espace équitablement entre les deux boutons */
+        flex: 1;
     }
 }

@@ -134,10 +134,10 @@
 									<% } %>
 									</tbody>
 								</table>
+								<div>
+									<button id="cancel_selection_btn" onclick="setDetails(event, 'Close', 'List-Expediteurs', null)">Annuler</button>
+								</div>
 							</fieldset>
-							<div>
-								<button id="cancel_selection_btn" onclick="setDetails(event, 'Close', 'List-Expediteurs', null)">Annuler</button>
-							</div>
 						</dialog>
 						<dialog id="dialog_expediteur">
 							<fieldset>
@@ -168,6 +168,7 @@
 			<div>
 			<% if( !fournisseurs.isEmpty() && !articles.isEmpty()) { %>
 				<input type="submit" class="submit_entree btn" value="Confirmer">
+				<input type="button" class="cancel_entree btn" value="Retourner au tableau de bord" onClick="closeForm()">
 			<% } %>
 			</div>
 		</form>

@@ -46,10 +46,30 @@ header .logo {
 }
 
 header a {
-    color: #6C757D;
+    display: flex;
+    align-items: center;
+    color: #495057;
     text-decoration: none;
-    font-weight: bold;
-    font-size: 0.9em;
+    font-weight: 600;
+    font-size: 0.95em;
+    padding: 8px 12px;
+    border-radius: 20px; /* Effet pillule */
+    transition: all 0.3s ease;
+    background-color: transparent;
+    border: 1px solid transparent;
+}
+
+header a:hover {
+    background-color: #E9ECEF;
+    color: #007BFF;
+}
+
+header a::before {
+    content: "\f007";
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    margin-right: 8px;
+    font-size: 14px;
 }
 
 main {
@@ -169,6 +189,36 @@ button[id^="choice_"]:hover {
     transition: opacity 0.2s, transform 0.1s;
 }
 
+.cancel_sortie.btn,
+.cancel_entree.btn {
+    display: block;
+    width: 100%;
+    padding: 14px;
+    background-color: var(--color-danger);
+    color: #FFFFFF;
+    font-size: 1.1em;
+    font-weight: bold;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.1s;
+    margin-top: 10px;
+}
+
+.submit_sortie.btn:hover,
+.submit_entree.btn:hover,
+.cancel_sortie.btn:hover,
+.cancel_entree.btn:hover {
+    opacity: 0.9;
+}
+
+.submit_sortie.btn:active,
+.submit_entree.btn:active,
+.cancel_sortie.btn:active,
+.cancel_entree.btn:active {
+    transform: scale(0.98);
+}
+
 [id$="_btn"]{
     display: block;
     width: auto;
@@ -212,6 +262,7 @@ dialog table {
     width: 100%;
     border-collapse: collapse;
     margin: 15px 0;
+    overflow-y: scroll;
 }
 
 dialog td {

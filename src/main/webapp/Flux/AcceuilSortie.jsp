@@ -28,13 +28,15 @@
 	        <legend class="collapsible" onclick="toggleFieldset(this,'date')">Recherche par date <i class="fas fa-caret-down"></i></legend>
 	        
 	        <div class="fieldset-content" style="display: none;">
-	            <label id="date_type_select_label">
-	                Chercher la date de déplacement suivant
-	                <select name="date" onchange="updateSearchFlux('Date_flux')">
-	                    <option value="date">la date</option>
-	                    <option value="mois">le mois et l'année seulement</option>
-	                </select>
-	            </label>
+	        	<div>
+	        		<label id="date_type_select_label">
+		                Chercher la date de déplacement suivant
+		                <select name="date" onchange="updateSearchFlux('Date_flux')">
+		                    <option value="date">la date</option>
+		                    <option value="mois">le mois et l'année seulement</option>
+		                </select>
+		            </label>
+	        	</div>
 	
 	            <div id="date_input_fields">
 	
@@ -95,24 +97,29 @@
     <div id="result_sortie">
         <% if (!sorties.isEmpty()) { %>
         <dialog id="dialog_employe">
-            <h1>Details sur l'employé <span id="dialog_employe_nom_complet"></span></h1>
-            <fieldset>
-                <legend>Informations personnelles</legend>
-                <p id="dialog_employe_adresse"></p>
-                <p id="dialog_employe_email"></p>
-                <p id="dialog_employe_telephone"></p>
-                <p id="dialog_employe_date_naissance"></p>
-            </fieldset>
-            <fieldset>
-                <legend>Information sur le compte</legend>
-                <p id="dialog_employe_matricule"></p>
-                <p id="dialog_employe_role"></p>
-                <p id="dialog_employe_date_creation"></p>
-                <p id="dialog_employe_date_modification"></p>
-            </fieldset>
-            <button onclick="setDetails(event, 'Close', 'Expediteur-Destinataire', null)">Fermer</button>
+        	<div id="employe_details">
+	            <h1>Details sur l'employé <span id="dialog_employe_nom_complet"></span></h1>
+	            <fieldset>
+	                <legend>Informations personnelles</legend>
+	                <p id="dialog_employe_adresse"></p>
+	                <p id="dialog_employe_email"></p>
+	                <p id="dialog_employe_telephone"></p>
+	                <p id="dialog_employe_date_naissance"></p>
+	            </fieldset>
+	            <fieldset>
+	                <legend>Information sur le compte</legend>
+	                <p id="dialog_employe_matricule"></p>
+	                <p id="dialog_employe_role"></p>
+	                <p id="dialog_employe_date_creation"></p>
+	                <p id="dialog_employe_date_modification"></p>
+	            </fieldset>
+	            <div id="employe_action_button">
+	            	<button onclick="setDetails(event, 'Close', 'Expediteur-Destinataire', null)">Fermer</button>
+	            </div>
+            </div>
         </dialog>
         <table>
+        	<caption>Tous (<%= sorties.size() %>)</caption>
             <thead>
                 <tr>
                     <th>ID</th>
@@ -139,12 +146,12 @@
                                 data-email="<%= s.getExpediteur().getEmail() %>"
                                 data-telephone="<%= s.getExpediteur().getTelephone() %>"
                                 data-adresse="<%= s.getExpediteur().getAdresse() %>"
-                                data-date_naissance="<%= s.getExpediteur().getDate_de_naissance() %>"
+                                data-date_naissance="<%= s.getExpediteur().getDate_de_naissance_formatter() %>"
                                 data-matricule="<%= s.getExpediteur().getMatricule() %>"
                                 data-role="<%= s.getExpediteur().getRole() %>"
                                 data-activite="<%= s.getExpediteur().getActivite() %>"
-                                data-date_creation="<%= s.getExpediteur().getDate_creation() %>"
-                                data-date_modification="<%= s.getExpediteur().getDate_modification() %>">
+                                data-date_creation="<%= s.getExpediteur().getDate_creation_formatter() %>"
+                                data-date_modification="<%= s.getExpediteur().getDate_modification_formatter() %>">
                             <%= s.getExpediteur().getNomPrenom() %>
                         </button>
                     </td>
@@ -154,12 +161,12 @@
                                 data-email="<%= s.getDestinataire().getEmail() %>"
                                 data-telephone="<%= s.getDestinataire().getTelephone() %>"
                                 data-adresse="<%= s.getDestinataire().getAdresse() %>"
-                                data-date_naissance="<%= s.getDestinataire().getDate_de_naissance() %>"
+                                data-date_naissance="<%= s.getDestinataire().getDate_de_naissance_formatter() %>"
                                 data-matricule="<%= s.getDestinataire().getMatricule() %>"
                                 data-role="<%= s.getDestinataire().getRole() %>"
                                 data-activite="<%= s.getDestinataire().getActivite() %>"
-                                data-date_creation="<%= s.getDestinataire().getDate_creation() %>"
-                                data-date_modification="<%= s.getDestinataire().getDate_modification() %>">
+                                data-date_creation="<%= s.getDestinataire().getDate_creation_formatter() %>"
+                                data-date_modification="<%= s.getDestinataire().getDate_modification_formatter() %>">
                             <%= s.getDestinataire().getNomPrenom() %>
                         </button>
                     </td>
@@ -172,7 +179,7 @@
         </table>
         <% if(visibleRapportButton) { %>
         <div id="excel">
-            <button onclick="setExcelTransform('Sortie')"><i class="fa-solid fa-download"></i> Faire un rapport excel</button>
+            <button onclick="setExcelTransform('Sortie', this)"><i class="fa-solid fa-download"></i> Faire un rapport excel</button>
         </div>
         <% } %>
         <% } else { %>

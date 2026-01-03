@@ -40,7 +40,6 @@
     <script>
 	    document.addEventListener("DOMContentLoaded", function() {
 	        const ctx = '<%= ctx %>';
-            // 🛑 SÉCURITÉ/CORRECTION: Échappement
 	        const currentMatricule = '<%= employe.getMatricule().replace("'", "\\'") %>'; 
 	        const currentRoleInt = <%= employe.getRoleInt() %>;
 	        
@@ -67,7 +66,6 @@
             });
         });
         
-        // 🛑 CORRECTION CRITIQUE: Appel correct pour le nettoyage de la session inattendue
         document.addEventListener("pagehide", function() {
             closeEmployeWebSocket(true, '<%= ctx %>');
         });

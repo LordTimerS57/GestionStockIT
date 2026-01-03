@@ -13,7 +13,6 @@ import java.util.ArrayList;
 public class CohereClient {
     private final Cohere cohere;
     private final List<Message> baseHistory;
-    // Utilisation du modèle Command-R-Plus, plus puissant et supporté
     private static final String MODEL_NAME = "command-a-03-2025";
 
     public CohereClient(String apiKey, String fullSchema) {
@@ -27,7 +26,10 @@ public class CohereClient {
     private List<Message> setupBaseHistory(String schema) {
         String systemInstruction =
                 "Tu es un traducteur expert en langage naturel vers SQL pour PostgreSQL. Ton unique réponse DOIT être la requête SQL valide, sans aucun autre texte, explication, ou bloc de code." +
-                        "\n\nVoici le schéma de la base de données :\n<SCHEMA>\n" + schema + "\n</SCHEMA>\n";
+                        "\n\nCONSIGNES CRUCIALES : "+
+                        	"\n1-Seules les requêtes de type SELECT sont autorisés."+
+                			"\n1-Interdiction formelle de joindre (JOIN) la table des entrées et la table des sorties dans la même clause FROM. Pour lister des mouvements provenant de tables différentes, utilise exclusivement UNION ALL dans une sous-requête."+
+            			"\n\nVoici le schéma de la base de données :\n<SCHEMA>\n" + schema + "\n</SCHEMA>\n";
 
         List<Message> history = new ArrayList<>();
         history.add(Message.system(ChatMessage.builder().message(systemInstruction).build()));
@@ -41,7 +43,7 @@ public class CohereClient {
         
         String sujetsAutorises = ".*(stock|fournisseur|entré|sorti|article|type).*";
 
-        if (role != 1 && role != 2) {
+        if (role > 2 || role < 1) {
             if (!question.toLowerCase().matches(sujetsAutorises)) {
                 if (!question.toLowerCase().matches("(?i).*(employ[ée]|employe).*(nom|prénom|adresse|email|téléphone).*|.*(nom|prénom|adresse|email|téléphone).*(employ[ée]|employe).*")) {
                     throw new ErrorConfirmException("Vous ne pouvez questionner que les informations des articles, stocks, fournisseurs, entrées, sorties ou les informations limitées des employés (noms, prénoms, emails, téléphones).");
@@ -67,10 +69,9 @@ public class CohereClient {
                         .message(question)
                         .chatHistory(currentHistory)
                         .temperature(0.0F)
-                        .model(MODEL_NAME) // Utilisation de command-r-plus
+                        .model(MODEL_NAME)
                         .build()
         );
-        // CORRECTION : Utilisation de getText()
         return response.getText().trim();
     }
 
@@ -80,13 +81,14 @@ public class CohereClient {
     public String reformulateResponse(String userQuestion, String jsonResults) throws Exception {
 
         String systemInstruction =
-                "Tu es un assistant convivial et concis. Ta tâche est de reformuler les données brutes (format JSON) ci-dessous en une réponse directe à la question de l'utilisateur. Ne donne que la réponse reformulée, sans préambule ni explications.";
+                "Tu es un assistant convivial et concis. Ta tâche est de reformuler les données brutes (format JSON) ci-dessous en une réponse pouvant être directe à la question de l'utilisateur. Ne donne que la réponse reformulée, sans préambule ni explications.";
 
         String reformulationPrompt = String.format(
                 "Question de l'utilisateur : %s\n\nRésultats de la base de données (JSON) : %s",
                 userQuestion,
                 jsonResults
         );
+        
 
         NonStreamedChatResponse response = cohere.chat(
                 ChatRequest.builder()

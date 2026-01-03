@@ -118,6 +118,8 @@
     flex-direction: column;
     gap: 10px;
 }
+
+
 #employe_param_search_container{
 	display: flex;
     flex-direction: column;
@@ -237,6 +239,17 @@
     width: 100%;
     border-collapse: collapse;
     min-width: 800px;
+    overflow-y: scroll;
+}
+
+.content .content-flux-in table caption, .content .content-flux-out table caption {
+    caption-side: top;
+    text-align: left;
+    font-size: 1.3em;
+    font-weight: bold;
+    color: #212529; /* Gris Anthracite */
+    padding: 15px 0 5px 0;
+    margin-bottom: 5px; 
 }
 
 .content .content-flux-in table th, .content .content-flux-out table th {

@@ -28,30 +28,42 @@
   <% if(!articles.isEmpty()) { %>
 
   <dialog id="dialog_type_article">
-    <fieldset>
-      <legend>Détails sur le type de l'article <span id="dialog_nom_article"></span> </legend>
-      <p><span id="dialog_nom_type"></span></p>
-      <p><span id="dialog_description_type"></span></p>
-    </fieldset>
-    <button onclick="setDetails(event, 'Close', 'Type', null)">Fermer</button>
+  	<div id="type_article_details">
+	    <fieldset>
+	      <legend>Détails sur le type de l'article <span id="dialog_nom_article"></span> </legend>
+	      <p><span id="dialog_nom_type"></span></p>
+	      <p><span id="dialog_description_type"></span></p>
+	    </fieldset>
+	    <div id="type_article_action_button">
+	    	<button onclick="setDetails(event, 'Close', 'Type', null)">Fermer</button>
+	    </div>
+    </div>
   </dialog>
   
   <dialog id="dialog_info_article">
-    <fieldset>
-      <legend>Détails du stock sur l'article <span id="dialog_nom_article_info"></span> </legend>
-      <p><span id="dialog_stock_actuel_article"></span></p>
-      <p><span id="dialog_consommation_moyen_article"></span></p>
-      <p><span id="dialog_delai_reapprovisionnement_article"></span></p>
-      <p><span id="dialog_seuil_critique_article"></span></p>
-      <p><span id="dialog_situation_article"></span></p>
-      <p><span id="dialog_entree_article"></span></p>
-      <p><span id="dialog_sortie_article"></span></p>
-    </fieldset>
-    <button onclick="setDetails(event, 'Close', 'Article-Info', null)">Fermer</button>
+  	<div id="article_details">
+	    <fieldset>
+	      <legend>Détails du stock sur l'article <span id="dialog_nom_article_info"></span> </legend>
+	      <p><span id="dialog_stock_actuel_article"></span></p>
+	      <p><span id="dialog_consommation_moyen_article"></span></p>
+	      <p><span id="dialog_delai_reapprovisionnement_article"></span></p>
+	      <p><span id="dialog_seuil_critique_article"></span></p>
+	      <p><span id="dialog_situation_article"></span></p>
+	      <p><span id="dialog_entree_article"></span></p>
+	      <p><span id="dialog_sortie_article"></span></p>
+	      <p><span id="dialog_date_entree_article"></span></p>
+	      <p><span id="dialog_date_sortie_article"></span></p>
+	      
+	    </fieldset>
+	    <div id="article_action_button">
+	    	<button onclick="setDetails(event, 'Close', 'Article-Info', null)">Fermer</button>
+	  	</div>
+  	</div>
   </dialog>
-
+	
   <div id="result_article">
     <table>
+      <caption>Tous (<%= articles.size() %>)</caption>	
       <thead>
       <tr>
         <th>ID</th>
@@ -83,7 +95,7 @@
           <% if(isAdminOrSuperAdmin) { %>
             <button class="action-modifier" onclick="setUpdateArticle('<%=a.getTag_article()%>')"><i class="fas fa-pencil-alt"></i></button>
             <% if(a.getNombre_occurence_entrees_article() + a.getNombre_occurence_sorties_article() == 0) { %>
-            <button class="action-supprimer" onclick="removeData('<%=a.getTag_article()%>', 'Article', null)"><i class="fas fa-trash"></i></button>
+            <button class="action-supprimer" onclick="removeData('<%=a.getTag_article()%>', 'Article', this)"><i class="fas fa-trash"></i></button>
             <% } %>
           <% } %>
             <button class="action-details" 
@@ -96,6 +108,8 @@
             		data-dirm_article="<%= a.getDelai_reappro_estime() %>"
             		data-seuil_stock_article="<%= (a.getSeuil_critique_arrondi() > 0) ? a.getSeuil_critique_arrondi() : "N/A" %>"
             		data-situation_article="<%= a.getSituation_article() %>"
+            		data-occurrence_entree_article="<%= a.getNombre_occurence_entrees_article() %>"
+            		data-occurrence_sortie_article="<%= a.getNombre_occurence_sorties_article() %>"
             		data-derniere_entree_article="<%= a.getDate_derniere_entree() %>"
             		data-derniere_sortie_article="<%= a.getDate_derniere_sortie() %>"><i class="fa-solid fa-eye-slash"></i>
       		</button>

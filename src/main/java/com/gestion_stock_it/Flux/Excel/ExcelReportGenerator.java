@@ -67,7 +67,7 @@ public class ExcelReportGenerator {
 
 		if (hasDateFlux && hasDateFluxParam) {
 			String formattedDateFlux = dateFlux;
-			if (dateFlux.matches("\\d{4}-\\d{2}-\\d{2}")) { // vérifie le format
+			if (dateFlux.matches("\\d{4}-\\d{2}-\\d{2}")) {
 				String[] parts = dateFlux.split("-");
 				formattedDateFlux = parts[2] + "-" + parts[1] + "-" + parts[0];
 			}
@@ -199,7 +199,7 @@ public class ExcelReportGenerator {
             row.createCell(0).setCellValue(s.getTag_flux());
             row.createCell(1).setCellValue(s.getArticle().getNom_article());
             row.createCell(2).setCellValue(s.getNombre_article_deplace());
-            row.createCell(3).setCellValue(s.getDate_deplacement_formatter());
+            row.createCell(3).setCellValue(s.getDate_deplacement_formatter().split(" ")[0]);
             row.createCell(4).setCellValue(s.getDate_deplacement_formatter().split(" ")[1]);
             row.createCell(5).setCellValue(s.getExpediteur().getNomPrenom());
             row.createCell(6).setCellValue(s.getDestinataire().getNomPrenom());

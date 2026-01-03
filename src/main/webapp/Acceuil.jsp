@@ -4,5 +4,6 @@
 <%@ page import="com.gestion_stock_it.Employe.Employe" %>
 <% Employe employe = (Employe) session.getAttribute("login_profil"); %>
 <section class="welcome-section">
+	<img src="<%= request.getContextPath() %>/IMAGES/logo_spat.png" alt="" class="logo-background">
 	<h2 class="welcome-content">Bienvenue <%= employe.getNomPrenom() %> </h2>
 </section>

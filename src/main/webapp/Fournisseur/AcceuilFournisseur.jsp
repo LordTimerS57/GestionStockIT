@@ -18,18 +18,22 @@
   
   <% if(!fournisseurs.isEmpty()) { %>
   <dialog id="dialog_fournisseur">
-    <fieldset>
-      <legend>Détails sur le fournisseur <span id="dialog_fournisseur_raison_sociale"></span> </legend>
-      <p><span id="dialog_telephone_fournisseur"></span></p>
-      <p><span id="dialog_email_fournisseur"></span></p>
-      <p><span id="dialog_tag_fournisseur"></span></p>
-    </fieldset>
-    <button onclick="setDetails(event, 'Close', 'Fournisseur', null)">Fermer</button>
+    <div id="fournisseur_details">
+	    <fieldset>
+	      <legend>Détails sur le fournisseur <span id="dialog_fournisseur_raison_sociale"></span> </legend>
+	      <p><span id="dialog_telephone_fournisseur"></span></p>
+	      <p><span id="dialog_email_fournisseur"></span></p>
+	      <p><span id="dialog_tag_fournisseur"></span></p>
+	    </fieldset>
+	    <div id="fournisseur_action_button">
+	    	<button onclick="setDetails(event, 'Close', 'Fournisseur', null)">Fermer</button>
+	    </div>
+    </div>
   </dialog>
 
   <div id="result_fournisseur">
     <table>
-      <caption>Liste des fournisseurs</caption>
+      <caption>Tous (<%= fournisseurs.size() %>)</caption>
       <thead>
         <tr>
           <th>Raison Sociale</th>
@@ -53,7 +57,7 @@
             <div class="table-actions">
               <button class="action-modifier" onclick="setUpdateFournisseur('<%=f.getTag_fournisseur()%>')"><i class="fas fa-pencil-alt"></i></button>
               <% if(f.getNombre_occurence_entrees_fournisseur() == 0) { %>
-              <button class="action-supprimer" onclick="removeData('<%=f.getTag_fournisseur()%>', 'Fournisseur')"><i class="fas fa-trash"></i></button>
+              <button class="action-supprimer" onclick="removeData('<%=f.getTag_fournisseur()%>', 'Fournisseur', this)"><i class="fas fa-trash"></i></button>
               <% } %>
             </div>
         </td>

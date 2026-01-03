@@ -66,10 +66,10 @@ public class Employe {
   public LocalDateTime getDate_modification() { return date_modification; }
 
   public String getDate_creation_formatter() {
-      return date_creation.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss.SSSSSSSSS "));
+      return date_creation.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"));
   }
   public String getDate_modification_formatter() {
-      return date_modification.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss.SSSSSSSSS "));
+      return date_modification.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"));
   }
   public String getDate_de_naissance_formatter() {
       return date_de_naissance.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));

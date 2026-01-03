@@ -41,7 +41,7 @@
 			</div>
 		</div>
 
-		<form id="modify_role" onsubmit="event.preventDefault(); setForm(event, 'Modification', 'Employe', 'Modification_role'); setDetails(event, 'Close', 'Employe', null);">
+		<form id="modify_role" onsubmit="event.preventDefault(); setForm(event, 'Modification', 'Employe', 'Modification_role');">
 			<fieldset>
 				<legend>Modification du rôle</legend>
 				<label>
@@ -51,6 +51,7 @@
 						<option value="2">Administrateur</option>
 						<option value="3">Employé Simple</option>
 					</select>
+					<span id="error_role"></span>
 				</label>
 				<input type="hidden" id="emp_matricule" name="matricule">
 				<input type="hidden" id="emp_email" name="email">
@@ -66,12 +67,13 @@
 	<% if(!connectes.isEmpty()) { %>
 	<div id="result_employe_connected">
 		<table>
-			<caption>Employés en ligne</caption> <thead>
-		<tr>
-			<th>Nom et Prénoms</th>
-			<th></th>
-		</tr>
-		</thead>
+			<caption>Employés en ligne (<%= connectes.size() %>)</caption> 
+			<thead>
+				<tr>
+					<th>Nom et Prénoms</th>
+					<th></th>
+				</tr>
+			</thead>
 			<tbody>
 			<%  for (Employe c : connectes) { %>
 			<tr>
@@ -93,7 +95,7 @@
 				</td>
 				<% if(!Objects.equals(c.getRole(), "Super Administrateur") &&  !Objects.equals(self.getMatricule(), c.getMatricule()) && !Objects.equals(self.getRole(), c.getRole()) )  { %>
 				<td>
-					<button class="<%= c.getActivite() ? "desactivation" : "activation" %>-employe"  onclick="removeData('<%=c.getMatricule()%>', 'Employe')"><%= c.getActivite() ? "Désactiver" : "Activer" %> le compte</button>
+					<button class="<%= c.getActivite() ? "desactivation" : "activation" %>-employe"  onclick="removeData('<%=c.getMatricule()%>', 'Employe', this)"><%= c.getActivite() ? "Désactiver" : "Activer" %> le compte</button>
 				</td>
 				<% } else { %>
 				<td>—</td> <% } %>
@@ -109,12 +111,13 @@
 	<% if(!nonConnectes.isEmpty()) { %>
 	<div id="result_employe_not_connected">
 		<table>
-			<caption>Employés hors ligne</caption> <thead>
-		<tr>
-			<th>Nom et Prénoms</th>
-			<th></th>
-		</tr>
-		</thead>
+			<caption>Employés hors ligne (<%= nonConnectes.size() %>)</caption> 
+			<thead>
+				<tr>
+					<th>Nom et Prénoms</th>
+					<th></th>
+				</tr>
+			</thead>
 			<tbody>
 			<%  for (Employe nc : nonConnectes) { %>
 			<tr>
@@ -136,7 +139,7 @@
 				</td>
 				<% if(!Objects.equals(nc.getRole(), "Super Administrateur") && !Objects.equals(self.getRole(), nc.getRole())) { %>
 				<td>
-					<button class="<%= nc.getActivite() ? "desactivation" : "activation" %>-employe" onclick="removeData('<%=nc.getMatricule()%>', 'Employe')"><%= nc.getActivite() ? "Désactiver" : "Activer" %> le compte</button>
+					<button class="<%= nc.getActivite() ? "desactivation" : "activation" %>-employe" onclick="removeData('<%=nc.getMatricule()%>', 'Employe', this)"><%= nc.getActivite() ? "Désactiver" : "Activer" %> le compte</button>
 				</td>
 				<% } else { %>
 				<td>—</td> <% } %>

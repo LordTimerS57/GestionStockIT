@@ -46,10 +46,30 @@ header .logo {
 }
 
 header a {
-    color: #6C757D;
+    display: flex;
+    align-items: center;
+    color: #495057;
     text-decoration: none;
-    font-weight: bold;
-    font-size: 0.9em;
+    font-weight: 600;
+    font-size: 0.95em;
+    padding: 8px 12px;
+    border-radius: 20px; /* Effet pillule */
+    transition: all 0.3s ease;
+    background-color: transparent;
+    border: 1px solid transparent;
+}
+
+header a:hover {
+    background-color: #E9ECEF;
+    color: #007BFF;
+}
+
+header a::before {
+    content: "\f007";
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    margin-right: 8px;
+    font-size: 14px;
 }
 
 main {

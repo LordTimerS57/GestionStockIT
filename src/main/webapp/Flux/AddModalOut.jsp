@@ -203,6 +203,7 @@
 			<div>
 			<% if( !destinataires.isEmpty() && !articles.isEmpty()) { %>
 				<input type="submit" class="submit_sortie btn" value="Confirmer">
+				<input type="button" class="cancel_sortie btn" value="Retourner au tableau de bord" onClick="closeForm()">
 			<% } %>
 			</div>
 		</form>
